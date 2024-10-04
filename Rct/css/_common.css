@@ -1,0 +1,112 @@
+:root {
+    /* マージンのサイズ */
+    --margin-main: 15px;
+    --margin-narrow: 10px;
+    --margin-more-narrow: 5px;
+
+    /* パディングのサイズ */
+    --padding-main: 20px;
+    --padding-narrow: 10px;
+    --padding-more-narrow: 5px;
+
+    /* フォントサイズ */
+    --font-size-larger: 20px;
+    --font-size-main: 16px;
+    --font-size-smaller: 14px;
+
+    /* ボーダーの角丸 */
+    --border-radius: 4px;
+    
+    /* 配色 */
+    --color-primary: #007bff;
+    --color-hover: #0056b3;
+    --color-muted-primary: hsl(211, 50%, 56%);
+    --color-muted-hover: hsl(211, 50%, 46%);
+    --color-border: #ccc;
+    --color-text: #333;
+    --color-text-light: #888;
+
+    /* コンテナの幅 */
+    --container-width: 400px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.header {
+    position: fixed;
+    display: flex;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--color-muted-primary);
+    color: white;
+    margin: auto;
+    height: 80px;
+    text-align: center;
+    z-index: 1000;
+}
+
+.header h1{
+    margin: 10px 70px;
+    flex-grow: 1;
+    text-align: left;
+    font-size: 50px;
+}
+
+.main-content {
+    margin-top: 100px;
+    /* ヘッダーの高さ分だけ下にずらす */
+    padding: var(--padding-main);
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+h2 {
+    margin-bottom: var(--padding-main);
+    color: var(--color-text);
+}
+
+.btn {
+    width: 100%;
+    padding: var(--padding-narrow);
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-larger);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.btn:hover {
+    background-color: var(--color-hover);
+}
+
+.btn-muted {
+    width: 100%;
+    padding: var(--padding-narrow);
+    background-color: var(--color-muted-primary);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-larger);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.btn-muted:hover {
+    background-color: var(--color-muted-hover)
+}

@@ -1,0 +1,33 @@
+@import url('_common.css');
+
+.dropdown-container {
+    margin-bottom: var(--margin-main);
+}
+
+.main{
+    display: flex;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: var(--margin-more-narrow);
+}
+
+input,
+select {
+    /* outline: none; */
+    width: 300px;
+    padding: var(--padding-narrow);
+    font-size: var(--font-size-main);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    transition: border-color 0.3s ease;
+    margin-bottom: var(--margin-main);
+}
+
+input:focus, select:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    background-color: white;
+}

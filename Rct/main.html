@@ -1,0 +1,47 @@
+<html lang="ja">
+
+</html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rct メインページ</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+    <header class="header">
+        <h1>Remind code typing</h1>
+        <div class="login-info">
+            <div class="login-info-text">
+                <!-- TODO ID・日数情報の置き換え バックエンドができてから -->
+                〇〇さん<br>
+                連続◯日
+                累計◯日
+                のログインです
+            </div>
+            <div>
+                <button type="submit" class="btn">ログアウト</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+
+        <div class="main-container">
+            <div class="tab-container">
+                <div class="tab active" onclick="loadPage('typing.html', event)">タイピング訓練</div>
+                <div class="tab" onclick="loadPage('notebook.html', event)">電子学習帳</div>
+                <div class="tab" onclick="loadPage('records.html', event)">学習記録</div>
+            </div>
+
+            <div id="content-area">
+                <!-- 初期表示時にタイピング訓練の内容を読み込む -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>

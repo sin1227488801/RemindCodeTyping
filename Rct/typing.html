@@ -1,0 +1,52 @@
+<head>
+    <link rel="stylesheet" href="css/typing.css">
+</head>
+
+<body>
+    <div>
+        <h2>タイピング訓練(設定)</h2>
+        <div class="main">
+            <div class="box-left">
+                <!-- 複数選択のプルダウンメニュー -->
+                <div class="dropdown-container">
+                    <label for="language-select">言語選択 (CtrlまたはCmdキーを使用):</label>
+                    <select id="language-select" name="language-select" multiple size="4">
+                        <option value="option1">Python</option>
+                        <option value="option2">C#</option>
+                        <option value="option3">Java</option>
+                        <option value="option4">JavaScript</option>
+                    </select>
+                </div>
+                <!-- 単一選択のプルダウンメニュー -->
+                <div class="dropdown-container">
+                    <label for="rule-select">ルール選択:</label>
+                    <select id="rule-select" name="rule-select">
+                        <option value="option1">ランダム出題</option>
+                        <option value="option2">苦手優先</option>
+                        <option value="option3">得意優先</option>
+                    </select>
+                </div>
+                <!-- 入力可能プルダウンメニュー -->
+                <!-- TODO プルダウンから選択したときに網掛けになる。最悪プルダウン単体or入力ボックスで対応 -->
+                <div class="dropdown-container">
+                    <label for="time-select">挑戦時間選択(分単位):</label>
+                    <input list="times" id="time-select" name="time-select" placeholder="選択または入力">
+                    <datalist id="times">
+                        <option value="5">
+                        <option value="10">
+                        <option value="15">
+                        <option value="20">
+                        <option value="25">
+                        <option value="30">
+                    </datalist>
+                </div>
+                <div class="box-right">
+                    aaa
+                </div>
+            </div>
+            <style>
+
+            </style>
+        </div>
+    </div>
+</body>

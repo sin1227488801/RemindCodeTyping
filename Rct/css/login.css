@@ -1,0 +1,60 @@
+@import url('_common.css');
+
+.login-container {
+    background-color: #fff;
+    padding: var(--padding-main);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: var(--container-width);
+    text-align: center;
+    position: relative;
+}
+
+.input-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.input-group label {
+    font-size: var(--font-size-main);
+    color: var(--color-text);
+    width: 30%;
+}
+
+.input-group input[type="text"],
+.input-group input[type="password"] {
+    width: 65%;
+    padding: var(--padding-narrow);
+    font-size: var(--font-size-main);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    transition: border-color 0.3s ease;
+    margin-bottom: var(--margin-main);
+}
+
+.input-group input:focus {
+    border-color: var(--color-primary);
+    outline: none;
+}
+
+.password-options {
+    text-align: right;
+    margin-top: -10px;
+    margin-bottom: var(--margin-main);
+    font-size: var(--font-size-smaller);
+    color: var(--color-text-light);
+}
+
+.password-options input[type="checkbox"] {
+    margin-right: var(--margin-more-narrow);
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button-container .btn-muted {
+    width: 48%;
+}

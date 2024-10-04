@@ -1,0 +1,44 @@
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログイン</title>
+    <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+    <header class="header">
+        <h1>Remind code typing</h1>
+    </header>
+
+    <div class="login-container">
+        <h2>ログイン</h2>
+        <form action="/login" method="post">
+            <div class="input-group">
+                <label for="username">ID</label>
+                <input type="text" id="username" name="username" placeholder="IDを入力" required>
+            </div>
+            <div class="input-group">
+                <label for="password">パスワード</label>
+                <input type="password" id="password" name="password" placeholder="パスワードを入力" required>
+            </div>
+            <div class="password-options">
+                <input type="checkbox" id="show-password" onclick="togglePassword()">
+                <label for="show-password">パスワード表示</label>
+            </div>
+
+            <button type="submit" class="btn">ログイン</button>
+            <p>IDをお持ちでない方</p>
+            <div class="button-container">
+                <button type="submit" class="btn-muted">デモプレイ</button>
+                <button type="submit" class="btn-muted">新規登録</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="js/login.js"></script>
+
+</body>
+
+</html>
