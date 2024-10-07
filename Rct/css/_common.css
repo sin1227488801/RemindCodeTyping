@@ -1,6 +1,8 @@
+
+
 :root {
     /* マージンのサイズ */
-    --margin-main: 15px;
+    --margin-main: 20px;
     --margin-narrow: 10px;
     --margin-more-narrow: 5px;
 
@@ -16,8 +18,10 @@
 
     /* ボーダーの角丸 */
     --border-radius: 4px;
-    
+
     /* 配色 */
+    --color-product-main: #7CADED;
+    --color-product-sub: #929292;
     --color-primary: #007bff;
     --color-hover: #0056b3;
     --color-muted-primary: hsl(211, 50%, 56%);
@@ -50,15 +54,23 @@
     z-index: 1000;
 }
 
-.header h1{
-    margin: 10px 70px;
+.header h1 {
+    margin: 10px auto;
     flex-grow: 1;
     text-align: left;
+    font-family: 'Mogra';
     font-size: 50px;
+    text-shadow: 0.2rem 0.1rem 0px var(--color-product-sub);
+}
+
+.header img {
+    height: 80px;
+    margin: 0 var(--margin-main);
 }
 
 .main-content {
     margin-top: 100px;
+    height: calc(100vh - 80px);
     /* ヘッダーの高さ分だけ下にずらす */
     padding: var(--padding-main);
 }

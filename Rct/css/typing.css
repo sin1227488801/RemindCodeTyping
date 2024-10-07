@@ -4,8 +4,18 @@
     margin-bottom: var(--margin-main);
 }
 
-.main{
+.main {
     display: flex;
+    width: calc(100% - 10px);
+    box-sizing: border-box;
+}
+
+.main .box-left {
+    width: 50%;
+}
+
+.main .box-right {
+    width: 50%;
 }
 
 label {
@@ -16,8 +26,7 @@ label {
 
 input,
 select {
-    /* outline: none; */
-    width: 300px;
+    width: 90%;
     padding: var(--padding-narrow);
     font-size: var(--font-size-main);
     border: 1px solid var(--color-border);
@@ -26,8 +35,36 @@ select {
     margin-bottom: var(--margin-main);
 }
 
-input:focus, select:focus {
+input:focus,
+select:focus {
     border-color: var(--color-primary);
     outline: none;
     background-color: white;
+}
+
+.user-data{
+    text-align: right;
+}
+
+.lank-list ul {
+    background: var(--color-border);
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px var(--color-product-sub);
+    padding: 0.5rem 0.5rem 0.5rem 2rem;
+    margin: var(--margin-narrow) var(--margin-main);
+}
+
+.lank-list ul li {
+    line-height: 1.2;
+    padding: var(--padding-more-narrow) 0;
+    justify-content: space-between;
+}
+
+.rank {
+    flex-basis: 70%;
+}
+
+.level {
+    flex-basis: 30%;
+    text-align: right;
 }
