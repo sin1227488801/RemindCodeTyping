@@ -46,7 +46,7 @@ select:focus {
     text-align: right;
 }
 
-.lank-list ul {
+.rank-list ul {
     background: var(--color-border);
     border-radius: 8px;
     box-shadow: 0px 0px 5px var(--color-product-sub);
@@ -54,7 +54,7 @@ select:focus {
     margin: var(--margin-narrow) var(--margin-main);
 }
 
-.lank-list ul li {
+.rank-list ul li {
     line-height: 1.2;
     padding: var(--padding-more-narrow) 0;
     justify-content: space-between;
