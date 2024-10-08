@@ -1,0 +1,17 @@
+@import url('_common.css');
+
+.main {
+    display: flex;
+    width: calc(100% - 10px);
+    box-sizing: border-box;
+}
+
+.main .box-left {
+    width: 50%;
+}
+
+.main .box-right {
+    width: 50%;
+}
+
+

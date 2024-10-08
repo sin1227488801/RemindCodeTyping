@@ -1,4 +1,32 @@
+<head></head>
+<link rel="stylesheet" href="css/notebook.css">
+</head>
+
 <body>
     <h2>電子学習帳</h2>
-    <p>ここに電子学習帳の内容が表示されます。</p>
+    <div class="main">
+        <div class="box-left">
+            <label>新規登録</label>
+            <!-- 入力可能プルダウンメニュー -->
+            <div class="dropdown-container">
+                <label for="language-select">言語:</label>
+                <input list="languages" id="language-select" name="language-select" placeholder="選択または入力">
+                <datalist id="languages">
+                    <option value="Python">Python</option>
+                    <option value="C#">C#</option>
+                    <option value="Java">Java</option>
+                    <option value="JavaScript">JavaScript</option>
+                </datalist>
+            </div>
+            <!-- 長文入力 -->
+            <textarea placeholder="ここに問題文を入力してください"></textarea>
+
+            <p>ここに電子学習帳の内容が表示されます。</p>
+        </div>
+        <div class="box-right">
+            <label></label>
+            <p>ここに電子学習帳の内容が表示されます。</p>
+        </div>
+        aaaa
+    </div>
 </body>
