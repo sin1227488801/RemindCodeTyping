@@ -10,10 +10,7 @@
     box-sizing: border-box;
 }
 
-.main .box-left {
-    width: 50%;
-}
-
+.main .box-left,
 .main .box-right {
     width: 50%;
 }
@@ -42,7 +39,7 @@
     padding: var(--padding-narrow) 0;
 }
 
-.rank{
+.rank {
     width: 150px;
     text-align: center;
 }

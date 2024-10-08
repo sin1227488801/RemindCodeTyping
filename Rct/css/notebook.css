@@ -6,12 +6,7 @@
     box-sizing: border-box;
 }
 
-.main .box-left {
-    width: 50%;
-}
-
+.main .box-left,
 .main .box-right {
     width: 50%;
 }
-
-
