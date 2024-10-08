@@ -42,16 +42,8 @@ select:focus {
     background-color: white;
 }
 
-.user-data{
+.user-data {
     text-align: right;
-}
-
-.rank-list ul {
-    background: var(--color-border);
-    border-radius: 8px;
-    box-shadow: 0px 0px 5px var(--color-product-sub);
-    padding: 0.5rem 0.5rem 0.5rem 2rem;
-    margin: var(--margin-narrow) var(--margin-main);
 }
 
 .rank-list ul li {
@@ -60,11 +52,26 @@ select:focus {
     justify-content: space-between;
 }
 
-.rank {
-    flex-basis: 70%;
+.rank-list ul {
+    background: var(--color-border);
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px var(--color-product-sub);
+    padding: var(--padding-main);
+    margin: var(--margin-narrow) var(--margin-main);
 }
 
-.level {
-    flex-basis: 30%;
-    text-align: right;
+.rank-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--padding-narrow) 0;
+}
+
+.rank{
+    width: 150px;
+    text-align: center;
+}
+
+.points {
+    width: 100px;
+    text-align: center;
 }
