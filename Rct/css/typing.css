@@ -1,9 +1,5 @@
 @import url('_common.css');
 
-.dropdown-container {
-    margin-bottom: var(--margin-main);
-}
-
 .main {
     display: flex;
     width: calc(100% - 10px);
