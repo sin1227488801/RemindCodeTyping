@@ -87,10 +87,10 @@ h2 {
     color: var(--color-text);
 }
 
-.btn {
+.btn,
+.btn-muted {
     width: 100%;
     padding: var(--padding-narrow);
-    background-color: var(--color-primary);
     color: white;
     border: none;
     border-radius: var(--border-radius);
@@ -98,6 +98,10 @@ h2 {
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin-bottom: 10px;
+}
+
+.btn {
+    background-color: var(--color-primary);
 }
 
 .btn:hover {
@@ -105,16 +109,7 @@ h2 {
 }
 
 .btn-muted {
-    width: 100%;
-    padding: var(--padding-narrow);
     background-color: var(--color-muted-primary);
-    color: white;
-    border: none;
-    border-radius: var(--border-radius);
-    font-size: var(--font-size-larger);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-bottom: 10px;
 }
 
 .btn-muted:hover {
@@ -128,33 +123,27 @@ label {
 }
 
 input,
-select {
-    width: 90%;
+select,
+textarea {
+    width: 100% ;
     padding: var(--padding-narrow);
     font-size: var(--font-size-main);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
     transition: border-color 0.3s ease;
+    margin-right: var(--margin-main);
     margin-bottom: var(--margin-main);
-}
-
-input:focus,
-select:focus {
-    border-color: var(--color-primary);
-    outline: none;
-    background-color: white;
 }
 
 textarea {
-    width: 90%;
     min-height: 100px;
     max-height: 400px;
-    padding: var(--padding-narrow);
-    font-size: var(--font-size-main);
-    resize: vertical;
-    box-sizing: border-box;
 }
 
-.dropdown-container {
-    margin-bottom: var(--margin-main);
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    background-color: white;
 }
