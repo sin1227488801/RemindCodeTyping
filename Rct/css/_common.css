@@ -117,6 +117,21 @@ h2 {
     background-color: var(--color-muted-hover)
 }
 
+.main {
+    display: flex;
+    width: calc(100% - 10px);
+    box-sizing: border-box;
+}
+
+.main .box-left,
+.main .box-right {
+    width: 50%;
+}
+
+.main .box-full {
+    width: 100%;
+}
+
 label {
     font-weight: bold;
     display: block;
