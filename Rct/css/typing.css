@@ -39,12 +39,8 @@
     padding: var(--padding-narrow) 0;
 }
 
-.rank {
-    width: 150px;
-    text-align: center;
-}
-
+.rank,
 .points {
-    width: 100px;
+    width: 100%;
     text-align: center;
 }
