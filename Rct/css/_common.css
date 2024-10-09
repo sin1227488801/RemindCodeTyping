@@ -132,6 +132,13 @@ h2 {
     width: 100%;
 }
 
+.label-text-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
 label {
     font-weight: bold;
     display: block;
