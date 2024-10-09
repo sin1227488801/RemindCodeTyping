@@ -1,18 +1,51 @@
 @import url('_common.css');
 
-
-
-.toggleButton input {
-    display: none;
-    /* チェックボックスを非表示 */
+.box-color {
+    background-color: var(--color-border);
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px var(--color-product-sub);
+    padding: var(--padding-more-narrow) var(--padding-more-narrow);
+    margin: var(--margin-more-narrow);
 }
 
-.toggleButton span {
+.label-button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* トグルボタンのスタイル */
+.toggleButton {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 30px;
+    background-color: var(--color-text-light);
+    border-radius: 30px;
+    border: none;
     cursor: pointer;
-    /* スタイルを追加 */
+    transition: background-color 0.4s;
+    /* margin-right: 100px; */
 }
 
-.toggleButton input:checked ~ #content {
-    display: block;
-    /* チェックされたときにコンテンツを表示 */
+.toggleButton:before {
+    content: '';
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background-color: white;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.4s;
+}
+
+/* ボタンが「非表示」の時のスタイル */
+.toggleButton.active {
+    background-color: var(--color-primary);
+}
+
+.toggleButton.active:before {
+    transform: translateX(20px);
 }
