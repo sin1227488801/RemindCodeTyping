@@ -18,6 +18,9 @@ function loadPage(page, event) {
         })
         .then(data => {
             document.getElementById('content-area').innerHTML = data;
+
+            // ここで records.js の関数呼び出し
+            setupToggleButtons();
         })
         .catch(error => console.error('Error:', error));
 }
