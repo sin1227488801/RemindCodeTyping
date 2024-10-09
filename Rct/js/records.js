@@ -8,10 +8,10 @@ function setupToggleButtons() {
             // 表示・非表示をトグル
             if (targetElement.style.display === "none" || targetElement.style.display === "") {
                 targetElement.style.display = "block";
-                this.textContent = "非表示";
+                this.classList.add("active");
             } else {
                 targetElement.style.display = "none";
-                this.textContent = "表示";
+                this.classList.remove("active");
             }
         });
     });
