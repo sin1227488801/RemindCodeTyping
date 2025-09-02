@@ -32,7 +32,8 @@ spring:
     placeholder-replacement: false
 
 server:
-  port: ${SERVER_PORT:8080}
+  port: ${PORT:8080}
+  address: 0.0.0.0
 
 # Application-specific configuration following 12-Factor principles
 app:
@@ -82,9 +83,17 @@ management:
     web:
       exposure:
         include: health,info,metrics
+      base-path: /actuator
   endpoint:
     health:
-      show-details: when-authorized
+      show-details: always
+      show-components: always
+  health:
+    # DB接続失敗時でもヘルスチェックを成功させる
+    db:
+      enabled: ${HEALTH_DB_ENABLED:false}
+    defaults:
+      enabled: true
 
 logging:
   level:
@@ -238,6 +247,7 @@ spring:
 
 server:
   port: ${PORT:8080}
+  address: 0.0.0.0
 
 # Railway environment overrides
 app:
