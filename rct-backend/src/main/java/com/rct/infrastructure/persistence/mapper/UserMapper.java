@@ -22,8 +22,7 @@ public class UserMapper {
       return null;
     }
 
-    UserEntity entity = new UserEntity();
-    entity.setId(user.getId().getValue());
+    UserEntity entity = new UserEntity(user.getId().getValue());
     entity.setLoginId(user.getLoginId().getValue());
     entity.setPasswordHash(user.getPasswordHash().getValue());
     entity.setRole(user.getRole().getCode());
@@ -48,13 +47,12 @@ public class UserMapper {
       return null;
     }
 
-    UserId userId = new UserId(entity.getId());
-    LoginId loginId = new LoginId(entity.getLoginId());
-    PasswordHash passwordHash = new PasswordHash(entity.getPasswordHash());
+    UserId userId = UserId.of(entity.getId());
+    LoginId loginId = LoginId.of(entity.getLoginId());
+    PasswordHash passwordHash = PasswordHash.of(entity.getPasswordHash());
     Role role = Role.fromString(entity.getRole());
 
-    LoginStatistics loginStatistics =
-        new LoginStatistics(
+    LoginStatistics loginStatistics = LoginStatistics.of(
             entity.getLastLoginDate(),
             entity.getConsecutiveLoginDays(),
             entity.getMaxConsecutiveLoginDays(),

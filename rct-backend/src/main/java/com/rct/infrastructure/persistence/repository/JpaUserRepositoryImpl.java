@@ -46,11 +46,12 @@ public class JpaUserRepositoryImpl implements UserRepository {
       entity = jpaRepository.save(entity);
 
       // Create a new User with the generated ID
-      UserId newUserId = new UserId(entity.getId());
+      UserId newUserId = UserId.of(entity.getId());
       return User.reconstruct(
           newUserId,
           user.getLoginId(),
           user.getPasswordHash(),
+          user.getRole(),
           user.getLoginStatistics(),
           entity.getCreatedAt(),
           entity.getUpdatedAt());

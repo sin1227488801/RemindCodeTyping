@@ -115,7 +115,7 @@ public class AuthenticateUserUseCase {
    * @since 1.0.0
    */
   @Transactional
-  public AuthenticationResult execute(AuthenticationCommand command) {
+  public User execute(AuthenticationCommand command) {
     Objects.requireNonNull(command, "Authentication command cannot be null");
 
     log.debug("Attempting to authenticate user: {}", command.getLoginId());
@@ -128,12 +128,12 @@ public class AuthenticateUserUseCase {
                 () -> {
                   log.warn("Authentication failed: User not found for loginId: {}", loginId);
                   return new AuthenticationException(
-                      ErrorCode.INVALID_CREDENTIALS, "Invalid login credentials");
+                      ErrorCode.INVALID_CREDENTIALS.getCode(), "Invalid login credentials");
                 });
 
-    if (!passwordService.matches(command.getPassword(), user.getPasswordHash().getValue())) {
+    if (!passwordService.matches(command.getPassword(), user.getPasswordHash())) {
       log.warn("Authentication failed: Invalid password for user: {}", loginId);
-      throw new AuthenticationException(ErrorCode.INVALID_CREDENTIALS, "Invalid login credentials");
+      throw new AuthenticationException(ErrorCode.INVALID_CREDENTIALS.getCode(), "Invalid login credentials");
     }
 
     // Update login statistics
@@ -153,12 +153,7 @@ public class AuthenticateUserUseCase {
 
     log.info("User authenticated successfully: {}", loginId);
 
-    return AuthenticationResult.success(
-        updatedUser.getId(),
-        updatedUser.getLoginId().getValue(),
-        updatedUser.getRole().getCode(),
-        accessToken,
-        refreshToken);
+    return updatedUser;
   }
 
   /**

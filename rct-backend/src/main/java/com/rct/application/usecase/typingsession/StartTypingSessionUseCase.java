@@ -64,7 +64,7 @@ public class StartTypingSessionUseCase {
       UserId userId = UserId.of(command.getUserId());
       LocalDateTime startedAt = LocalDateTime.now();
 
-      TypingSession typingSession = TypingSession.start(sessionId, userId, studyBookId, startedAt);
+      TypingSession typingSession = TypingSession.start(sessionId, userId, studyBookId);
       TypingSession savedSession = typingSessionRepository.save(typingSession);
 
       log.info("Typing session started successfully: {}", sessionId);

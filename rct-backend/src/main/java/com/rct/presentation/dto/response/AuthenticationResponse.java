@@ -13,6 +13,14 @@ public class AuthenticationResponse {
 
   private UUID userId;
   private String loginId;
-  private String token;
+  private String accessToken;
+  private String refreshToken;
+  private Long expiresIn;
+  private String tokenType;
   private boolean isGuest;
+
+  // Backward compatibility
+  public String getToken() {
+    return accessToken;
+  }
 }

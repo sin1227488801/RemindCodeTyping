@@ -54,6 +54,11 @@ public class TypingSessionEntity {
   // Default constructor for JPA
   protected TypingSessionEntity() {}
 
+  // Public default constructor for mappers
+  public TypingSessionEntity(UUID id) {
+    this.id = id;
+  }
+
   // Constructor for creating new entities
   public TypingSessionEntity(
       UUID userId,

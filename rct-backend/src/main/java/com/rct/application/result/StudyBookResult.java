@@ -21,8 +21,8 @@ public class StudyBookResult {
     return new StudyBookResult(
         studyBook.getId().getValue(),
         studyBook.getLanguage().getValue(),
-        studyBook.getQuestion().getValue(),
-        studyBook.getExplanation() != null ? studyBook.getExplanation().getValue() : null,
+        studyBook.getQuestion().getContent(),
+        studyBook.getExplanation() != null ? studyBook.getExplanation().getContent() : null,
         studyBook.getCreatedAt(),
         studyBook.getUpdatedAt());
   }

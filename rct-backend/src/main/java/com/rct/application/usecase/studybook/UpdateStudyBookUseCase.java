@@ -70,7 +70,7 @@ public class UpdateStudyBookUseCase {
           command.getExplanation() != null ? Explanation.of(command.getExplanation()) : null;
 
       // Update study book
-      StudyBook updatedStudyBook = existingStudyBook.update(language, question, explanation);
+      StudyBook updatedStudyBook = existingStudyBook.updateContent(question, explanation);
       StudyBook savedStudyBook = studyBookRepository.save(updatedStudyBook);
 
       log.info("Study book updated successfully: {}", studyBookId);

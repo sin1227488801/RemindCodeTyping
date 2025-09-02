@@ -47,32 +47,49 @@ public class TypingSessionApplicationService {
     StudyBookId studyBookId = StudyBookId.of(command.getStudyBookId());
     Duration duration = Duration.ofMilliseconds(command.getDurationMs());
 
-    // Calculate accuracy
-    double accuracy =
-        command.getTotalChars() > 0
-            ? (double) command.getCorrectChars() / command.getTotalChars() * 100.0
-            : 0.0;
+    // Start a new typing session first
+    var startCommand = new StartTypingSessionUseCase.StartTypingSessionCommand(
+        command.getUserId(),
+        command.getStudyBookId()
+    );
+    
+    var sessionResult = startTypingSessionUseCase.execute(startCommand);
+    
+    if (!sessionResult.isSuccess()) {
+      throw new RuntimeException(sessionResult.getErrorMessage());
+    }
 
-    TypingResult typingResult =
-        TypingResult.create(command.getTotalChars(), command.getCorrectChars(), accuracy, duration);
+    // Now record the result for the created session
+    // For simplicity, we'll calculate the typed text based on accuracy
+    String typedText = generateTypedTextFromAccuracy(command.getTotalChars(), command.getCorrectChars());
+    
+    var recordCommand = new RecordTypingResultUseCase.RecordTypingResultCommand(
+        sessionResult.getTypingSession().getId().getValue(),
+        command.getUserId(),
+        typedText
+    );
 
-    // Create use case command - we need to create a session first or modify the use case
-    // For now, let's create a simplified approach
-    var useCaseCommand =
-        new RecordTypingResultUseCase.RecordTypingResultCommand(
-            UUID.randomUUID(), // Session ID - in a real implementation, this would come from
-            // starting a session
-            command.getUserId(),
-            "typed_text" // This would be the actual typed text in a real implementation
-            );
-
-    var result = recordTypingResultUseCase.execute(useCaseCommand);
+    var result = recordTypingResultUseCase.execute(recordCommand);
 
     if (!result.isSuccess()) {
       throw new RuntimeException(result.getErrorMessage());
     }
 
     log.info("Typing result recorded successfully for user: {}", command.getUserId());
+  }
+  
+  private String generateTypedTextFromAccuracy(int totalChars, int correctChars) {
+    // This is a simplified implementation for demo purposes
+    // In a real application, the typed text would come from the frontend
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < totalChars; i++) {
+      if (i < correctChars) {
+        sb.append('a'); // Correct character
+      } else {
+        sb.append('x'); // Incorrect character
+      }
+    }
+    return sb.toString();
   }
 
   /**
@@ -99,15 +116,15 @@ public class TypingSessionApplicationService {
 
     // Convert use case result to application result
     var statistics = useCaseResult.getStatistics();
-
     return new TypingStatisticsResult(
-        statistics.getTotalAttempts(),
-        statistics.getAverageAccuracy(),
-        statistics.getBestAccuracy(),
-        statistics.getTotalCharsTyped(),
-        statistics.getTotalTimeMs(),
-        statistics.getCurrentLoginStreak(),
-        statistics.getMaxLoginStreak(),
-        statistics.getTotalLoginDays());
+        (long) statistics.getTotalSessions(),
+        java.math.BigDecimal.valueOf(statistics.getAverageAccuracy()),
+        java.math.BigDecimal.valueOf(statistics.getMaxAccuracy()),
+        statistics.getTotalCharacters(),
+        0L, // Total time - would need to be calculated from sessions
+        0, // Current login streak - would need user login data
+        0, // Max login streak - would need user login data
+        0 // Total login days - would need user login data
+    );
   }
 }

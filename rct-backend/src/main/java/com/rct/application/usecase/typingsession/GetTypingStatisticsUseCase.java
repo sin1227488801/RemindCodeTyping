@@ -45,9 +45,19 @@ public class GetTypingStatisticsUseCase {
 
     try {
       UserId userId = UserId.of(query.getUserId());
-      List<TypingSession> sessions =
-          typingSessionRepository.findCompletedSessionsByUserAndDateRange(
-              userId, query.getFromDate(), query.getToDate());
+      List<TypingSession> sessions;
+      
+      if (query.getFromDate() != null && query.getToDate() != null) {
+        sessions = typingSessionRepository.findByUserIdAndDateRange(
+            userId, query.getFromDate(), query.getToDate());
+      } else {
+        sessions = typingSessionRepository.findByUserId(userId);
+      }
+      
+      // Filter only completed sessions
+      sessions = sessions.stream()
+          .filter(session -> session.getResult() != null)
+          .toList();
 
       TypingStatistics statistics = calculateStatistics(sessions);
 
@@ -70,18 +80,18 @@ public class GetTypingStatisticsUseCase {
 
     int totalSessions = sessions.size();
     double totalAccuracy =
-        sessions.stream().mapToDouble(session -> session.getResult().getAccuracy()).sum();
+        sessions.stream().mapToDouble(session -> session.getResult().getAccuracy().doubleValue()).sum();
     double averageAccuracy = totalAccuracy / totalSessions;
 
     double maxAccuracy =
         sessions.stream()
-            .mapToDouble(session -> session.getResult().getAccuracy())
+            .mapToDouble(session -> session.getResult().getAccuracy().doubleValue())
             .max()
             .orElse(0.0);
 
     double minAccuracy =
         sessions.stream()
-            .mapToDouble(session -> session.getResult().getAccuracy())
+            .mapToDouble(session -> session.getResult().getAccuracy().doubleValue())
             .min()
             .orElse(0.0);
 

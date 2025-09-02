@@ -44,7 +44,7 @@ public class JpaTypingSessionRepositoryImpl implements TypingSessionRepository {
       entity = jpaRepository.save(entity);
 
       // Create a new TypingSession with the generated ID
-      TypingSessionId newSessionId = new TypingSessionId(entity.getId());
+      TypingSessionId newSessionId = TypingSessionId.of(entity.getId());
       return TypingSession.reconstruct(
           newSessionId,
           session.getUserId(),

@@ -26,8 +26,11 @@ public class AuthenticationDtoMapper {
   public AuthenticationResponse toAuthenticationResponse(AuthenticationResult result) {
     return new AuthenticationResponse(
         result.getUserId().getValue(),
-        result.getLoginId().getValue(),
-        result.getToken(),
+        result.getLoginId(),
+        result.getAccessToken(),
+        result.getRefreshToken(),
+        3600L, // Default expiration time
+        "Bearer",
         result.isGuest());
   }
 }

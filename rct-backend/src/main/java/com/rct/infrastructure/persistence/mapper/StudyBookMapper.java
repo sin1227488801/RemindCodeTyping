@@ -23,8 +23,7 @@ public class StudyBookMapper {
       return null;
     }
 
-    StudyBookEntity entity = new StudyBookEntity();
-    entity.setId(studyBook.getId().getValue());
+    StudyBookEntity entity = new StudyBookEntity(studyBook.getId().getValue());
     entity.setUserId(studyBook.getUserId() != null ? studyBook.getUserId().getValue() : null);
     entity.setLanguage(studyBook.getLanguage().getValue());
     entity.setQuestion(studyBook.getQuestion().getContent());
@@ -49,12 +48,12 @@ public class StudyBookMapper {
       return null;
     }
 
-    StudyBookId studyBookId = new StudyBookId(entity.getId());
-    UserId userId = entity.getUserId() != null ? new UserId(entity.getUserId()) : null;
-    Language language = new Language(entity.getLanguage());
-    Question question = new Question(entity.getQuestion());
+    StudyBookId studyBookId = StudyBookId.of(entity.getId());
+    UserId userId = entity.getUserId() != null ? UserId.of(entity.getUserId()) : null;
+    Language language = Language.of(entity.getLanguage());
+    Question question = Question.of(entity.getQuestion());
     Explanation explanation =
-        entity.getExplanation() != null ? new Explanation(entity.getExplanation()) : null;
+        entity.getExplanation() != null ? Explanation.of(entity.getExplanation()) : null;
 
     return StudyBook.reconstruct(
         studyBookId,

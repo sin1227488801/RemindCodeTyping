@@ -10,6 +10,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -50,13 +51,15 @@ public class GetStudyBooksUseCase {
       UserId userId = UserId.of(query.getUserId());
       Pageable pageable = createPageable(query);
 
-      Page<StudyBook> studyBooks;
+      List<StudyBook> studyBooksList;
       if (query.getLanguage() != null && !query.getLanguage().trim().isEmpty()) {
-        Language language = Language.of(query.getLanguage());
-        studyBooks = studyBookRepository.findByUserIdAndLanguage(userId, language, pageable);
+        studyBooksList = studyBookRepository.findByUserIdAndLanguage(userId, query.getLanguage());
       } else {
-        studyBooks = studyBookRepository.findByUserId(userId, pageable);
+        studyBooksList = studyBookRepository.findByUserId(userId);
       }
+      
+      // Convert List to Page for compatibility
+      Page<StudyBook> studyBooks = new PageImpl<>(studyBooksList, pageable, studyBooksList.size());
 
       log.debug("Found {} study books for user: {}", studyBooks.getTotalElements(), userId);
 
@@ -84,9 +87,8 @@ public class GetStudyBooksUseCase {
         query.getLimit());
 
     try {
-      Language language = Language.of(query.getLanguage());
       List<StudyBook> studyBooks =
-          studyBookRepository.findRandomByLanguage(language, query.getLimit());
+          studyBookRepository.findRandomByLanguage(query.getLanguage(), query.getLimit());
 
       log.debug("Found {} random study books for language: {}", studyBooks.size(), language);
 

@@ -43,16 +43,16 @@ public class AuthenticationApplicationService {
         new AuthenticateUserUseCase.AuthenticationCommand(
             command.getLoginId(), command.getPassword());
 
-    var useCaseResult = authenticateUserUseCase.execute(useCaseCommand);
-
-    if (!useCaseResult.isSuccess()) {
-      throw new RuntimeException(useCaseResult.getErrorMessage());
-    }
-
-    User user = useCaseResult.getUser();
+    User user = authenticateUserUseCase.execute(useCaseCommand);
     String token = jwtTokenService.generateToken(user);
+    String refreshToken = jwtTokenService.generateRefreshToken(user);
 
-    return AuthenticationResult.success(user.getId(), user.getLoginId(), token);
+    return AuthenticationResult.success(
+        user.getId(), 
+        user.getLoginId().getValue(), 
+        user.getRole().getCode(),
+        token,
+        refreshToken);
   }
 
   /**
@@ -67,16 +67,22 @@ public class AuthenticationApplicationService {
     var useCaseCommand =
         new RegisterUserUseCase.RegistrationCommand(command.getLoginId(), command.getPassword());
 
-    var useCaseResult = registerUserUseCase.execute(useCaseCommand);
-
-    if (!useCaseResult.isSuccess()) {
-      throw new RuntimeException(useCaseResult.getErrorMessage());
+    var registrationResult = registerUserUseCase.execute(useCaseCommand);
+    
+    if (!registrationResult.isSuccess()) {
+      throw new RuntimeException(registrationResult.getErrorMessage());
     }
-
-    User user = useCaseResult.getUser();
+    
+    User user = registrationResult.getUser();
     String token = jwtTokenService.generateToken(user);
+    String refreshToken = jwtTokenService.generateRefreshToken(user);
 
-    return AuthenticationResult.success(user.getId(), user.getLoginId(), token);
+    return AuthenticationResult.success(
+        user.getId(), 
+        user.getLoginId().getValue(), 
+        user.getRole().getCode(),
+        token,
+        refreshToken);
   }
 
   /**
@@ -94,6 +100,6 @@ public class AuthenticationApplicationService {
     // Generate a token for the guest session
     String token = jwtTokenService.generateGuestToken(guestUserId, guestLoginId);
 
-    return AuthenticationResult.guestSession(guestUserId, guestLoginId, token);
+    return AuthenticationResult.guestSession(guestUserId, guestLoginId.getValue(), token);
   }
 }

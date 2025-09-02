@@ -51,6 +51,11 @@ public class UserEntity {
   // Default constructor for JPA
   protected UserEntity() {}
 
+  // Public default constructor for mappers
+  public UserEntity(UUID id) {
+    this.id = id;
+  }
+
   // Constructor for creating new entities
   public UserEntity(
       String loginId,

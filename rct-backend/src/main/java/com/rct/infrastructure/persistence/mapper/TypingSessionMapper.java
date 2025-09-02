@@ -25,8 +25,7 @@ public class TypingSessionMapper {
       return null;
     }
 
-    TypingSessionEntity entity = new TypingSessionEntity();
-    entity.setId(typingSession.getId().getValue());
+    TypingSessionEntity entity = new TypingSessionEntity(typingSession.getId().getValue());
     entity.setUserId(typingSession.getUserId().getValue());
     entity.setStudyBookId(typingSession.getStudyBookId().getValue());
     entity.setStartedAt(typingSession.getStartedAt());
@@ -38,7 +37,7 @@ public class TypingSessionMapper {
       entity.setDurationMs(result.getDuration().getMilliseconds());
       entity.setTotalCharacters(result.getTotalCharacters());
       entity.setCorrectCharacters(result.getCorrectCharacters());
-      entity.setAccuracy(BigDecimal.valueOf(result.getAccuracy()));
+      entity.setAccuracy(result.getAccuracy());
     }
 
     return entity;
@@ -55,9 +54,9 @@ public class TypingSessionMapper {
       return null;
     }
 
-    TypingSessionId sessionId = new TypingSessionId(entity.getId());
-    UserId userId = new UserId(entity.getUserId());
-    StudyBookId studyBookId = new StudyBookId(entity.getStudyBookId());
+    TypingSessionId sessionId = TypingSessionId.of(entity.getId());
+    UserId userId = UserId.of(entity.getUserId());
+    StudyBookId studyBookId = StudyBookId.of(entity.getStudyBookId());
 
     TypingResult result = null;
     if (entity.getCompletedAt() != null
@@ -66,12 +65,10 @@ public class TypingSessionMapper {
         && entity.getCorrectCharacters() != null
         && entity.getAccuracy() != null) {
 
-      Duration duration = new Duration(entity.getDurationMs());
-      result =
-          new TypingResult(
+      Duration duration = Duration.of(entity.getDurationMs());
+      result = TypingResult.create(
               entity.getTotalCharacters(),
               entity.getCorrectCharacters(),
-              entity.getAccuracy().doubleValue(),
               duration);
     }
 
@@ -106,7 +103,7 @@ public class TypingSessionMapper {
       durationMs = result.getDuration().getMilliseconds();
       totalCharacters = result.getTotalCharacters();
       correctCharacters = result.getCorrectCharacters();
-      accuracy = BigDecimal.valueOf(result.getAccuracy());
+      accuracy = result.getAccuracy();
     }
 
     return new TypingSessionEntity(
@@ -141,7 +138,7 @@ public class TypingSessionMapper {
       entity.setDurationMs(result.getDuration().getMilliseconds());
       entity.setTotalCharacters(result.getTotalCharacters());
       entity.setCorrectCharacters(result.getCorrectCharacters());
-      entity.setAccuracy(BigDecimal.valueOf(result.getAccuracy()));
+      entity.setAccuracy(result.getAccuracy());
     }
   }
 }

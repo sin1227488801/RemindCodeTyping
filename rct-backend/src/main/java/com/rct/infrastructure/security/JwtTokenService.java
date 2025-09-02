@@ -122,11 +122,12 @@ public class JwtTokenService {
     try {
       Claims claims =
           Jwts.parser()
-              .setSigningKey(signingKey)
+              .verifyWith(signingKey)
               .requireIssuer(jwtProperties.issuer())
               .requireAudience(jwtProperties.audience())
-              .parseClaimsJws(token)
-              .getBody();
+              .build()
+              .parseSignedClaims(token)
+              .getPayload();
 
       return Optional.of(new TokenClaims(claims));
     } catch (JwtException e) {

@@ -52,6 +52,11 @@ public class StudyBookEntity {
   // Default constructor for JPA
   protected StudyBookEntity() {}
 
+  // Public default constructor for mappers
+  public StudyBookEntity(UUID id) {
+    this.id = id;
+  }
+
   // Constructor for creating new entities
   public StudyBookEntity(
       UUID userId,
@@ -110,6 +115,10 @@ public class StudyBookEntity {
   }
 
   public Boolean getIsSystemProblem() {
+    return isSystemProblem;
+  }
+
+  public Boolean isSystemProblem() {
     return isSystemProblem;
   }
 

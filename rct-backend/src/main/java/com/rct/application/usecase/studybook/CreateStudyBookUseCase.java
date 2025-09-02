@@ -53,7 +53,7 @@ public class CreateStudyBookUseCase {
       // Create study book
       StudyBook studyBook =
           StudyBook.create(
-              studyBookId, userId, language, question, explanation, command.isSystemProblem());
+              studyBookId, userId, language, question, explanation);
 
       StudyBook savedStudyBook = studyBookRepository.save(studyBook);
 

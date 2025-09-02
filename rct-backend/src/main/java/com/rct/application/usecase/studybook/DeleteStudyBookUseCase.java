@@ -66,7 +66,7 @@ public class DeleteStudyBookUseCase {
     }
 
     try {
-      studyBookRepository.delete(studyBookId);
+      studyBookRepository.deleteById(studyBookId);
 
       log.info("Study book deleted successfully: {}", studyBookId);
 

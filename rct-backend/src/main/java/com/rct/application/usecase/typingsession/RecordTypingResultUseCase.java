@@ -75,14 +75,13 @@ public class RecordTypingResultUseCase {
                   });
 
       // Complete the typing session with the result
-      TypingSession completedSession =
-          typingSession.complete(command.getTypedText(), studyBook.getQuestion().getContent());
+      typingSession.complete(command.getTypedText(), studyBook.getQuestion().getContent());
 
-      TypingSession savedSession = typingSessionRepository.save(completedSession);
+      TypingSession savedSession = typingSessionRepository.save(typingSession);
 
       log.info(
           "Typing result recorded successfully for session: {} with accuracy: {}%",
-          sessionId, completedSession.getResult().getAccuracy());
+          sessionId, savedSession.getResult().getAccuracy());
 
       return TypingResultRecordingResult.success(savedSession);
     } catch (Exception e) {
