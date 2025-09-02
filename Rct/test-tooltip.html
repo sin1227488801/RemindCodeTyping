@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ツールチップテスト</title>
+    <style>
+        /* data-tooltip属性を使ったツールチップスタイル */
+        .rank-tooltip-trigger {
+            position: relative;
+            cursor: help;
+            border-bottom: 2px dotted #007bff;
+            padding: 2px 4px;
+            border-radius: 2px;
+            transition: background-color 0.2s ease;
+        }
+
+        .rank-tooltip-trigger:hover {
+            background-color: rgba(0, 123, 255, 0.1);
+        }
+
+        /* data-tooltip属性からツールチップを生成 */
+        .rank-tooltip-trigger::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-5px);
+            background-color: rgba(0, 0, 0, 0.95);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            z-index: 99999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            margin-bottom: 8px;
+        }
+
+        /* 矢印 */
+        .rank-tooltip-trigger::after {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(2px);
+            border: 6px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.95);
+            z-index: 99999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        /* ホバー時の表示 */
+        .rank-tooltip-trigger:hover::before,
+        .rank-tooltip-trigger:hover::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* 評価ランクのスタイル */
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            border: 1px solid #e9ecef;
+            background-color: #fafafa;
+            border-radius: 4px;
+            margin: 10px;
+            width: 300px;
+        }
+
+        .rank-highlight {
+            background-color: #e3f2fd;
+            border-left: 4px solid #007bff;
+        }
+
+        .stat-value {
+            cursor: help;
+            border-bottom: 1px dotted #007bff;
+            font-weight: bold;
+            color: #0056b3;
+        }
+
+        .stat-label {
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <h1>ツールチップテスト</h1>
+    
+    <div class="stat rank-highlight">
+        <span class="stat-label">評価ランク</span>
+        <span class="stat-value rank-tooltip-trigger" id="result-rank" data-tooltip="ワープロ検定1級相当！">1級</span>
+    </div>
+
+    <p>上の「1級」の部分にマウスをホバーしてください。ツールチップが表示されるはずです。</p>
+
+    <script>
+        // 動的にツールチップテキストを変更するテスト
+        setTimeout(() => {
+            const rank = document.getElementById('result-rank');
+            
+            rank.textContent = '初段';
+            rank.setAttribute('data-tooltip', 'ワープロ検定初段相当！');
+            
+            console.log('ツールチップテキストを更新しました');
+        }, 3000);
+    </script>
+</body>
+</html>

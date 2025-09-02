@@ -1,18 +1,44 @@
 @import url('_common.css');
 
+/* 学習記録ページ全体の幅制限 */
+.main {
+    max-width: 100% !important;
+    overflow: hidden !important;
+}
+
+.box-left,
+.box-right {
+    width: calc(50% - 5px) !important;
+    max-width: calc(50% - 5px) !important;
+}
+
 .box-color {
     background-color: var(--color-border);
     border-radius: 8px;
     box-shadow: 0px 0px 5px var(--color-product-sub);
-    padding: var(--padding-more-narrow) var(--padding-more-narrow);
-    margin: var(--margin-more-narrow);
+    padding: 5px;
+    margin: var(--margin-more-narrow) 0;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .label-button-container {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     width: 100%;
+    min-height: 40px;
+}
+
+/* トグルコンテンツのスタイル */
+.toggleContent {
+    text-align: left;
+    margin-top: 6px;
+    padding: 4px 8px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    line-height: 1.2;
+    font-size: 12px;
 }
 
 /* トグルボタンのスタイル */
@@ -48,4 +74,95 @@
 
 .toggleButton.active:before {
     transform: translateX(20px);
+}
+
+/* レスポンシブデザイン */
+@media screen and (max-width: 768px) {
+    .main {
+        max-width: 100% !important;
+        overflow: hidden !important;
+    }
+
+    .box-left,
+    .box-right {
+        width: calc(50% - 5px) !important;
+        max-width: calc(50% - 5px) !important;
+        margin: var(--margin-more-narrow) 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .box-color {
+        padding: 8px;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+    }
+
+    .label-button-container {
+        min-height: 40px;
+        align-items: flex-start;
+    }
+
+    .toggleContent {
+        text-align: left;
+        margin-top: 5px;
+        padding: 3px 6px;
+        background-color: rgba(255, 255, 255, 0.4);
+        border-radius: 4px;
+        line-height: 1.2;
+        font-size: 11px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .main {
+        max-width: 100% !important;
+        overflow: hidden !important;
+    }
+
+    .box-left,
+    .box-right {
+        width: calc(50% - 5px) !important;
+        max-width: calc(50% - 5px) !important;
+        margin: var(--margin-more-narrow) 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .box-color {
+        padding: 6px;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+    }
+
+    .label-button-container {
+        min-height: 40px;
+        align-items: flex-start;
+    }
+
+    .label-button-container label {
+        font-size: 0.9rem;
+    }
+
+    .toggleButton {
+        width: 40px;
+        height: 24px;
+    }
+
+    .toggleButton:before {
+        width: 20px;
+        height: 20px;
+    }
+
+    .toggleButton.active:before {
+        transform: translateX(16px);
+    }
+
+    .toggleContent {
+        text-align: left;
+        font-size: 10px;
+        padding: 2px 4px;
+        margin-top: 4px;
+        background-color: rgba(255, 255, 255, 0.4);
+        border-radius: 4px;
+        line-height: 1.1;
+    }
 }

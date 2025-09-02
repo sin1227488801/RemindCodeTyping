@@ -1,20 +1,79 @@
 @import url('_common.css');
 
+/* bodyの高さ制限を解除 */
+body {
+    height: auto !important;
+    min-height: 100vh !important;
+    align-items: flex-start !important;
+}
+
 .login-info {
     display: flex;
     align-items: center;
-    padding: var(--padding-narrow);
-    font-size: var(--font-size-smaller);
+    gap: 15px;
+    padding: 5px 0;
+    font-size: 11px;
     text-align: left;
+    flex-shrink: 0;
+    position: absolute;
+    right: calc(5vw + 15px + 0.25em);
 }
 
 .login-info-text {
-    margin: 0 var(--margin-main);
+    line-height: 1.2;
+    min-width: 100px;
+    font-size: 10px;
+}
+
+/* ログイン情報の表示切り替え - デフォルト */
+.login-text-full {
+    display: block;
+    white-space: nowrap;
+    text-align: left;
+    line-height: 1.2;
+}
+
+.login-text-compact {
+    display: none;
+    white-space: normal;
+    text-align: right;
+    line-height: 1.2;
+    max-width: 150px;
+}
+
+.login-info .btn {
+    width: auto;
+    padding: 6px 12px;
+    font-size: 12px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+    min-width: 70px;
+    white-space: nowrap;
+    text-align: center;
 }
 
 .main-container {
     width: 90vw;
-    height: 90vh;
+    height: auto;
+    min-height: 500px;
+    min-width: 520px;
+}
+
+/* main-containerのレスポンシブ対応 */
+@media (max-width: 800px) {
+    .main-container {
+        width: 95vw;
+        min-width: 320px;
+        min-height: 450px;
+    }
+
+    .login-info {
+        right: calc(2.5vw + 15px + 0.25em);
+    }
+
+    #content-area {
+        min-height: 400px;
+    }
 }
 
 .tab-container {
@@ -32,6 +91,10 @@
     color: white;
     margin-right: var(--margin-more-narrow);
     border-radius: var(--border-radius);
+}
+
+.tab:last-child {
+    margin-right: 0;
 }
 
 .tab.active {
@@ -55,10 +118,300 @@
 }
 
 #content-area {
-    padding: 20px;
+    padding: 15px;
     border: 1px solid #ccc;
     border-radius: 4px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 450px;
+    height: auto;
+    overflow: auto;
+}
+
+/* ヘッダーとbodyレイアウトは固定 */
+/* レスポンシブ対応 - ヘッダーのみ */
+@media (max-width: 700px) {
+    .login-text-full {
+        display: none !important;
+    }
+
+    .login-text-compact {
+        display: block !important;
+        font-size: 10px;
+        line-height: 1.1;
+        text-align: right;
+    }
+
+    .login-info {
+        gap: 10px;
+    }
+
+    .login-info .btn {
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+        min-width: 70px !important;
+        white-space: nowrap !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 1.3rem !important;
+    }
+
+    .header img {
+        height: 42px !important;
+    }
+
+    .login-info .btn {
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+        min-width: 70px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 8px 10px !important;
+        gap: 10px !important;
+    }
+
+    .login-text-compact {
+        font-size: 9px !important;
+    }
+
+    .login-info {
+        gap: 8px;
+    }
+
+    .login-info .btn {
+        padding: 4px 8px !important;
+        font-size: 10px !important;
+        min-width: 60px !important;
+    }
+
+    .header h1 {
+        font-size: 1.1rem !important;
+    }
+
+    .header img {
+        height: 36px !important;
+    }
+}
+
+/* content-area内のmainクラス - 常に横並びを維持 */
+#content-area div.main {
+    flex-direction: row !important;
+    gap: 3px !important;
+    flex-wrap: nowrap !important;
+    width: calc(100% - 60px) !important;
+    max-width: calc(100% - 60px) !important;
+    box-sizing: border-box !important;
+    margin: 0 auto !important;
+}
+
+#content-area div.main div.box-left,
+#content-area div.main div.box-right {
+    width: calc(50% - 30px) !important;
+    flex-shrink: 0 !important;
+    flex-basis: auto !important;
+    max-width: calc(50% - 30px) !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+}
+
+#content-area div.main div.box-right {
+    margin-top: 0 !important;
+}
+
+/* 学習記録ページでのbox-rightの上padding調整 */
+#content-area div.main div.box-right.box-color {
+    margin-top: var(--margin-more-narrow) !important;
+    padding-left: 5px !important;
+    margin-left: 3px !important;
+    width: calc(50% - 30px) !important;
+    max-width: calc(50% - 30px) !important;
+}
+
+/* c
+ontent-areaのレスポンシブ対応 */
+@media (max-width: 768px) {
+    #content-area {
+        padding: 15px !important;
+    }
+
+    .main-container {
+        width: 98vw !important;
+    }
+
+    /* 学習記録ページでのbox-rightの上padding調整 - レスポンシブ */
+    #content-area div.main div.box-right.box-color {
+        margin-top: var(--margin-more-narrow) !important;
+        padding-left: 5px !important;
+        margin-left: 4px !important;
+        width: calc(50% - 35px) !important;
+        max-width: calc(50% - 35px) !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .main-container {
+        min-height: 400px !important;
+    }
+
+    #content-area {
+        padding: 12px !important;
+        min-height: 350px !important;
+    }
+
+    /* ログイン情報のテキスト部分のみ非表示 */
+    .login-info-text {
+        display: none !important;
+    }
+
+    .login-info {
+        right: calc(2.5vw + 10px + 0.25em) !important;
+    }
+
+    /* 学習記録ページでのbox-rightの上padding調整 - 600px以下 */
+    #content-area div.main div.box-right.box-color {
+        margin-top: var(--margin-more-narrow) !important;
+        padding-left: 5px !important;
+        margin-left: 3px !important;
+        width: calc(50% - 40px) !important;
+        max-width: calc(50% - 40px) !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-container {
+        min-height: 350px !important;
+    }
+
+    #content-area {
+        padding: 10px !important;
+        min-height: 300px !important;
+    }
+
+    /* 学習記録ページでのbox-rightの上padding調整 - 480px以下 */
+    #content-area div.main div.box-right.box-color {
+        margin-top: var(--margin-more-narrow) !important;
+        padding-left: 5px !important;
+        margin-left: 2px !important;
+        width: calc(50% - 45px) !important;
+        max-width: calc(50% - 45px) !important;
+    }
+}
+
+/* 特別ランクのツールチップ - より具体的なセレクタで競合を回避 */
+.rank-list .rank-shodan-special,
+.rank-list .rank-1-special,
+.rank-list .rank-2-special {
+    position: relative !important;
+    cursor: pointer !important;
+}
+
+/* 特別ランクのツールチップ生成 - 既存ルールを上書き */
+.rank-list .rank-shodan-special::before,
+.rank-list .rank-1-special::before,
+.rank-list .rank-2-special::before {
+    content: attr(data-tooltip) !important;
+    position: absolute !important;
+    bottom: 100% !important;
+    left: 50% !important;
+    transform: translateX(-50%) translateY(-8px) !important;
+    background-color: rgba(0, 0, 0, 0.95) !important;
+    color: white !important;
+    padding: 10px 14px !important;
+    border-radius: 6px !important;
+    font-size: 14px !important;
+    font-weight: normal !important;
+    white-space: nowrap !important;
+    z-index: 99999 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: all 0.3s ease !important;
+    pointer-events: none !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* 特別ランクのツールチップ矢印 - 既存ルールを上書き */
+.rank-list .rank-shodan-special::after,
+.rank-list .rank-1-special::after,
+.rank-list .rank-2-special::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 100% !important;
+    left: 50% !important;
+    transform: translateX(-50%) translateY(-2px) !important;
+    border: 6px solid transparent !important;
+    border-top-color: rgba(0, 0, 0, 0.95) !important;
+    z-index: 99999 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: all 0.3s ease !important;
+    pointer-events: none !important;
+}
+
+/* 特別ランクのホバー時表示 - 個別に定義して確実に動作させる */
+.rank-list .rank-shodan-special:hover::before {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateX(-50%) translateY(-12px) !important;
+}
+
+.rank-list .rank-shodan-special:hover::after {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateX(-50%) translateY(-12px) !important;
+}
+
+.rank-list .rank-1-special:hover::before {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateX(-50%) translateY(-12px) !important;
+}
+
+.rank-list .rank-1-special:hover::after {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateX(-50%) translateY(-12px) !important;
+}
+
+.rank-list .rank-2-special:hover::before {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateX(-50%) translateY(-12px) !important;
+}
+
+.rank-list .rank-2-special:hover::after {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateX(-50%) translateY(-12px) !important;
+}/* 最優先でツー
+ルチップを表示 - 既存ルールを完全に上書き */
+div.box-right .rank-list li.rank-shodan-special:hover::before,
+div.box-right .rank-list li.rank-1-special:hover::before,
+div.box-right .rank-list li.rank-2-special:hover::before {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateX(-50%) translateY(-12px) !important;
+}
+
+div.box-right .rank-list li.rank-shodan-special:hover::after,
+div.box-right .rank-list li.rank-1-special:hover::after,
+div.box-right .rank-list li.rank-2-special:hover::after {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateX(-50%) translateY(-12px) !important;
+}/*
+ 既存のCSSツールチップを無効化 */
+.rank-shodan-special::before,
+.rank-1-special::before,
+.rank-2-special::before,
+.rank-shodan-special::after,
+.rank-1-special::after,
+.rank-2-special::after {
+    display: none !important;
 }

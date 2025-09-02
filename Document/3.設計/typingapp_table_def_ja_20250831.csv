@@ -1,0 +1,42 @@
+﻿テーブルID,T001
+テーブル名(和名),ログイン情報
+テーブル名(物理名),login_info
+
+No,項目名(和名),項目名(物理名),PK,FK,Index,データ型,桁数,小数点桁数,必須,コードID,項目説明
+1,ID,id,〇,,〇,UUID,,,〇,,主キー。UUIDv4。
+2,ログインID,login_id,,,〇（UNIQUE）,VARCHAR,64,,〇,,正規表現 ^[A-Za-z0-9._-]{4,32}$（将来拡張可）
+3,パスワードハッシュ,password_hash,,,,VARCHAR,255,,〇,,BCrypt 等でハッシュ化して保存。プレーンテキスト不可。
+4,最終ログイン日時,last_login_date,,,,TIMESTAMPTZ,,,,,UTC で保存。
+5,最終連続ログイン日数,last_login_days,,,,INT,,,,,更新ロジック：前日＝+1／それ以外＝1に初期化。
+6,最高連続ログイン日数,max_login_days,,,,INT,,,,,連続日数が更新された場合に上書き。
+7,累計ログイン日数,total_login_days,,,,INT,,,,,初期値1、以降ログイン毎に+1。
+8,作成日時,created_at,,,,TIMESTAMPTZ,,,〇,,レコード作成日時（UTC）。
+9,更新日時,updated_at,,,,TIMESTAMPTZ,,,〇,,レコード更新日時（UTC）。
+
+テーブルID,T002
+テーブル名(和名),学習帳
+テーブル名(物理名),study_book
+
+No,項目名(和名),項目名(物理名),PK,FK,Index,データ型,桁数,小数点桁数,必須,コードID,項目説明
+1,ID,id,〇,,〇,UUID,,,〇,,主キー。UUIDv4。
+2,ユーザーID,user_id,,〇（login_info.id）,〇,UUID,,,〇,,作成者。外部キー。
+3,言語,language,,,〇,VARCHAR,50,,,,例：Java, JavaScript, Python, SQL など。将来はコード管理可。
+4,問題文,question,,,,TEXT,,,〇,,最大2000文字推奨。
+5,解説,explanation,,,,TEXT,,,,,最大5000文字推奨。
+6,作成日時,created_at,,,,TIMESTAMPTZ,,,〇,,UTC。
+7,更新日時,updated_at,,,,TIMESTAMPTZ,,,〇,,UTC。
+
+テーブルID,T003
+テーブル名(和名),タイピング結果
+テーブル名(物理名),typing_log
+
+No,項目名(和名),項目名(物理名),PK,FK,Index,データ型,桁数,小数点桁数,必須,コードID,項目説明
+1,ID,id,〇,,〇,UUID,,,〇,,主キー。UUIDv4。
+2,ユーザーID,user_id,,〇（login_info.id）,〇,UUID,,,〇,,外部キー。
+3,学習帳ID,study_book_id,,〇（study_book.id）,〇,UUID,,,,,ON DELETE SET NULL（過去ログ保全）。
+4,開始日時,started_at,,,,TIMESTAMPTZ,,,,,UTC。
+5,所要時間(ms),duration_ms,,,,INT,,,,,0以上。
+6,総タイプ数,total_chars,,,,INT,,,,,0以上。
+7,正タイプ数,correct_chars,,,,INT,,,,,0以上。
+8,正答率(%),accuracy,,,,NUMERIC,5,2,,,0.00〜100.00。
+9,作成日時,created_at,,,,TIMESTAMPTZ,,,〇,,UTC。

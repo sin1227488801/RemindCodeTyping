@@ -1,0 +1,85 @@
+あなたは熟練の Java/Spring エンジニアです。目的は「完成済みフロント（React想定）を一切変更せず、最小のバックエンド＋DBを最速で用意し、ドキュメントを充実させる」ことです。
+クラウドは **Azure** を第一ターゲット（将来 AWS へ移設可能）とし、ローカル→Azure へ段階的に移行できる構成を作ってください。
+
+# 0. 前提
+- フロントは既存（ログイン/デモプレイ/学習帳/成績閲覧）。フロント改変は不可。
+- まずローカル即時起動（DBは H2 または SQLite）、次に Azure で動かす（App Service + Azure Database for PostgreSQL Flexible Server）。
+- 学習・共同開発に適したシンプルさ（モノリス、マイグレーション自動、OpenAPI、自動シード、CORS 設定）。
+- 将来 AWS へ移す際は、RDS for PostgreSQL と App Runner/ECS/Fargate に置換できる前提で実装。
+
+# 1. 技術スタック
+- Java 17 / Spring Boot 3（spring-boot-starter-web, validation, data-jpa）
+- DB: dev=H2(または SQLite)、prod=PostgreSQL（Azure Database for PostgreSQL Flexible Server）
+- Migration: Flyway（V1__init.sql + デモ用 Seed スクリプト）
+- Docs: springdoc-openapi + Swagger UI（/swagger-ui.html）
+- Build: Gradle もしくは Maven（どちらでも良いが、選定理由を README に明記）
+- Observability: Spring Boot Actuator、有効なら Application Insights SDK（任意）
+- Docker（任意）: docker-compose（app + postgres）を生成
+
+# 2. エンティティ / スキーマ（最小）
+- login_info(id UUID, login_id unique, password_hash, last_login_date, last_login_days, max_login_days, total_login_days, created_at, updated_at)
+- study_book(id UUID, user_id FK -> login_info, language, question, explanation, created_at, updated_at)
+- typing_log(id UUID, user_id FK, study_book_id FK, started_at, duration_ms, total_chars, correct_chars, accuracy DECIMAL(5,2), created_at)
+
+Flyway で上記を作成し、デモ用ユーザー/学習帳/ログを数件シード。login_id/password の最小バリデーション（英大小/数字/記号を含む8文字以上）を実装。
+
+# 3. API（JSON, REST）
+## Auth / Demo
+- POST /auth/register {login_id, password} -> 201
+- POST /auth/login {login_id, password} -> 200 {token or session}
+- POST /auth/demo -> 200 {userId or token} // デモプレイ用（未ログインでも出題可）
+
+## StudyBook
+- GET /studybooks?language=&query=&page=&size=
+- POST /studybooks {language, question, explanation}
+- PUT /studybooks/{id}
+- DELETE /studybooks/{id}
+- GET /studybooks/random?language=&limit=10  // ランダム出題
+
+## Typing
+- POST /typing/logs {study_book_id, duration_ms, total_chars, correct_chars}
+- GET /stats/summary  // 正答率/累計/連続ログイン
+
+# 4. 実装ポリシー
+- パッケージ: controller / service / repository / entity / dto / config
+- DTO + Bean Validation（@NotBlank, @Size ほか）
+- @Transactional の境界を service に集約
+- Repository: Spring Data JPA（PostgreSQL 前提の方言に依存しない記述）
+- CORS: http://localhost:3000 などを環境変数で許可（SPRING_CORS_ORIGINS）
+- エラーハンドリング: @ControllerAdvice（400/401/404/409/500 を統一）
+- 認証: 初期は簡易（ゲスト/開発 JWT）。本番 JWT へ移行しやすい設計。
+
+# 5. Azure へのデプロイ想定（README へ記述）
+- 前提: Azure サブスクリプション、CLI ログイン済み（`az login`）
+- App Service（Linux, Java 17） + Azure Database for PostgreSQL Flexible Server を前提に、以下を提示：
+  - リソースグループ/リージョン作成例
+  - PostgreSQL（フレキシブルサーバー）作成、VNet/Firewall 設定例
+  - Web App 作成、アプリ設定（SPRING_DATASOURCE_URL/USERNAME/PASSWORD, SPRING_CORS_ORIGINS 等）
+  - デプロイ方法（GitHub Actions or `az webapp deploy`）
+- 可能なら Application Insights のセットアップ例（任意）
+- 将来 AWS へ移す際の差し替えポイント（DB 接続文字列、ホスティング先のみ）を README に明示。
+
+# 6. ドキュメント/開発体験（必須）
+- README.md（3分クイックスタート）に以下を記載：
+  - 前提ツール（Java 17, Gradle/Maven）
+  - ローカル起動（dev DB=H2）コマンド
+  - Docker Compose 起動例（任意）
+  - Flyway 自動実行と Seed の説明
+  - OpenAPI UI の URL
+  - .env.example（DB_URL, CORS_ORIGINS など）
+  - Azure への手動デプロイ最小コマンド例（`az group create` → `az postgres flexible-server create` → `az webapp up` 等）
+- OpenAPI 3.0（YAML/JSON）を出力
+- Postman コレクション（任意）を同梱
+
+# 7. Definition of Done（受け入れ条件）
+- `./gradlew bootRun` または `mvn spring-boot:run` で即時起動（H2）
+- 初回起動で Flyway がテーブル作成＋デモデータ投入
+- CORS 設定でフロントからのアクセスが許可される
+- /studybooks/random と /typing/logs で往復確認できる
+- README に従って新規参加者が 30 分以内に環境再現できる
+- Azure 用の手順で App Service + PostgreSQL にデプロイして動作確認できる
+
+# 8. 追加出力
+- 主要コード断片（controller/service/repository/entity/dto/config）と、変更ファイル一覧
+- README 抜粋（Quick Start / Azure Deploy 節）
+- OpenAPI スキーマ（YAML）

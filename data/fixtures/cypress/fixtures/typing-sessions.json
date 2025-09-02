@@ -1,0 +1,113 @@
+{
+  "activeSession": {
+    "id": "session-123",
+    "userId": "user-123",
+    "studyBookId": "1",
+    "studyBook": {
+      "id": "1",
+      "language": "javascript",
+      "question": "console.log(\"Hello World\");",
+      "explanation": "Basic console logging"
+    },
+    "startTime": "2024-01-01T10:00:00Z",
+    "status": "active",
+    "settings": {
+      "strictMode": false,
+      "showHints": true,
+      "timeLimit": 300
+    }
+  },
+  "completedSession": {
+    "id": "session-124",
+    "userId": "user-123",
+    "studyBookId": "1",
+    "startTime": "2024-01-01T10:00:00Z",
+    "endTime": "2024-01-01T10:02:30Z",
+    "status": "completed",
+    "result": {
+      "accuracy": 95.5,
+      "wpm": 65,
+      "duration": 150000,
+      "totalCharacters": 26,
+      "correctCharacters": 25,
+      "errors": 1
+    }
+  },
+  "typingResult": {
+    "accuracy": 100,
+    "wpm": 72,
+    "duration": 120000,
+    "totalCharacters": 26,
+    "correctCharacters": 26,
+    "errors": 0,
+    "completedAt": "2024-01-01T10:02:00Z"
+  },
+  "statistics": {
+    "totalSessions": 50,
+    "averageAccuracy": 92.5,
+    "averageWpm": 65,
+    "totalTime": 180000,
+    "bestAccuracy": 100,
+    "bestWpm": 85,
+    "sessionsThisWeek": 7,
+    "improvementRate": 5.2
+  },
+  "sessionHistory": [
+    {
+      "id": "session-120",
+      "date": "2024-01-01",
+      "language": "javascript",
+      "accuracy": 95.5,
+      "wpm": 65,
+      "duration": 150
+    },
+    {
+      "id": "session-121",
+      "date": "2024-01-02",
+      "language": "python",
+      "accuracy": 88.2,
+      "wpm": 58,
+      "duration": 180
+    },
+    {
+      "id": "session-122",
+      "date": "2024-01-03",
+      "language": "javascript",
+      "accuracy": 97.1,
+      "wpm": 70,
+      "duration": 135
+    }
+  ],
+  "validationResult": {
+    "isValid": true,
+    "errors": [],
+    "correctChars": 15,
+    "totalChars": 15,
+    "progress": 57.7
+  },
+  "validationError": {
+    "isValid": false,
+    "errors": [
+      "Character mismatch at position 8: expected 'l' but got 'x'"
+    ],
+    "correctChars": 7,
+    "totalChars": 8,
+    "progress": 30.8
+  },
+  "settings": {
+    "default": {
+      "language": "javascript",
+      "difficulty": 1,
+      "sessionDuration": 5,
+      "showHints": false,
+      "strictMode": false
+    },
+    "advanced": {
+      "language": "python",
+      "difficulty": 3,
+      "sessionDuration": 15,
+      "showHints": true,
+      "strictMode": true
+    }
+  }
+}

@@ -16,10 +16,7 @@
                 <label for="language-select">言語:</label>
                 <input list="languages" id="language-select" name="language-select" placeholder="選択または入力">
                 <datalist id="languages">
-                    <option value="Python">Python</option>
-                    <option value="C#">C#</option>
-                    <option value="Java">Java</option>
-                    <option value="JavaScript">JavaScript</option>
+                    <!-- 言語オプションは動的に読み込まれます -->
                 </datalist>
             </div>
         </div>
@@ -28,17 +25,13 @@
         <div class="box-full">
             <label>問題</label>
             <!-- 長文入力 -->
-            <textarea placeholder="ここに問題文を入力してください"></textarea>
+            <textarea placeholder="ここに問題文を入力してください" rows="6" cols="80"></textarea>
         </div>
     </div>
     <div class="main">
-        <div class="box-left">
-            <label>回答</label>
-            <textarea placeholder="ここに回答を入力してください"></textarea>
-        </div>
-        <div class="box-right">
+        <div class="box-full">
             <label>解説</label>
-            <textarea placeholder="ここに解説を入力してください"></textarea>
+            <textarea placeholder="ここに解説を入力してください" rows="4" cols="80"></textarea>
         </div>
     </div>
     <button class="btn">新規登録</button>

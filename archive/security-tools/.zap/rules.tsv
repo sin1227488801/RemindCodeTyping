@@ -1,0 +1,176 @@
+# ZAP Security Scanning Rules Configuration
+# Format: RULE_ID	THRESHOLD	[IGNORE|WARN|FAIL]	[URL_REGEX]
+
+# Ignore rules for development/testing endpoints
+10021	IGNORE	.*/actuator/.*
+10021	IGNORE	.*/swagger-ui/.*
+10021	IGNORE	.*/api-docs/.*
+
+# Content Security Policy
+10038	WARN
+
+# X-Frame-Options Header
+10020	FAIL
+
+# X-Content-Type-Options Header
+10021	FAIL
+
+# Strict-Transport-Security Header
+10035	WARN
+
+# Information Disclosure
+10024	WARN
+
+# Cookie Security
+10054	FAIL
+10055	FAIL
+
+# SQL Injection
+40018	FAIL
+
+# Cross Site Scripting
+40012	FAIL
+40014	FAIL
+40016	FAIL
+40017	FAIL
+
+# Path Traversal
+6	FAIL
+
+# Remote File Inclusion
+7	FAIL
+
+# Server Side Include
+40009	WARN
+
+# Cross Site Request Forgery
+10202	FAIL
+
+# Insecure HTTP Methods
+90028	WARN
+
+# Application Error Disclosure
+90022	WARN
+
+# Timestamp Disclosure
+10096	IGNORE
+
+# Hash Disclosure
+10097	IGNORE
+
+# Credit Card Number Disclosure
+10062	FAIL
+
+# Email Address Disclosure
+10040	IGNORE
+
+# Private IP Disclosure
+2	IGNORE
+
+# Session ID in URL Rewrite
+3	FAIL
+
+# Script Passive Scan Rules
+10015	WARN
+
+# Charset Mismatch
+90011	WARN
+
+# Incomplete or No Cache-control and Pragma HTTP Header Set
+10015	IGNORE	.*/static/.*
+
+# Web Browser XSS Protection Not Enabled
+10016	WARN
+
+# Content Type Missing
+10019	WARN
+
+# Information Disclosure - Debug Error Messages
+10023	FAIL
+
+# Information Disclosure - Sensitive Information in URL
+10024	WARN
+
+# Information Disclosure - Sensitive Information in HTTP Referrer Header
+10025	WARN
+
+# HTTP Parameter Override
+10026	WARN
+
+# Information Disclosure - Suspicious Comments
+10027	IGNORE
+
+# Open Redirect
+10028	FAIL
+
+# Cookie Poisoning
+10029	WARN
+
+# User Controllable Charset
+10030	WARN
+
+# User Controllable HTML Element Attribute (Potential XSS)
+10031	WARN
+
+# Viewstate Scanner
+10032	IGNORE
+
+# Directory Browsing
+10033	FAIL
+
+# Heartbleed OpenSSL Vulnerability
+10034	FAIL
+
+# Secure Pages Include Mixed Content
+10040	WARN
+
+# HTTP to HTTPS Insecure Transition in Form Post
+10041	WARN
+
+# HTTPS to HTTP Insecure Transition in Form Post
+10042	FAIL
+
+# User Controllable JavaScript Event (XSS)
+10043	WARN
+
+# Big Redirect Detected (Potential Sensitive Information Leak)
+10044	WARN
+
+# Retrieved from Cache
+10050	IGNORE
+
+# X-ChromeLogger-Data (XCOLD) Header Information Leak
+10052	WARN
+
+# Cookie Without Secure Flag
+10054	FAIL
+
+# Cookie Without HttpOnly Flag
+10055	FAIL
+
+# Cookie Without SameSite Attribute
+10056	WARN
+
+# Username Hash Found
+10057	IGNORE
+
+# X-Debug-Token Information Leak
+10058	WARN
+
+# Source Code Disclosure - Java
+10061	FAIL
+
+# PII Disclosure
+10062	FAIL
+
+# Feature Policy Header Not Set
+10063	IGNORE
+
+# Permissions Policy Header Not Set
+10064	IGNORE
+
+# Dangerous JS Functions
+10065	WARN
+
+# No Anti-clickjacking Header
+10020	FAIL

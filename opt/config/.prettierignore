@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+rct-backend/target/
+rct-backend/.mvn/
+rct-backend/logs/
+
+# Build outputs
+dist/
+build/
+coverage/
+
+# Generated files
+*.min.js
+*.min.css
+
+# Documentation
+*.md
+
+# Configuration files that should maintain their format
+.env*
+*.properties
+*.yml
+*.yaml
+
+# Database files
+*.sql
+
+# IDE files
+.vscode/
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files that might have specific formatting
+**/*.test.js
+**/__tests__/**

@@ -1,0 +1,109 @@
+# Pre-commit hooks configuration
+# Install with: pip install pre-commit && pre-commit install
+
+repos:
+  # General file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: '\.md$'
+      - id: end-of-file-fixer
+        exclude: '\.jar$|\.class$'
+      - id: check-yaml
+        exclude: '\.github/workflows/.*\.yml$'
+      - id: check-json
+      - id: check-xml
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+
+  # Java/Maven specific
+  - repo: local
+    hooks:
+      - id: spotless-check
+        name: Spotless Format Check
+        entry: bash -c 'cd rct-backend && ./mvnw spotless:check'
+        language: system
+        files: '\.java$'
+        pass_filenames: false
+
+      - id: checkstyle
+        name: Checkstyle
+        entry: bash -c 'cd rct-backend && ./mvnw checkstyle:check'
+        language: system
+        files: '\.java$'
+        pass_filenames: false
+
+      - id: pmd
+        name: PMD Analysis
+        entry: bash -c 'cd rct-backend && ./mvnw pmd:check'
+        language: system
+        files: '\.java$'
+        pass_filenames: false
+
+      - id: maven-test
+        name: Maven Unit Tests
+        entry: bash -c 'cd rct-backend && ./mvnw test'
+        language: system
+        files: '\.java$'
+        pass_filenames: false
+
+  # JavaScript/Node.js specific
+  - repo: local
+    hooks:
+      - id: eslint
+        name: ESLint
+        entry: npm run lint:check
+        language: system
+        files: '\.js$'
+        pass_filenames: false
+
+      - id: prettier
+        name: Prettier Format Check
+        entry: npm run format:check
+        language: system
+        files: '\.(js|html|css)$'
+        pass_filenames: false
+
+      - id: jest
+        name: Jest Tests
+        entry: npm run test:ci
+        language: system
+        files: '\.js$'
+        pass_filenames: false
+
+  # Security checks
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
+        exclude: '\.lock$|\.jar$|\.class$'
+
+  # Additional checks for specific file types
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        args: [-c=.yamllint.yml]
+
+# Configuration for specific hooks
+default_language_version:
+  python: python3
+  node: '18'
+
+# Exclude patterns
+exclude: |
+  (?x)^(
+    .*\.min\.(js|css)|
+    .*\.bundle\.(js|css)|
+    node_modules/.*|
+    rct-backend/target/.*|
+    rct-backend/\.mvn/.*|
+    \.git/.*|
+    coverage/.*|
+    .*\.jar|
+    .*\.class
+  )$

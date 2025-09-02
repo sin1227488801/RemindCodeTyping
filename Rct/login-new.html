@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログイン - Remind Code Typing</title>
+    <link rel="icon" href="./images/13_Rのみ.png">
+    <link rel="stylesheet" href="css/components/auth.css">
+</head>
+
+<body>
+    <div id="auth-container"></div>
+
+    <!-- Domain Models -->
+    <script src="js/domain/models/User.js"></script>
+    <script src="js/domain/valueObjects/ValidationError.js"></script>
+
+    <!-- Application Layer -->
+    <script src="js/application/validation/ValidationResult.js"></script>
+    <script src="js/application/controllers/AuthController.js"></script>
+    <script src="js/application/services/AuthService.js"></script>
+    <script src="js/application/repositories/UserRepository.js"></script>
+
+    <!-- Infrastructure Layer -->
+    <script src="js/infrastructure/errors/RctError.js"></script>
+    <script src="js/infrastructure/errors/NetworkError.js"></script>
+    <script src="js/infrastructure/errors/AuthenticationError.js"></script>
+    <script src="js/infrastructure/errors/ErrorHandlerService.js"></script>
+    <script src="js/infrastructure/notifications/NotificationService.js"></script>
+    <script src="js/infrastructure/logging/Logger.js"></script>
+    <script src="js/infrastructure/http/ApiClient.js"></script>
+    <script src="js/infrastructure/api/AuthApiService.js"></script>
+    <script src="js/infrastructure/auth/TokenManager.js"></script>
+
+    <!-- Presentation Components -->
+    <script src="js/presentation/components/auth/LoginForm.js"></script>
+    <script src="js/presentation/components/auth/RegisterForm.js"></script>
+    <script src="js/presentation/components/auth/AuthenticationView.js"></script>
+
+    <script>
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeAuthenticationApp();
+        });
+
+        /**
+         * Initializes the authentication application
+         */
+        function initializeAuthenticationApp() {
+            try {
+                // Initialize infrastructure services
+                const logger = new Logger('AuthApp');
+                const notificationService = new NotificationService();
+                const errorHandler = new ErrorHandlerService(notificationService, logger);
+                
+                // Initialize API services
+                const apiClient = new ApiClient('/api');
+                const tokenManager = new TokenManager();
+                const authApiService = new AuthApiService(apiClient, tokenManager);
+                
+                // Initialize repositories
+                const userRepository = new UserRepository();
+                
+                // Initialize application services
+                const authService = new AuthService(authApiService, userRepository, errorHandler);
+                
+                // Initialize controllers
+                const authController = new AuthController(authService, userRepository, errorHandler);
+                
+                // Check if user is already authenticated
+                if (authController.isAuthenticated()) {
+                    logger.info('User already authenticated, redirecting to main page');
+                    window.location.href = 'main.html';
+                    return;
+                }
+                
+                // Initialize authentication view
+                const authContainer = document.getElementById('auth-container');
+                const authView = new AuthenticationView(authContainer, {
+                    authController: authController,
+                    errorHandler: errorHandler
+                });
+                
+                // Initialize the view
+                authView.initialize();
+                
+                logger.info('Authentication application initialized successfully');
+                
+            } catch (error) {
+                console.error('Failed to initialize authentication application:', error);
+                
+                // Fallback error display
+                const authContainer = document.getElementById('auth-container');
+                authContainer.innerHTML = `
+                    <div style="
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        min-height: 100vh;
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                        color: white;
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        text-align: center;
+                        padding: 2rem;
+                    ">
+                        <div>
+                            <h1>アプリケーションの初期化に失敗しました</h1>
+                            <p>ページを再読み込みしてください。問題が続く場合は、管理者にお問い合わせください。</p>
+                            <button 
+                                onclick="window.location.reload()" 
+                                style="
+                                    background: white;
+                                    color: #333;
+                                    border: none;
+                                    padding: 0.75rem 1.5rem;
+                                    border-radius: 8px;
+                                    font-size: 1rem;
+                                    cursor: pointer;
+                                    margin-top: 1rem;
+                                "
+                            >
+                                再読み込み
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        /**
+         * Enhanced AuthController with additional methods for the view
+         */
+        class EnhancedAuthController extends AuthController {
+            /**
+             * Login method that returns a result object
+             * @param {string} loginId - Login ID
+             * @param {string} password - Password
+             * @returns {Promise<Object>} Login result
+             */
+            async login(loginId, password) {
+                try {
+                    const result = await this.authService.login(loginId, password);
+                    
+                    if (result.success) {
+                        this.userRepository.setCurrentUser(result.user);
+                        return { success: true, user: result.user };
+                    } else {
+                        return { success: false, error: result.error || 'ログインに失敗しました。' };
+                    }
+                } catch (error) {
+                    this.errorHandler.handle(error, { context: 'login' });
+                    return { success: false, error: 'ログイン処理中にエラーが発生しました。' };
+                }
+            }
+
+            /**
+             * Register method that returns a result object
+             * @param {string} loginId - Login ID
+             * @param {string} password - Password
+             * @returns {Promise<Object>} Registration result
+             */
+            async register(loginId, password) {
+                try {
+                    const result = await this.authService.register(loginId, password);
+                    
+                    if (result.success) {
+                        this.userRepository.setCurrentUser(result.user);
+                        return { success: true, user: result.user };
+                    } else {
+                        return { success: false, error: result.error || '新規登録に失敗しました。' };
+                    }
+                } catch (error) {
+                    this.errorHandler.handle(error, { context: 'registration' });
+                    return { success: false, error: '新規登録処理中にエラーが発生しました。' };
+                }
+            }
+
+            /**
+             * Guest login method that returns a result object
+             * @returns {Promise<Object>} Guest login result
+             */
+            async loginAsGuest() {
+                try {
+                    const result = await this.authService.loginAsGuest();
+                    
+                    if (result.success) {
+                        this.userRepository.setCurrentUser(result.user);
+                        return { success: true, user: result.user };
+                    } else {
+                        return { success: false, error: result.error || 'ゲストログインに失敗しました。' };
+                    }
+                } catch (error) {
+                    this.errorHandler.handle(error, { context: 'guest_login' });
+                    return { success: false, error: 'ゲストログイン処理中にエラーが発生しました。' };
+                }
+            }
+
+            /**
+             * Check if user is authenticated
+             * @returns {boolean} Whether user is authenticated
+             */
+            isAuthenticated() {
+                const currentUser = this.userRepository.getCurrentUser();
+                return currentUser && currentUser.isAuthenticated();
+            }
+        }
+
+        // Override the AuthController class with enhanced version
+        window.AuthController = EnhancedAuthController;
+    </script>
+</body>
+
+</html>

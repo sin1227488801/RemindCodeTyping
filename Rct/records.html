@@ -10,14 +10,15 @@
             <p>最高ランク ●●</p>
         </div>
     </div>
+    
+
+    
     <div class="main">
         <div class="box-left box-color">
             <div class="label-button-container">
                 <label>得意言語</label>
-                <button class="toggleButton active" data-target="favoriteLanguage">
+                <button class="toggleButton active" data-target="favoriteLanguage" onclick="toggleContent('favoriteLanguage', this)">▼</button>
             </div>
-            <span></span>
-            </button>
             <div class="toggleContent" id="favoriteLanguage" style="display: block;">
                 言語 Python<br>
                 正答率 100%
@@ -26,7 +27,7 @@
         <div class="box-right box-color">
             <div class="label-button-container">
                 <label>苦手言語</label>
-                <button class="toggleButton" data-target="weaknessesLanguage"></button>
+                <button class="toggleButton" data-target="weaknessesLanguage" onclick="toggleContent('weaknessesLanguage', this)">▶</button>
             </div>
             <div class="toggleContent" id="weaknessesLanguage" style="display: none;">
                 言語 C#<br>

@@ -4,21 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ログイン</title>
-    <link rel="icon" href="images/13_Rのみ.png">
+    <link rel="icon" href="./images/13_Rのみ.png">
     <link rel="stylesheet" href="css/login.css">
 </head>
 
 <body>
     <header class="header">
-        <img src="images/02_ロゴ基本_白抜き.png" alt="Rct">
+        <img src="./images/02_ロゴ基本_白抜き.png" alt="Remind Code Typing Logo">
         <h1>Remind code typing</h1>
     </header>
 
     <div class="login-container">
-        <h2>ログイン</h2>
         <form action="/login" method="post">
             <div class="input-group">
-                <label for="username">ID</label>
+                <label for="username">ログインID</label>
                 <input type="text" id="username" name="username" placeholder="IDを入力" required>
             </div>
             <div class="input-group">
@@ -33,12 +32,13 @@
             <button type="submit" class="btn">ログイン</button>
             <p>IDをお持ちでない方</p>
             <div class="button-container">
-                <button type="submit" class="btn-muted">デモプレイ</button>
+                <button type="submit" class="btn-muted">ゲストプレイ</button>
                 <button type="submit" class="btn-muted">新規登録</button>
             </div>
         </form>
     </div>
 
+    <script src="js/api.js"></script>
     <script src="js/login.js"></script>
 
 </body>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アカウント作成完了</title>
+    <link rel="icon" href="./images/13_Rのみ.png">
+    <link rel="stylesheet" href="css/account-created.css">
+</head>
+
+<body>
+    <header class="header">
+        <img src="./images/02_ロゴ基本_白抜き.png" alt="Remind Code Typing Logo">
+        <h1>Remind code typing</h1>
+    </header>
+
+    <div class="success-container">
+        <div class="success-icon">
+            <div class="checkmark">✓</div>
+        </div>
+        <h2>アカウントを作成しました</h2>
+        <p>Remind Code Typingへようこそ！</p>
+
+        <div class="button-container">
+            <button type="button" class="btn" onclick="proceedToLogin()">ログイン</button>
+            <button type="button" class="btn-muted" onclick="goBack()">戻る</button>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        // URLパラメータから登録したアカウント情報を取得
+        function getAccountInfo() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return {
+                loginId: urlParams.get('loginId'),
+                password: urlParams.get('password')
+            };
+        }
+
+        async function proceedToLogin() {
+            const accountInfo = getAccountInfo();
+
+            if (!accountInfo.loginId || !accountInfo.password) {
+                // アカウント情報がない場合はログイン画面に遷移
+                window.location.href = 'login.html';
+                return;
+            }
+
+            try {
+                showLoading('ログイン中...');
+                const response = await rctApi.login(accountInfo.loginId, accountInfo.password);
+                console.log('自動ログイン成功:', response);
+                window.location.href = 'main.html';
+            } catch (error) {
+                console.error('自動ログインエラー:', error);
+                showError('ログインに失敗しました。手動でログインしてください。');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function goBack() {
+            window.location.href = 'login.html';
+        }
+
+        // UI ヘルパー関数
+        function showLoading(message) {
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'loading-message';
+            loadingDiv.textContent = message;
+            loadingDiv.style.cssText = 'color: var(--color-primary); text-align: center; margin: 10px 0; font-size: var(--font-size-main);';
+
+            const container = document.querySelector('.success-container');
+            container.appendChild(loadingDiv);
+
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(btn => btn.disabled = true);
+        }
+
+        function hideLoading() {
+            const loadingDiv = document.querySelector('.loading-message');
+            if (loadingDiv) {
+                loadingDiv.remove();
+            }
+
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(btn => btn.disabled = false);
+        }
+
+        function showError(message) {
+            const existingError = document.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = message;
+            errorDiv.style.cssText = 'color: #dc3545; text-align: center; margin: 10px 0; padding: 10px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: var(--border-radius); font-size: var(--font-size-smaller);';
+
+            const container = document.querySelector('.success-container');
+            container.appendChild(errorDiv);
+        }
+    </script>
+
+</body>
+
+</html>

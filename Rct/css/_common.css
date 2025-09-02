@@ -1,21 +1,21 @@
 :root {
     /* マージンのサイズ */
-    --margin-main: 20px;
-    --margin-narrow: 10px;
-    --margin-more-narrow: 5px;
+    --margin-main: 13px;
+    --margin-narrow: 7px;
+    --margin-more-narrow: 3px;
 
     /* パディングのサイズ */
-    --padding-main: 20px;
-    --padding-narrow: 10px;
-    --padding-more-narrow: 5px;
+    --padding-main: 13px;
+    --padding-narrow: 7px;
+    --padding-more-narrow: 3px;
 
     /* フォントサイズ */
-    --font-size-larger: 20px;
-    --font-size-main: 16px;
-    --font-size-smaller: 14px;
+    --font-size-larger: 12px;
+    --font-size-main: 11px;
+    --font-size-smaller: 10px;
 
     /* ボーダーの角丸 */
-    --border-radius: 4px;
+    --border-radius: 3px;
 
     /* 配色 */
     --color-product-main: #7CADED;
@@ -30,7 +30,7 @@
     --color-text-light: #888;
 
     /* コンテナの幅 */
-    --container-width: 400px;
+    --container-width: 268px;
 }
 
 * {
@@ -48,28 +48,36 @@
     background-color: var(--color-muted-primary);
     color: white;
     margin: auto;
-    height: 80px;
-    text-align: center;
+    height: 60px !important;
+    padding: 10px 15px !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 15px !important;
     z-index: 1000;
+    min-width: 320px;
 }
 
 .header h1 {
-    margin: 10px auto;
-    flex-grow: 1;
-    text-align: left;
+    font-size: 1.5rem !important;
+    margin: 0 !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+    flex-grow: 1 !important;
     font-family: 'Mogra';
-    font-size: 50px;
-    text-shadow: 0.2rem 0.1rem 0px var(--color-product-sub);
+    text-shadow: 0.1rem 0.05rem 0px var(--color-product-sub);
+    line-height: 1.2;
 }
 
 .header img {
-    height: 80px;
-    margin: 0 var(--margin-main);
+    height: 48px !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
 }
 
 .main-content {
-    margin-top: 100px;
-    height: calc(100vh - 80px);
+    margin-top: 80px;
+    height: calc(100vh - 60px);
     /* ヘッダーの高さ分だけ下にずらす */
     padding: var(--padding-main);
 }
@@ -81,11 +89,14 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    min-width: 320px;
+    overflow-x: auto;
 }
 
 h2 {
     margin-bottom: var(--padding-main);
     color: var(--color-text);
+    font-size: var(--font-size-larger);
 }
 
 .btn,
@@ -121,28 +132,45 @@ h2 {
     display: flex;
     width: calc(100% - 10px);
     box-sizing: border-box;
+    gap: var(--margin-main);
+    align-items: flex-start;
 }
 
 .main .box-left,
 .main .box-right {
     width: 50%;
+    flex-shrink: 0;
+}
+
+.main .box-right {
+    padding-left: var(--padding-narrow);
 }
 
 .main .box-full {
     width: 100%;
 }
 
+/* レスポンシブ対応を無効化 - 775px以上のデザインで固定 */
+/* @media (max-width: 775px) - 無効化 */
+
 .label-text-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: calc(100% - 50px);
+}
+
+.label-text-container div {
+    margin-right: 1em;
+    text-align: left;
+    font-size: var(--font-size-smaller);
 }
 
 label {
     font-weight: bold;
     display: block;
     margin-bottom: var(--margin-more-narrow);
+    font-size: var(--font-size-smaller);
 }
 
 input,

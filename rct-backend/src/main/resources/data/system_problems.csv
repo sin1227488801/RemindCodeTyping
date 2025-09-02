@@ -1,0 +1,83 @@
+language,question,explanation
+Python,"print(""Hello"")","基本的な出力文です。"
+Python,"x = 5","変数に数値を代入します。"
+Python,"name = ""Alice""","変数に文字列を代入します。"
+Python,"print(x + 3)","変数を使った計算です。"
+Python,"if x > 0:
+    print(""positive"")","条件分岐の基本です。"
+Python,"for i in range(3):
+    print(i)","繰り返し処理の基本です。"
+Python,"def hello():
+    print(""Hi"")","関数の基本的な定義です。"
+Python,"numbers = [1, 2, 3]","リストの基本的な作成です。"
+Python,"print(len(numbers))","リストの長さを取得します。"
+Python,"age = 20
+if age >= 18:
+    print(""adult"")","年齢判定の例です。"
+JavaScript,"console.log(""Hello"");","基本的な出力文です。"
+JavaScript,"let x = 10;","変数の宣言と代入です。"
+JavaScript,"const name = ""Bob"";","定数の宣言です。"
+JavaScript,"let sum = 5 + 3;","変数を使った計算です。"
+JavaScript,"if (x > 5) {
+    console.log(""big"");
+}","条件分岐の基本です。"
+JavaScript,"for (let i = 0; i < 3; i++) {
+    console.log(i);
+}","for文の基本です。"
+JavaScript,"function greet() {
+    console.log(""Hi"");
+}","関数の基本的な定義です。"
+JavaScript,"let arr = [1, 2, 3];","配列の基本的な作成です。"
+JavaScript,"console.log(arr.length);","配列の長さを取得します。"
+JavaScript,"let score = 85;
+if (score >= 80) {
+    console.log(""good"");
+}","点数判定の例です。"
+Java,"System.out.println(""Hello"");","基本的な出力文です。"
+Java,"int x = 5;","整数型変数の宣言です。"
+Java,"String name = ""Tom"";","文字列型変数の宣言です。"
+Java,"int sum = x + 3;","変数を使った計算です。"
+Java,"if (x > 0) {
+    System.out.println(""positive"");
+}","条件分岐の基本です。"
+Java,"for (int i = 0; i < 3; i++) {
+    System.out.println(i);
+}","for文の基本です。"
+Java,"public static void hello() {
+    System.out.println(""Hi"");
+}","メソッドの基本的な定義です。"
+Java,"int[] numbers = {1, 2, 3};","配列の基本的な作成です。"
+Java,"System.out.println(numbers.length);","配列の長さを取得します。"
+Java,"int grade = 90;
+if (grade >= 80) {
+    System.out.println(""excellent"");
+}","成績判定の例です。"
+HTML,"<h1>Hello</h1>","見出しタグの基本です。"
+HTML,"<p>This is text.</p>","段落タグの基本です。"
+HTML,"<a href=""#"">Link</a>","リンクタグの基本です。"
+HTML,"<img src=""pic.jpg"" alt=""image"">","画像タグの基本です。"
+HTML,"<div>Content</div>","divタグの基本です。"
+HTML,"<ul>
+    <li>Item 1</li>
+    <li>Item 2</li>
+</ul>","リストタグの基本です。"
+HTML,"<input type=""text"" name=""username"">","入力フィールドの基本です。"
+HTML,"<button>Click me</button>","ボタンタグの基本です。"
+HTML,"<table>
+    <tr>
+        <td>Cell</td>
+    </tr>
+</table>","テーブルタグの基本です。"
+HTML,"<form>
+    <input type=""submit"" value=""Send"">
+</form>","フォームタグの基本です。"
+CSS,"color: red;","文字色を赤にします。"
+CSS,"background-color: blue;","背景色を青にします。"
+CSS,"font-size: 16px;","フォントサイズを設定します。"
+CSS,"margin: 10px;","外側の余白を設定します。"
+CSS,"padding: 5px;","内側の余白を設定します。"
+CSS,"border: 1px solid black;","境界線を設定します。"
+CSS,"width: 100px;","幅を設定します。"
+CSS,"height: 50px;","高さを設定します。"
+CSS,"text-align: center;","テキストを中央揃えにします。"
+CSS,"display: block;","ブロック要素として表示します。"

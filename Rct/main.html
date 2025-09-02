@@ -4,26 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rct メインページ</title>
-    <link rel="icon" href="images/13_Rのみ.png">
+    <link rel="icon" href="./images/13_Rのみ.png">
     <!-- <link href="https://fonts.googleapis.com/css2?family=Mogra&display=swap" rel="stylesheet"> -->
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/typing-practice.css">
 </head>
 
 <body>
     <header class="header">
-        <img src="images/02_ロゴ基本_白抜き.png" alt="Rct">
+        <img src="./images/02_ロゴ基本_白抜き.png" alt="Rct">
         <h1>Remind code typing</h1>
         <div class="login-info">
             <div class="login-info-text">
                 <!-- TODO ID・日数情報の置き換え バックエンドができてから -->
-                Hello 〇〇さん！<br>
-                連続◯日
-                累計◯日
-                のログインです
+                <span class="login-text-full">Hello 〇〇さん！<br>連続◯日 累計◯日<br>のログインです</span>
+                <span class="login-text-compact">Hi! 〇〇! ◯日 login!</span>
             </div>
-            <div>
-                <button type="submit" class="btn">ログアウト</button>
-            </div>
+            <button type="submit" class="btn">ログアウト</button>
         </div>
     </header>
 
@@ -42,8 +39,11 @@
         </div>
     </div>
 
+    <script src="js/api.js"></script>
+    <script src="js/typing.js"></script>
     <script src="js/main.js"></script>
     <script src="js/records.js"></script>
+    <script src="js/tooltip.js"></script>
 </body>
 
 </html>

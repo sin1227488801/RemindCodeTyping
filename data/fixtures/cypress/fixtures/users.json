@@ -1,0 +1,53 @@
+{
+  "validUser": {
+    "loginId": "testuser",
+    "password": "testpassword"
+  },
+  "adminUser": {
+    "loginId": "admin",
+    "password": "adminpassword"
+  },
+  "guestUser": {
+    "loginId": "guest",
+    "password": "guestpassword"
+  },
+  "loginResponse": {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlhdCI6MTUxNjIzOTAyMn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+    "user": {
+      "id": "user-123",
+      "loginId": "testuser",
+      "createdAt": "2024-01-01T00:00:00Z"
+    },
+    "expiresIn": 3600
+  },
+  "registerRequest": {
+    "loginId": "newuser",
+    "password": "newpassword123"
+  },
+  "registerResponse": {
+    "message": "User registered successfully",
+    "userId": "user-456"
+  },
+  "invalidCredentials": {
+    "loginId": "invaliduser",
+    "password": "wrongpassword"
+  },
+  "errorResponses": {
+    "invalidCredentials": {
+      "error": "Invalid login credentials",
+      "code": "AUTH_001"
+    },
+    "userExists": {
+      "error": "User already exists",
+      "code": "AUTH_002"
+    },
+    "weakPassword": {
+      "error": "Password must be at least 8 characters",
+      "code": "AUTH_003"
+    },
+    "serverError": {
+      "error": "Internal server error",
+      "code": "SYS_001"
+    }
+  }
+}

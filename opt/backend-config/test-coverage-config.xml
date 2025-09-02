@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- JaCoCo Test Coverage Configuration -->
+    <coverage>
+        <minimum>
+            <line>80</line>
+            <branch>70</branch>
+        </minimum>
+        <excludes>
+            <exclude>**/config/**</exclude>
+            <exclude>**/dto/**</exclude>
+            <exclude>**/entity/**</exclude>
+            <exclude>**/*Application.class</exclude>
+        </excludes>
+    </coverage>
+</configuration>

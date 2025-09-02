@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>判定値計算テスト</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .test-case {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 3px;
+        }
+
+        .expected {
+            color: #27ae60;
+        }
+
+        .actual {
+            color: #3498db;
+        }
+
+        .pass {
+            background: #d5f4e6;
+        }
+
+        .fail {
+            background: #ffeaa7;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>判定値計算テスト</h1>
+    <p>新しい評価システムの判定値計算をテストします。</p>
+
+    <div id="test-results"></div>
+
+    <script>
+        // 判定値計算のテスト関数
+        function calculateJudgmentValue(inputChars, remainingChars, excessChars, timeInSeconds) {
+            const effectiveChars = inputChars - (remainingChars + excessChars);
+            const judgmentValue = (effectiveChars / timeInSeconds) * 6 * 10;
+            return Math.max(0, judgmentValue);
+        }
+
+        // 評価ランク判定のテスト関数
+        function calculateRank(judgmentValue) {
+            if (judgmentValue >= 100) return '初段';
+            if (judgmentValue >= 70) return '1級';
+            if (judgmentValue >= 60) return '準1級';
+            if (judgmentValue >= 50) return '2級';
+            if (judgmentValue >= 40) return '準2級';
+            if (judgmentValue >= 30) return '3級';
+            return '4級';
+        }
+
+        // テストケース
+        const testCases = [
+            {
+                name: "完璧な入力（初段レベル）",
+                inputChars: 300,
+                remainingChars: 0,
+                excessChars: 0,
+                timeInSeconds: 180, // 3分
+                expectedJudgmentValue: 100,
+                expectedRank: "初段"
+            },
+            {
+                name: "1級レベル",
+                inputChars: 250,
+                remainingChars: 50,
+                excessChars: 0,
+                timeInSeconds: 180, // 3分
+                expectedJudgmentValue: 70,
+                expectedRank: "1級"
+            },
+            {
+                name: "準1級レベル",
+                inputChars: 200,
+                remainingChars: 100,
+                excessChars: 0,
+                timeInSeconds: 200, // 3分20秒
+                expectedJudgmentValue: 60,
+                expectedRank: "準1級"
+            },
+            {
+                name: "時間オーバーで低評価",
+                inputChars: 300,
+                remainingChars: 0,
+                excessChars: 0,
+                timeInSeconds: 600, // 10分（時間かかりすぎ）
+                expectedJudgmentValue: 30,
+                expectedRank: "3級"
+            },
+            {
+                name: "入力不足で低評価",
+                inputChars: 100,
+                remainingChars: 200,
+                excessChars: 0,
+                timeInSeconds: 180, // 3分
+                expectedJudgmentValue: 20,
+                expectedRank: "4級"
+            }
+        ];
+
+        // テスト実行
+        function runTests() {
+            const resultsDiv = document.getElementById('test-results');
+            let allPassed = true;
+
+            testCases.forEach((testCase, index) => {
+                const actualJudgmentValue = calculateJudgmentValue(
+                    testCase.inputChars,
+                    testCase.remainingChars,
+                    testCase.excessChars,
+                    testCase.timeInSeconds
+                );
+                const actualRank = calculateRank(actualJudgmentValue);
+
+                const judgmentValuePassed = Math.abs(actualJudgmentValue - testCase.expectedJudgmentValue) < 5; // 5の誤差許容
+                const rankPassed = actualRank === testCase.expectedRank;
+                const testPassed = judgmentValuePassed && rankPassed;
+
+                if (!testPassed) allPassed = false;
+
+                const testDiv = document.createElement('div');
+                testDiv.className = `test-case ${testPassed ? 'pass' : 'fail'}`;
+                testDiv.innerHTML = `
+                    <h3>テスト ${index + 1}: ${testCase.name}</h3>
+                    <p><strong>条件:</strong></p>
+                    <ul>
+                        <li>入力文字数: ${testCase.inputChars}</li>
+                        <li>残った文字数: ${testCase.remainingChars}</li>
+                        <li>余った文字数: ${testCase.excessChars}</li>
+                        <li>かかった時間: ${testCase.timeInSeconds}秒</li>
+                    </ul>
+                    <div class="result">
+                        <p class="expected"><strong>期待値:</strong> 判定値=${testCase.expectedJudgmentValue}, ランク=${testCase.expectedRank}</p>
+                        <p class="actual"><strong>実際値:</strong> 判定値=${Math.round(actualJudgmentValue * 10) / 10}, ランク=${actualRank}</p>
+                        <p><strong>結果:</strong> ${testPassed ? '✅ PASS' : '❌ FAIL'}</p>
+                <p><strong>スコア表示:</strong> ${Math.round(actualJudgmentValue * 10) / 10}</p>
+                    </div>
+                `;
+                resultsDiv.appendChild(testDiv);
+            });
+
+            // 総合結果
+            const summaryDiv = document.createElement('div');
+            summaryDiv.className = `test-case ${allPassed ? 'pass' : 'fail'}`;
+            summaryDiv.innerHTML = `
+                <h3>総合結果</h3>
+                <p><strong>${allPassed ? '✅ 全テスト合格' : '❌ 一部テスト失敗'}</strong></p>
+                <p>計算式: 判定値 = ((入力文字数 - (残った文字数 + 余った文字数)) / かかった時間) × 6 × 10</p>
+            `;
+            resultsDiv.appendChild(summaryDiv);
+        }
+
+        // ページ読み込み時にテスト実行
+        window.addEventListener('load', runTests);
+    </script>
+</body>
+
+</html>

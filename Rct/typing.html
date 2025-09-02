@@ -1,27 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>タイピング設定 - RemindCodeTyping</title>
     <link rel="stylesheet" href="css/typing.css">
+    <script src="js/api.js"></script>
+    <script src="js/typing.js"></script>
 </head>
 
 <body>
     <div class="label-text-container">
         <h2>タイピング訓練(設定)</h2>
         <div class="user-data">
-            <!-- TODO 100問までの算出と100問以上の算出を分岐して表示 -->
-            直近◯問正答率 ●●%<br>
-            最高ランク ●●
+            <div id="stats-loading" style="display: none;">統計情報を読み込み中...</div>
+            <div id="stats-display">
+                <span id="recent-accuracy">直近の正答率 ---%</span><br>
+                <span id="highest-rank">最高ランク ---</span>
+            </div>
         </div>
     </div>
     <div class="main">
         <div class="box-left">
+            <!-- 問題選択 -->
+            <div class="dropdown-container">
+                <label for="problem-source-select">問題選択:</label>
+                <select id="problem-source-select" name="problem-source-select">
+                    <option value="system">システム問題（基礎学習用）</option>
+                    <option value="user">My問題（自作問題）</option>
+                    <option value="mixed">ミックス（システム + My問題）</option>
+                </select>
+            </div>
             <!-- 複数選択のプルダウンメニュー -->
             <div class="dropdown-container">
                 <label for="language-select">言語選択:</label>
                 <p>(CtrlまたはCmdキーを使用して複数選択)</p>
-                <select id="language-select" name="language-select" multiple size="4">
-                    <option value="option1">Python</option>
-                    <option value="option2">C#</option>
-                    <option value="option3">Java</option>
-                    <option value="option4">JavaScript</option>
+                <select id="language-select" name="language-select" multiple size="8">
+                    <!-- 言語オプションは動的に読み込まれます -->
                 </select>
             </div>
             <!-- 単一選択のプルダウンメニュー -->
@@ -35,56 +51,76 @@
                     <option value="option5">登録順(古い順)</option>
                 </select>
             </div>
+            <!-- 問題数選択 -->
+            <div class="dropdown-container">
+                <label for="problem-count-input">問題数選択 (1-20問):</label>
+                <input type="number" id="problem-count-input" name="problem-count-input" max="20" value="10"
+                    placeholder="1-20の数値を入力">
+            </div>
             <!-- 入力可能プルダウンメニュー -->
-            <!-- TODO プルダウンから選択したときに網掛けになる。最悪プルダウン単体or入力ボックスで対応 -->
             <div class="dropdown-container">
                 <label for="time-select">挑戦時間選択(分単位):</label>
-                <input list="times" id="time-select" name="time-select" placeholder="選択または入力">
-                <datalist id="times">
-                    <option value="5">
-                    <option value="10">
-                    <option value="15">
-                    <option value="20">
-                    <option value="25">
-                    <option value="30">
-                </datalist>
+                <select id="time-select" name="time-select">
+                    <option value="5">5分</option>
+                    <option value="10" selected>10分</option>
+                    <option value="15">15分</option>
+                    <option value="20">20分</option>
+                    <option value="25">25分</option>
+                    <option value="30">30分</option>
+                </select>
             </div>
-            <button class="btn">Start！</button>
+            <button type="button" class="btn">Start！</button>
         </div>
         <div class="box-right">
             <label>評価ランク一覧</label>
             <div class="rank-list">
                 <ul>
-                    <li>
+                    <li class="rank-shodan-special" data-tooltip="最高ランク！">
                         <span class="rank">初段</span>
-                        <span class="points">8~</span>
+                        <span class="points">100~</span>
+                        <div class="highlight-effect"></div>
                     </li>
-                    <li>
+                    <li class="rank-1-special" data-tooltip="ワープロ検定1級相当！">
                         <span class="rank">1級</span>
-                        <span class="points">7~</span>
+                        <span class="points">70~</span>
+                        <div class="highlight-effect"></div>
                     </li>
                     <li>
                         <span class="rank">準1級</span>
-                        <span class="points">6~</span>
+                        <span class="points">60~</span>
                     </li>
-                    <li>
+                    <li class="rank-2-special" data-tooltip="ワープロ検定2級相当！">
                         <span class="rank">2級</span>
-                        <span class="points">5~</span>
+                        <span class="points">50~</span>
+                        <div class="highlight-effect"></div>
                     </li>
                     <li>
                         <span class="rank">準2級</span>
-                        <span class="points">4~</span>
+                        <span class="points">40~</span>
                     </li>
                     <li>
                         <span class="rank">3級</span>
-                        <span class="points">3~</span>
+                        <span class="points">30~</span>
                     </li>
                     <li>
                         <span class="rank">4級</span>
-                        <span class="points">2~</span>
+                        <span class="points">~29</span>
                     </li>
                 </ul>
             </div>
         </div>
     </div>
+
+    <!-- 特別ランクモーダル -->
+    <div id="special-rank-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 id="modal-rank-title">ランク詳細</h3>
+            <div id="modal-rank-content">
+                <p id="modal-rank-description"></p>
+            </div>
+        </div>
+    </div>
 </body>
+
+</html>

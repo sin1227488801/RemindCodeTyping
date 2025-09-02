@@ -1,0 +1,176 @@
+@import url('_common.css');
+
+/* bodyの高さ制限を解除 */
+body {
+    height: auto !important;
+    min-height: 100vh !important;
+    align-items: flex-start !important;
+}
+
+.success-container {
+    background-color: #fff;
+    padding: calc(var(--padding-main) * 1.2);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: var(--container-width);
+    min-width: var(--container-width);
+    text-align: center;
+    position: relative;
+    margin: 0 auto;
+    flex-shrink: 0;
+    border: 1px solid #e9ecef;
+}
+
+.success-icon {
+    margin-bottom: calc(var(--margin-main) * 1.5);
+}
+
+.checkmark {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: var(--color-muted-primary);
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    animation: checkmarkPulse 0.8s ease-in-out;
+    position: relative;
+}
+
+.checkmark::after {
+    content: '';
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border: 2px solid var(--color-muted-primary);
+    border-radius: 50%;
+    opacity: 0.3;
+    animation: ripple 1.5s infinite;
+}
+
+@keyframes checkmarkPulse {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(1);
+        opacity: 0.3;
+    }
+    100% {
+        transform: scale(1.3);
+        opacity: 0;
+    }
+}
+
+.success-container h2 {
+    color: var(--color-text);
+    margin-bottom: var(--margin-main);
+    font-size: var(--font-size-larger);
+    font-weight: normal;
+}
+
+.success-container p {
+    color: var(--color-text-light);
+    margin-bottom: calc(var(--margin-main) * 1.5);
+    line-height: 1.6;
+    font-size: var(--font-size-main);
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--margin-narrow);
+}
+
+.button-container .btn,
+.button-container .btn-muted {
+    width: 48%;
+    padding: var(--padding-narrow);
+    font-size: var(--font-size-main);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 0;
+}
+
+.button-container .btn {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.button-container .btn:hover {
+    background-color: var(--color-hover);
+}
+
+.button-container .btn-muted {
+    background-color: var(--color-muted-primary);
+    color: white;
+}
+
+.button-container .btn-muted:hover {
+    background-color: var(--color-muted-hover);
+}
+
+/* ヘッダーを全画面サイズで固定 */
+.header {
+    height: 60px !important;
+    padding: 10px 15px !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 15px !important;
+    min-width: 460px;
+    overflow: hidden;
+}
+
+.header img {
+    height: 48px !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+}
+
+.header h1 {
+    font-size: 1.5rem !important;
+    margin: 0 !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+    flex-grow: 1 !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* アカウント作成完了ページ専用のbodyスタイル - 固定レイアウト維持 */
+body {
+    min-width: 460px !important;
+    overflow-x: auto !important;
+    padding: 0 30px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    height: 100vh !important;
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+/* レスポンシブ対応を無効化 - 固定レイアウト維持 */
+/* 
+400px固定幅を維持し、狭い画面では水平スクロールで対応
+レイアウトの崩れを防止
+*/

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Component Testing</title>
+  
+  <!-- Base styles for component testing -->
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background-color: #f5f5f5;
+    }
+    
+    #root {
+      background-color: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      min-height: 200px;
+    }
+    
+    /* Component testing specific styles */
+    .component-test-wrapper {
+      border: 1px dashed #ccc;
+      padding: 16px;
+      margin: 16px 0;
+      border-radius: 4px;
+    }
+    
+    .component-test-label {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    
+    /* Error boundary styles */
+    .error-boundary {
+      border: 2px solid #ff6b6b;
+      background-color: #ffe0e0;
+      padding: 16px;
+      border-radius: 4px;
+      color: #d63031;
+    }
+    
+    .error-boundary h3 {
+      margin: 0 0 8px 0;
+      color: #d63031;
+    }
+    
+    .error-boundary pre {
+      background-color: #fff;
+      padding: 8px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 12px;
+    }
+    
+    /* Loading states */
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #3498db;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Accessibility testing indicators */
+    .a11y-violation {
+      border: 2px solid #e74c3c;
+      background-color: rgba(231, 76, 60, 0.1);
+    }
+    
+    .a11y-pass {
+      border: 2px solid #27ae60;
+      background-color: rgba(39, 174, 96, 0.1);
+    }
+    
+    /* Visual regression testing markers */
+    .visual-test-marker {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: #9b59b6;
+      color: white;
+      padding: 4px 8px;
+      font-size: 10px;
+      border-bottom-left-radius: 4px;
+    }
+    
+    /* Responsive testing indicators */
+    .responsive-indicator {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background-color: #34495e;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      z-index: 9999;
+    }
+    
+    /* Component isolation styles */
+    .component-isolation {
+      isolation: isolate;
+      contain: layout style paint;
+    }
+  </style>
+</head>
+<body>
+  <div id="root" data-cy-root></div>
+  
+  <!-- Component testing utilities -->
+  <script>
+    // Global utilities for component testing
+    window.componentTestUtils = {
+      // Mock localStorage for testing
+      mockLocalStorage: () => {
+        const store = {};
+        return {
+          getItem: (key) => store[key] || null,
+          setItem: (key, value) => store[key] = value.toString(),
+          removeItem: (key) => delete store[key],
+          clear: () => Object.keys(store).forEach(key => delete store[key])
+        };
+      },
+      
+      // Mock fetch for API testing
+      mockFetch: (responses = {}) => {
+        return (url, options = {}) => {
+          const key = `${options.method || 'GET'} ${url}`;
+          const response = responses[key] || responses[url];
+          
+          if (response) {
+            return Promise.resolve({
+              ok: response.status < 400,
+              status: response.status || 200,
+              json: () => Promise.resolve(response.body || {}),
+              text: () => Promise.resolve(JSON.stringify(response.body || {}))
+            });
+          }
+          
+          return Promise.reject(new Error(`No mock response for ${key}`));
+        };
+      },
+      
+      // Performance measurement
+      measurePerformance: (name, fn) => {
+        const start = performance.now();
+        const result = fn();
+        const end = performance.now();
+        console.log(`${name}: ${(end - start).toFixed(2)}ms`);
+        return result;
+      },
+      
+      // Error simulation
+      simulateError: (message = 'Simulated error') => {
+        throw new Error(message);
+      }
+    };
+    
+    // Error boundary for component testing
+    window.addEventListener('error', (event) => {
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'error-boundary';
+      errorDiv.innerHTML = `
+        <h3>Component Error</h3>
+        <p><strong>Message:</strong> ${event.error?.message || 'Unknown error'}</p>
+        <pre>${event.error?.stack || 'No stack trace available'}</pre>
+      `;
+      
+      const root = document.getElementById('root');
+      root.innerHTML = '';
+      root.appendChild(errorDiv);
+    });
+    
+    // Responsive testing helper
+    window.setResponsiveIndicator = (width) => {
+      let indicator = document.querySelector('.responsive-indicator');
+      if (!indicator) {
+        indicator = document.createElement('div');
+        indicator.className = 'responsive-indicator';
+        document.body.appendChild(indicator);
+      }
+      indicator.textContent = `${width}px`;
+    };
+    
+    // Visual testing marker
+    window.addVisualTestMarker = (testName) => {
+      const marker = document.createElement('div');
+      marker.className = 'visual-test-marker';
+      marker.textContent = testName;
+      document.body.appendChild(marker);
+      
+      setTimeout(() => marker.remove(), 3000);
+    };
+  </script>
+</body>
+</html>

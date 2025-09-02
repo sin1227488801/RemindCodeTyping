@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .error { background: #ffebee; color: #c62828; }
+        .success { background: #e8f5e8; color: #2e7d32; }
+    </style>
+</head>
+<body>
+    <h1>メインページテスト</h1>
+    
+    <div class="debug">
+        <h3>ログイン状態チェック</h3>
+        <button onclick="checkLoginStatus()">ログイン状態確認</button>
+        <div id="login-status"></div>
+    </div>
+    
+    <div class="debug">
+        <h3>デモログインテスト</h3>
+        <button onclick="testDemoLogin()">デモログイン実行</button>
+        <div id="demo-result"></div>
+    </div>
+    
+    <div class="debug">
+        <h3>メインページ遷移テスト</h3>
+        <button onclick="goToMain()">main.htmlに移動</button>
+        <div id="main-result"></div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        function checkLoginStatus() {
+            const isLoggedIn = rctApi.isLoggedIn();
+            const user = rctApi.getUser();
+            
+            document.getElementById('login-status').innerHTML = `
+                <div class="${isLoggedIn ? 'success' : 'error'}">
+                    ログイン状態: ${isLoggedIn ? 'ログイン中' : '未ログイン'}<br>
+                    ユーザーID: ${user.userId || 'なし'}<br>
+                    ログインID: ${user.loginId || 'なし'}<br>
+                    デモモード: ${user.isDemo ? 'はい' : 'いいえ'}
+                </div>
+            `;
+        }
+
+        async function testDemoLogin() {
+            try {
+                console.log('Testing demo login...');
+                const result = await rctApi.demoLogin();
+                
+                document.getElementById('demo-result').innerHTML = `
+                    <div class="success">
+                        デモログイン成功!<br>
+                        <pre>${JSON.stringify(result, null, 2)}</pre>
+                    </div>
+                `;
+                
+                // ログイン状態も更新
+                checkLoginStatus();
+                
+            } catch (error) {
+                console.error('Demo login error:', error);
+                document.getElementById('demo-result').innerHTML = `
+                    <div class="error">
+                        デモログイン失敗: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function goToMain() {
+            if (!rctApi.isLoggedIn()) {
+                document.getElementById('main-result').innerHTML = `
+                    <div class="error">
+                        ログインが必要です。先にデモログインを実行してください。
+                    </div>
+                `;
+                return;
+            }
+            
+            console.log('Navigating to main.html...');
+            window.location.href = 'main.html';
+        }
+
+        // ページ読み込み時に状態確認
+        window.onload = function() {
+            checkLoginStatus();
+        };
+    </script>
+</body>
+</html>
