@@ -22,9 +22,6 @@ FROM eclipse-temurin:17-jre-alpine
 
 WORKDIR /app
 
-# Install curl for health checks
-RUN apk add --no-cache curl
-
 # Copy the built JAR (use wildcard to handle any JAR name)
 COPY --from=builder /app/build/libs/*.jar app.jar
 
@@ -33,10 +30,6 @@ RUN ls -la app.jar && echo "JAR copied successfully" || echo "JAR copy failed"
 
 # Expose port
 EXPOSE 8080
-
-# Health check - use root endpoint for simplicity
-HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-  CMD curl -f http://localhost:${PORT:-8080}/ || exit 1
 
 # Run the application
 ENTRYPOINT ["sh", "-c", "java -Dspring.profiles.active=railway -Dserver.port=${PORT:-8080} -Dserver.address=0.0.0.0 -jar app.jar"]
