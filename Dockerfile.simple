@@ -6,8 +6,15 @@ WORKDIR /app
 # Copy source files
 COPY rct-backend/ ./
 
-# Build using the gradle image's gradle command
-RUN gradle clean bootJar --no-daemon
+# Ensure gradle wrapper is executable and clean any existing build
+RUN chmod +x gradlew || true
+RUN rm -rf build/ .gradle/ || true
+
+# Build using the gradle image's gradle command with verbose output
+RUN gradle clean bootJar --no-daemon --stacktrace --info
+
+# Debug: List the build directory contents
+RUN ls -la build/libs/ || echo "No build/libs directory found"
 
 # Runtime stage
 FROM eclipse-temurin:17-jre-alpine
