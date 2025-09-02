@@ -1,11 +1,9 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
-    "builder": "NIXPACKS",
-    "buildCommand": "cd rct-backend && chmod +x gradlew && ./gradlew bootJar --no-daemon"
+    "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "cd rct-backend && java -jar build/libs/rct-backend-0.0.1-SNAPSHOT.jar",
     "healthcheckPath": "/actuator/health",
     "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE",

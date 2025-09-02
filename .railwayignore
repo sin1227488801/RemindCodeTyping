@@ -1,0 +1,39 @@
+# Ignore frontend files for backend deployment
+Rct/
+node_modules/
+package.json
+package-lock.json
+webpack.config.js
+.eslintrc.js
+.prettierrc
+cypress/
+tests/
+
+# Ignore documentation
+docs/
+Document/
+*.md
+!README.md
+
+# Ignore development files
+.env
+.env.local
+.env.example
+.vscode/
+.idea/
+
+# Ignore build artifacts
+dist/
+build/
+coverage/
+
+# Ignore git files
+.git/
+.gitignore
+
+# Keep only backend files
+!rct-backend/
+!system.properties
+!Procfile
+!railway.json
+!nixpacks.toml
