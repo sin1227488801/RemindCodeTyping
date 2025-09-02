@@ -63,6 +63,10 @@ public class SecurityConfig {
                     .permitAll()
 
                     // Health check endpoints
+                    .requestMatchers("/")
+                    .permitAll()
+                    .requestMatchers("/health")
+                    .permitAll()
                     .requestMatchers("/actuator/health")
                     .permitAll()
                     .requestMatchers("/actuator/info")
