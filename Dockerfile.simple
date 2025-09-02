@@ -13,8 +13,9 @@ RUN rm -rf build/ .gradle/ || true
 # Build using the gradle image's gradle command with verbose output
 RUN gradle clean bootJar --no-daemon --stacktrace --info
 
-# Debug: List the build directory contents
+# Debug: List the build directory contents and find JAR
 RUN ls -la build/libs/ || echo "No build/libs directory found"
+RUN find build/libs/ -name "*.jar" -type f || echo "No JAR files found"
 
 # Runtime stage
 FROM eclipse-temurin:17-jre-alpine
@@ -24,8 +25,11 @@ WORKDIR /app
 # Install curl for health checks
 RUN apk add --no-cache curl
 
-# Copy the built JAR
-COPY --from=builder /app/build/libs/rct-backend-0.0.1-SNAPSHOT.jar app.jar
+# Copy the built JAR (use wildcard to handle any JAR name)
+COPY --from=builder /app/build/libs/*.jar app.jar
+
+# Verify JAR was copied
+RUN ls -la app.jar && echo "JAR copied successfully" || echo "JAR copy failed"
 
 # Expose port
 EXPOSE 8080

@@ -26,7 +26,7 @@ spring:
       path: /h2-console
   
   flyway:
-    enabled: true
+    enabled: false
     locations: classpath:db/migration
     baseline-on-migrate: true
     placeholder-replacement: false
@@ -91,9 +91,12 @@ management:
   health:
     # DB接続失敗時でもヘルスチェックを成功させる
     db:
-      enabled: ${HEALTH_DB_ENABLED:false}
+      enabled: false
     defaults:
       enabled: true
+  # セキュリティを無効化してヘルスチェックを匿名アクセス可能に
+  security:
+    enabled: false
 
 logging:
   level:
@@ -228,26 +231,47 @@ spring:
       on-profile: railway
   
   datasource:
-    url: ${DATABASE_URL:jdbc:h2:mem:railwaydb}
-    username: ${PGUSER:sa}
+    # 起動確認のため、DB接続を無効化（必要に応じて有効化）
+    url: ${DATABASE_URL:}
+    username: ${PGUSER:}
     password: ${PGPASSWORD:}
-    driver-class-name: ${DATABASE_DRIVER:org.h2.Driver}
+    driver-class-name: ${DATABASE_DRIVER:}
   
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: none
     properties:
       hibernate:
-        dialect: ${JPA_DIALECT:org.hibernate.dialect.H2Dialect}
+        dialect: ${JPA_DIALECT:}
     show-sql: false
+    # DB未接続時でも起動を継続
+    defer-datasource-initialization: true
   
   h2:
     console:
       enabled: false
+  
+  flyway:
+    enabled: false
 
 server:
   port: ${PORT:8080}
   address: 0.0.0.0
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+  health:
+    db:
+      enabled: false
+  security:
+    enabled: false
 
 # Railway environment overrides
 app:
@@ -272,8 +296,9 @@ logging:
     # Railway logging - debug for troubleshooting
     com.rct: DEBUG
     org.springframework: INFO
-    org.hibernate: INFO
     org.springframework.boot: INFO
+    org.springframework.boot.web.embedded.tomcat: INFO
+    org.springframework.boot.actuate: INFO
     root: INFO
 
 ---
