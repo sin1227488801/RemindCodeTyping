@@ -1,36 +1,6 @@
-spring:
-  application:
-    name: rct-backend
-
-  # まず dev は使わず、Railway プロファイルを後段のセクションで有効化
-  profiles:
-    active: railway
-
-  main:
-    banner-mode: "off"
-
-  # 一旦 DB 接続は “空” にして起動を最優先（後から有効化）
-  datasource:
-    url: ${DATABASE_URL:}
-    username: ${DB_USER:}
-    password: ${DB_PASSWORD:}
-  
-  # Flyway も無効化
-  flyway:
-    enabled: false
-
-  jpa:
-    hibernate:
-      # validate だとスキーマ未作成時に落ちるため、まず none に
-      ddl-auto: none
-    # DB未接続でも起動を継続
-    defer-datasource-initialization: true
-    open-in-view: false
-
 server:
   port: ${PORT:8080}
   address: 0.0.0.0
-  forward-headers-strategy: framework
 
 management:
   endpoints:
@@ -40,11 +10,10 @@ management:
         include: health,info
   endpoint:
     health:
-      show-details: never
       probes:
-        enabled: true   # /actuator/health/readiness, /liveness
+        enabled: true
+      show-details: never
   health:
-    # まずはヘルスを UP に寄せる：DB 等の依存は無効化
     db:
       enabled: false
     redis:
@@ -58,20 +27,22 @@ management:
     ldap:
       enabled: false
 
+spring:
+  application:
+    name: rct-backend
+  profiles:
+    active: railway
+  datasource:
+    url: ${JDBC_URL:}
+    username: ${DB_USER:}
+    password: ${DB_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: false
+
 logging:
   level:
     org.springframework.boot.web.embedded.tomcat: INFO
     org.springframework: INFO
-
----
-# Railway 専用プロファイル
-spring:
-  config:
-    activate:
-      on-profile: railway
-
-# ここでは依然として DB を無効にしたまま（起動確認後に有効化）
-management:
-  health:
-    db:
-      enabled: false
