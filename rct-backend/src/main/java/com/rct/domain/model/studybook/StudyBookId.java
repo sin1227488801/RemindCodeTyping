@@ -14,6 +14,11 @@ public final class StudyBookId implements Comparable<StudyBookId> {
     this.value = Objects.requireNonNull(value, "StudyBook ID cannot be null");
   }
 
+  /** Creates a StudyBookId from a UUID. */
+  public static StudyBookId of(UUID uuid) {
+    return new StudyBookId(uuid);
+  }
+
   /** Generates a new unique StudyBookId. */
   public static StudyBookId generate() {
     return new StudyBookId(UUID.randomUUID());

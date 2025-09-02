@@ -26,7 +26,7 @@ public class AuthenticationDtoMapper {
   public AuthenticationResponse toAuthenticationResponse(AuthenticationResult result) {
     return new AuthenticationResponse(
         result.getUserId().getValue(),
-        result.getLoginId(),
+        result.getLoginId().getValue(), // Convert LoginId to String
         result.getAccessToken(),
         result.getRefreshToken(),
         3600L, // Default expiration time

@@ -16,6 +16,11 @@ public final class Duration {
     this.milliseconds = milliseconds;
   }
 
+  /** Creates a Duration from milliseconds. */
+  public static Duration of(long milliseconds) {
+    return new Duration(milliseconds);
+  }
+
   public static Duration ofMilliseconds(long milliseconds) {
     return new Duration(milliseconds);
   }

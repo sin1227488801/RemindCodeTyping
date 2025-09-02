@@ -39,7 +39,7 @@ public class RefreshTokenUseCase {
     if (!jwtTokenService.isRefreshToken(refreshTokenValue)) {
       log.warn("Invalid token type provided for refresh");
       throw new AuthenticationException(
-          ErrorCode.INVALID_REFRESH_TOKEN.getCode(), "Invalid refresh token format");
+          ErrorCode.INVALID_REFRESH_TOKEN, "Invalid refresh token format");
     }
 
     // Find the refresh token in database
@@ -50,7 +50,7 @@ public class RefreshTokenUseCase {
                 () -> {
                   log.warn("Refresh token not found in database");
                   return new AuthenticationException(
-                      ErrorCode.INVALID_REFRESH_TOKEN.getCode(), "Refresh token not found");
+                      ErrorCode.INVALID_REFRESH_TOKEN, "Refresh token not found");
                 });
 
     // Validate token is still valid
@@ -61,7 +61,7 @@ public class RefreshTokenUseCase {
       refreshTokenRepository.deleteById(refreshToken.getId());
 
       throw new AuthenticationException(
-          ErrorCode.REFRESH_TOKEN_EXPIRED.getCode(), "Refresh token has expired");
+          ErrorCode.REFRESH_TOKEN_EXPIRED, "Refresh token has expired");
     }
 
     // Get the user
@@ -71,7 +71,7 @@ public class RefreshTokenUseCase {
             .orElseThrow(
                 () -> {
                   log.error("User not found for valid refresh token: {}", refreshToken.getUserId());
-                  return new AuthenticationException(ErrorCode.USER_NOT_FOUND.getCode(), "User not found");
+                  return new AuthenticationException(ErrorCode.USER_NOT_FOUND, "User not found");
                 });
 
     // Generate new tokens

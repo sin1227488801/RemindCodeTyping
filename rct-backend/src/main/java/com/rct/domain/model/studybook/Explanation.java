@@ -13,6 +13,11 @@ public final class Explanation {
     this.content = content; // Can be null or empty for optional explanations
   }
 
+  /** Creates an Explanation from a string content. */
+  public static Explanation of(String content) {
+    return new Explanation(content);
+  }
+
   /**
    * Validates the explanation content. Business rules: - If present, explanation should not exceed
    * maximum length - No special validation required as explanations are optional

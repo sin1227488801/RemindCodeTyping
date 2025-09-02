@@ -17,6 +17,11 @@ public final class Language {
     validate();
   }
 
+  /** Creates a Language from a string value. */
+  public static Language of(String value) {
+    return new Language(value);
+  }
+
   /** Validates the language value. */
   public void validate() {
     if (value.trim().isEmpty()) {

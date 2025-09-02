@@ -90,7 +90,7 @@ public class GetStudyBooksUseCase {
       List<StudyBook> studyBooks =
           studyBookRepository.findRandomByLanguage(query.getLanguage(), query.getLimit());
 
-      log.debug("Found {} random study books for language: {}", studyBooks.size(), language);
+      log.debug("Found {} random study books for language: {}", studyBooks.size(), query.getLanguage());
 
       return RandomStudyBookResult.success(studyBooks);
     } catch (Exception e) {

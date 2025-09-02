@@ -9,6 +9,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import java.security.Key;
+import javax.crypto.SecretKey;
 import java.time.Instant;
 import java.util.Date;
 import java.util.Optional;
@@ -122,7 +123,7 @@ public class JwtTokenService {
     try {
       Claims claims =
           Jwts.parser()
-              .verifyWith(signingKey)
+              .verifyWith((SecretKey) signingKey)
               .requireIssuer(jwtProperties.issuer())
               .requireAudience(jwtProperties.audience())
               .build()

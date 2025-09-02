@@ -128,12 +128,12 @@ public class AuthenticateUserUseCase {
                 () -> {
                   log.warn("Authentication failed: User not found for loginId: {}", loginId);
                   return new AuthenticationException(
-                      ErrorCode.INVALID_CREDENTIALS.getCode(), "Invalid login credentials");
+                      ErrorCode.INVALID_CREDENTIALS, "Invalid login credentials");
                 });
 
     if (!passwordService.matches(command.getPassword(), user.getPasswordHash())) {
       log.warn("Authentication failed: Invalid password for user: {}", loginId);
-      throw new AuthenticationException(ErrorCode.INVALID_CREDENTIALS.getCode(), "Invalid login credentials");
+      throw new AuthenticationException(ErrorCode.INVALID_CREDENTIALS, "Invalid login credentials");
     }
 
     // Update login statistics

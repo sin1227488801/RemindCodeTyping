@@ -17,6 +17,11 @@ public final class Question {
     validate();
   }
 
+  /** Creates a Question from a string content. */
+  public static Question of(String content) {
+    return new Question(content);
+  }
+
   /**
    * Validates the question content. Business rules: - Content must be at least 10 characters long -
    * Content cannot exceed 5000 characters

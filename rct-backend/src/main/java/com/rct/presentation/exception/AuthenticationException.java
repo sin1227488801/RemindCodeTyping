@@ -11,6 +11,10 @@ public class AuthenticationException extends RctException {
     super(ErrorCode.AUTH_001, message, "Invalid login credentials provided", cause);
   }
 
+  public AuthenticationException(ErrorCode errorCode, String message) {
+    super(errorCode, message, message);
+  }
+
   public static AuthenticationException userNotFound(String loginId) {
     return new AuthenticationException("User not found with login ID: " + loginId);
   }
