@@ -18,7 +18,7 @@ public class SecurityConfig {
     http
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/", "/actuator/health", "/actuator/health/**").permitAll()
+            .requestMatchers("/", "/healthz", "/actuator/health", "/actuator/health/**").permitAll()
             .anyRequest().permitAll()  // まずは通すことを最優先（後で絞る）
         )
         .httpBasic(Customizer.withDefaults());
