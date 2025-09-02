@@ -41,7 +41,8 @@ class ApiClient {
         if (hostname === 'localhost' || hostname === '127.0.0.1') {
             return 'http://localhost:8080/api';
         } else {
-            // Production environment - will be updated with actual Railway URL
+            // Production environment - enable demo mode if backend not available
+            console.log('Production environment detected - demo mode may be enabled');
             return 'https://rct-backend-production.up.railway.app/api';
         }
     }

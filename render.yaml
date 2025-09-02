@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: rct-backend
+    env: java
+    buildCommand: cd rct-backend && ./gradlew bootJar --no-daemon
+    startCommand: cd rct-backend && java -jar build/libs/rct-backend-0.0.1-SNAPSHOT.jar
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: render
+      - key: PORT
+        value: 8080
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: rct-postgres
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: rct-postgres
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: rct-postgres
+          property: password
+
+databases:
+  - name: rct-postgres
+    databaseName: rctdb
+    user: rctuser
