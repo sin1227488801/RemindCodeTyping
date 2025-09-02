@@ -46,3 +46,5 @@ logging:
   level:
     org.springframework.boot.web.embedded.tomcat: INFO
     org.springframework: INFO
+    org.apache.catalina.core.StandardService: INFO
+    org.apache.catalina.core.StandardEngine: INFO
