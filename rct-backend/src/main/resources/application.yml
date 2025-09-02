@@ -1,351 +1,70 @@
 spring:
   application:
     name: rct-backend
-  
+
+  # まず dev は使わず、Railway プロファイルを後段のセクションで有効化
   profiles:
-    active: dev
-  
+    active: railway
+
+  main:
+    banner-mode: "off"
+
+  # 一旦 DB 接続は “空” にして起動を最優先（後から有効化）
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:rctdb}
-    username: ${SPRING_DATASOURCE_USERNAME:sa}
-    password: ${SPRING_DATASOURCE_PASSWORD:}
-    driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.h2.Driver}
-  
+    url: ${JDBC_URL:}
+    username: ${DB_USER:}
+    password: ${DB_PASSWORD:}
+
   jpa:
     hibernate:
-      ddl-auto: validate
-    show-sql: ${app.database.show-sql:false}
-    properties:
-      hibernate:
-        dialect: ${SPRING_JPA_DIALECT:org.hibernate.dialect.H2Dialect}
-        format_sql: true
-  
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  
-  flyway:
-    enabled: false
-    locations: classpath:db/migration
-    baseline-on-migrate: true
-    placeholder-replacement: false
+      # validate だとスキーマ未作成時に落ちるため、まず none に
+      ddl-auto: none
 
 server:
   port: ${PORT:8080}
   address: 0.0.0.0
-
-# Application-specific configuration following 12-Factor principles
-app:
-  # Environment configuration
-  environment:
-    name: ${APP_ENVIRONMENT:dev}
-    production: ${APP_PRODUCTION:false}
-    debug-enabled: ${APP_DEBUG_ENABLED:true}
-    version: ${APP_VERSION:1.0.0-SNAPSHOT}
-    build-timestamp: ${APP_BUILD_TIMESTAMP:unknown}
-  
-  # JWT configuration
-  jwt:
-    secret: ${JWT_SECRET:}
-    expiration: ${JWT_EXPIRATION:PT60M}
-    refresh-expiration: ${JWT_REFRESH_EXPIRATION:P7D}
-    issuer: ${JWT_ISSUER:rct-backend}
-    audience: ${JWT_AUDIENCE:rct-frontend}
-  
-  # CORS configuration
-  cors:
-    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000,http://127.0.0.1:5500,http://localhost:5500}
-    allowed-methods: ${CORS_ALLOWED_METHODS:GET,POST,PUT,DELETE,OPTIONS}
-    allowed-headers: ${CORS_ALLOWED_HEADERS:*}
-    allow-credentials: ${CORS_ALLOW_CREDENTIALS:true}
-    max-age: ${CORS_MAX_AGE:PT1H}
-  
-  # Security configuration
-  security:
-    password-min-length: ${SECURITY_PASSWORD_MIN_LENGTH:8}
-    password-max-length: ${SECURITY_PASSWORD_MAX_LENGTH:128}
-    max-login-attempts: ${SECURITY_MAX_LOGIN_ATTEMPTS:5}
-    lockout-duration: ${SECURITY_LOCKOUT_DURATION:PT15M}
-    require-strong-password: ${SECURITY_REQUIRE_STRONG_PASSWORD:true}
-  
-  # Database configuration
-  database:
-    use-custom-pool: ${DATABASE_USE_CUSTOM_POOL:false}
-    connection-pool-size: ${DATABASE_CONNECTION_POOL_SIZE:10}
-    connection-timeout: ${DATABASE_CONNECTION_TIMEOUT:PT30S}
-    idle-timeout: ${DATABASE_IDLE_TIMEOUT:PT10M}
-    max-lifetime: ${DATABASE_MAX_LIFETIME:PT30M}
-    show-sql: ${DATABASE_SHOW_SQL:false}
+  forward-headers-strategy: framework
 
 management:
   endpoints:
     web:
-      exposure:
-        include: health,info,metrics
       base-path: /actuator
+      exposure:
+        include: health,info
   endpoint:
     health:
-      show-details: always
-      show-components: always
+      show-details: never
+      probes:
+        enabled: true   # /actuator/health/readiness, /liveness
   health:
-    # DB接続失敗時でもヘルスチェックを成功させる
+    # まずはヘルスを UP に寄せる：DB 等の依存は無効化
     db:
       enabled: false
-    defaults:
-      enabled: true
-  # セキュリティを無効化してヘルスチェックを匿名アクセス可能に
-  security:
-    enabled: false
-
-logging:
-  level:
-    com.rct: DEBUG
-    org.springframework.web: INFO
-    org.hibernate.SQL: DEBUG
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
-
----
-spring:
-  config:
-    activate:
-      on-profile: azure
-  
-  datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
-    driver-class-name: org.postgresql.Driver
-  
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-  
-  h2:
-    console:
+    redis:
+      enabled: false
+    mongo:
+      enabled: false
+    cassandra:
+      enabled: false
+    elasticsearch:
+      enabled: false
+    ldap:
       enabled: false
 
-# Production environment overrides
-app:
-  environment:
-    name: azure
-    production: true
-    debug-enabled: false
-  
-  database:
-    use-custom-pool: true
-    connection-pool-size: 20
-    show-sql: false
-  
-  security:
-    require-strong-password: true
-
 logging:
   level:
-    # Production logging - minimal and performance-focused
-    com.rct: WARN
-    org.springframework: ERROR
-    org.hibernate: ERROR
-    org.apache: ERROR
-    org.flywaydb: ERROR
-    ch.qos.logback: ERROR
-    # Explicitly disable DEBUG level
-    DEBUG: OFF
-    root: WARN
-  pattern:
-    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    org.springframework.boot.web.embedded.tomcat: INFO
+    org.springframework: INFO
 
 ---
-spring:
-  config:
-    activate:
-      on-profile: staging
-  
-  datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
-    driver-class-name: org.postgresql.Driver
-  
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-  
-  h2:
-    console:
-      enabled: false
-
-# Staging environment overrides
-app:
-  environment:
-    name: staging
-    production: false
-    debug-enabled: false
-  
-  database:
-    use-custom-pool: true
-    connection-pool-size: 15
-    show-sql: false
-
-logging:
-  level:
-    # Staging logging - balanced for testing
-    com.rct: INFO
-    org.springframework.web: WARN
-    org.hibernate.SQL: WARN
-
----
-spring:
-  config:
-    activate:
-      on-profile: test
-
-# Test environment overrides
-app:
-  environment:
-    name: test
-    production: false
-    debug-enabled: true
-  
-  database:
-    show-sql: true
-  
-  security:
-    max-login-attempts: 3
-    lockout-duration: PT1M
-
-logging:
-  level:
-    # Test logging - detailed for debugging tests
-    com.rct: DEBUG
-    org.springframework.test: INFO
-    org.springframework.web: DEBUG
-
----
+# Railway 専用プロファイル
 spring:
   config:
     activate:
       on-profile: railway
-  
-  datasource:
-    # 起動確認のため、DB接続を無効化（必要に応じて有効化）
-    url: ${DATABASE_URL:}
-    username: ${PGUSER:}
-    password: ${PGPASSWORD:}
-    driver-class-name: ${DATABASE_DRIVER:}
-  
-  jpa:
-    hibernate:
-      ddl-auto: none
-    properties:
-      hibernate:
-        dialect: ${JPA_DIALECT:}
-    show-sql: false
-    # DB未接続時でも起動を継続
-    defer-datasource-initialization: true
-  
-  h2:
-    console:
-      enabled: false
-  
-  flyway:
-    enabled: false
 
-server:
-  port: ${PORT:8080}
-  address: 0.0.0.0
-
+# ここでは依然として DB を無効にしたまま（起動確認後に有効化）
 management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics
-      base-path: /actuator
-  endpoint:
-    health:
-      show-details: always
   health:
     db:
       enabled: false
-  security:
-    enabled: false
-
-# Railway environment overrides
-app:
-  environment:
-    name: railway
-    production: true
-    debug-enabled: false
-  
-  cors:
-    allowed-origins: ${CORS_ALLOWED_ORIGINS:https://sin1227488801.github.io,http://localhost:3000}
-  
-  database:
-    use-custom-pool: true
-    connection-pool-size: 10
-    show-sql: false
-  
-  security:
-    require-strong-password: true
-
-logging:
-  level:
-    # Railway logging - debug for troubleshooting
-    com.rct: DEBUG
-    org.springframework: INFO
-    org.springframework.boot: INFO
-    org.springframework.boot.web.embedded.tomcat: INFO
-    org.springframework.boot.actuate: INFO
-    root: INFO
-
----
-spring:
-  config:
-    activate:
-      on-profile: heroku
-  
-  datasource:
-    url: ${DATABASE_URL}
-    driver-class-name: org.postgresql.Driver
-  
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: false
-  
-  h2:
-    console:
-      enabled: false
-
-server:
-  port: ${PORT:8080}
-
-# Heroku environment overrides
-app:
-  environment:
-    name: heroku
-    production: true
-    debug-enabled: false
-  
-  cors:
-    allowed-origins: ${CORS_ALLOWED_ORIGINS:https://sin1227488801.github.io,http://localhost:3000}
-  
-  database:
-    use-custom-pool: true
-    connection-pool-size: 10
-    show-sql: false
-  
-  security:
-    require-strong-password: true
-
-logging:
-  level:
-    # Heroku logging - production level
-    com.rct: INFO
-    org.springframework: WARN
-    org.hibernate: WARN
-    root: WARN
