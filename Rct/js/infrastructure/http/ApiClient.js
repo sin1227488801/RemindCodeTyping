@@ -6,7 +6,8 @@ import cacheManager, { CachePresets } from '../performance/CacheManager.js';
  */
 class ApiClient {
     constructor(baseUrl, options = {}) {
-        this.baseUrl = baseUrl || 'http://localhost:8080/api';
+        // Auto-detect environment and set appropriate base URL
+        this.baseUrl = baseUrl || this.getDefaultBaseUrl();
         this.defaultTimeout = options.timeout || 10000;
         this.maxRetries = options.maxRetries || 2;
         this.retryDelay = options.retryDelay || 1000;
@@ -28,6 +29,21 @@ class ApiClient {
         this.pendingRequests = new Map();
         
         this.setupDefaultInterceptors();
+    }
+
+    /**
+     * Get default base URL based on environment
+     * @returns {string} Default API base URL
+     */
+    getDefaultBaseUrl() {
+        const hostname = window.location.hostname;
+        
+        if (hostname === 'localhost' || hostname === '127.0.0.1') {
+            return 'http://localhost:8080/api';
+        } else {
+            // Production environment - will be updated with actual Railway URL
+            return 'https://rct-backend-production.up.railway.app/api';
+        }
     }
 
     /**
