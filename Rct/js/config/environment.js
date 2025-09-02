@@ -41,8 +41,8 @@ class EnvironmentConfig {
                 maxRetries: 2
             },
             production: {
-                // Railway backend URL - will be updated after deployment
-                apiBaseUrl: 'https://rct-backend-production.up.railway.app/api',
+                // Railway backend URL - deployed and ready!
+                apiBaseUrl: 'https://remindcodetyping-production.up.railway.app/api',
                 enableLogging: false,
                 enableCache: true,
                 requestTimeout: 15000,
