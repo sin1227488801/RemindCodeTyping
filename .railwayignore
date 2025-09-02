@@ -1,37 +1,59 @@
-# Ignore frontend files for backend deployment
+# FORCE JAVA-ONLY DEPLOYMENT - IGNORE ALL NODE.JS FILES
+
+# Frontend files (complete exclusion)
 Rct/
 node_modules/
 package.json
 package-lock.json
+npm-shrinkwrap.json
+yarn.lock
+pnpm-lock.yaml
 webpack.config.js
-.eslintrc.js
-.prettierrc
+vite.config.js
+rollup.config.js
+.eslintrc.*
+.prettierrc*
+babel.config.*
+jest.config.*
 cypress/
 tests/
+*.test.js
+*.spec.js
 
-# Ignore documentation
+# Documentation and non-essential files
 docs/
 Document/
+archive/
+data/
+opt/
 *.md
 !README.md
 
-# Ignore development files
-.env
-.env.local
-.env.example
+# Development and IDE files
+.env*
 .vscode/
 .idea/
+.DS_Store
+Thumbs.db
 
-# Ignore build artifacts
+# Build artifacts and cache
 dist/
 build/
 coverage/
+.nyc_output/
+.cache/
+tmp/
 
-# Ignore git files
+# Git and version control
 .git/
 .gitignore
+.gitattributes
 
-# Keep only backend files
+# Windows/Mac system files
+desktop.ini
+.DS_Store
+
+# Only keep essential backend files
 !rct-backend/
 !system.properties
 !Procfile

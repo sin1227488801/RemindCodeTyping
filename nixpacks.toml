@@ -1,15 +1,20 @@
+# Force Java detection and disable Node.js detection
 [variables]
 NIXPACKS_JDK_VERSION = "17"
+NIXPACKS_NO_DEFAULT_CACHE_DIRS = "true"
+
+[providers]
+java = "17"
 
 [phases.setup]
-nixPkgs = ["openjdk17"]
+nixPkgs = ["openjdk17", "gradle"]
 
 [phases.build]
 cmds = [
   "cd rct-backend",
-  "chmod +x gradlew", 
-  "./gradlew clean bootJar --no-daemon --stacktrace"
+  "chmod +x gradlew",
+  "./gradlew clean bootJar --no-daemon --stacktrace --info"
 ]
 
 [start]
-cmd = "cd rct-backend && java -Dserver.port=$PORT -jar build/libs/rct-backend-0.0.1-SNAPSHOT.jar"
+cmd = "cd rct-backend && java -Dserver.port=$PORT -Dspring.profiles.active=railway -jar build/libs/rct-backend-0.0.1-SNAPSHOT.jar"

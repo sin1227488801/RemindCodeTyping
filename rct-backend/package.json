@@ -1,0 +1,10 @@
+{
+  "name": "rct-backend-placeholder",
+  "version": "1.0.0",
+  "description": "Placeholder to prevent Railway from detecting frontend",
+  "main": "index.js",
+  "scripts": {
+    "start": "echo 'This is a Spring Boot application, not Node.js'"
+  },
+  "private": true
+}
