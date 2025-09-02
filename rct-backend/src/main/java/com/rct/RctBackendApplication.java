@@ -5,10 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 
-@SpringBootApplication(exclude = {
-  org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration.class,
-  org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration.class
-})
+@SpringBootApplication
 public class RctBackendApplication {
 
   public static void main(String[] args) {

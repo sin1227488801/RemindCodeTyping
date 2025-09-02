@@ -10,7 +10,7 @@ import org.springframework.security.web.SecurityFilterChain;
  * Security configuration optimized for Railway deployment
  * Prioritizes health check accessibility over security (for initial deployment)
  */
-@Configuration
+// @Configuration  // 一時的に無効化
 public class SecurityConfig {
 
   @Bean
