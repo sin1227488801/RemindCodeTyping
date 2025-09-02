@@ -32,6 +32,8 @@ spring:
     name: rct-backend
   profiles:
     active: railway
+  main:
+    lazy-initialization: true
   datasource:
     url: ${JDBC_URL:}
     username: ${DB_USER:}
@@ -39,6 +41,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+    open-in-view: false
   flyway:
     enabled: false
 
