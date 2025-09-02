@@ -262,3 +262,52 @@ logging:
     org.springframework: WARN
     org.hibernate: WARN
     root: WARN
+
+---
+spring:
+  config:
+    activate:
+      on-profile: heroku
+  
+  datasource:
+    url: ${DATABASE_URL}
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+  
+  h2:
+    console:
+      enabled: false
+
+server:
+  port: ${PORT:8080}
+
+# Heroku environment overrides
+app:
+  environment:
+    name: heroku
+    production: true
+    debug-enabled: false
+  
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:https://sin1227488801.github.io,http://localhost:3000}
+  
+  database:
+    use-custom-pool: true
+    connection-pool-size: 10
+    show-sql: false
+  
+  security:
+    require-strong-password: true
+
+logging:
+  level:
+    # Heroku logging - production level
+    com.rct: INFO
+    org.springframework: WARN
+    org.hibernate: WARN
+    root: WARN
