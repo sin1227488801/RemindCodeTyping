@@ -11,14 +11,21 @@ spring:
 
   # 一旦 DB 接続は “空” にして起動を最優先（後から有効化）
   datasource:
-    url: ${JDBC_URL:}
+    url: ${DATABASE_URL:}
     username: ${DB_USER:}
     password: ${DB_PASSWORD:}
+  
+  # Flyway も無効化
+  flyway:
+    enabled: false
 
   jpa:
     hibernate:
       # validate だとスキーマ未作成時に落ちるため、まず none に
       ddl-auto: none
+    # DB未接続でも起動を継続
+    defer-datasource-initialization: true
+    open-in-view: false
 
 server:
   port: ${PORT:8080}
