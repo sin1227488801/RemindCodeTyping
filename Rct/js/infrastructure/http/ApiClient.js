@@ -12,6 +12,9 @@ class ApiClient {
         this.maxRetries = options.maxRetries || 2;
         this.retryDelay = options.retryDelay || 1000;
         
+        // Mock mode detection
+        this.mockMode = this.shouldUseMockMode();
+        
         // Request/Response interceptors
         this.requestInterceptors = [];
         this.responseInterceptors = [];
@@ -28,7 +31,38 @@ class ApiClient {
         // Request deduplication
         this.pendingRequests = new Map();
         
+        // Initialize mock service if needed
+        if (this.mockMode) {
+            this.initializeMockService();
+        }
+        
         this.setupDefaultInterceptors();
+    }
+
+    /**
+     * Determine if mock mode should be used
+     * @returns {boolean}
+     */
+    shouldUseMockMode() {
+        const hostname = window.location.hostname;
+        return hostname.includes('github.io') || 
+               hostname.includes('netlify.app') || 
+               hostname.includes('vercel.app') ||
+               hostname.includes('surge.sh');
+    }
+
+    /**
+     * Initialize mock service
+     */
+    async initializeMockService() {
+        try {
+            const { default: MockApiService } = await import('../api/MockApiService.js');
+            this.mockService = MockApiService;
+            console.log('🎭 Mock API Service initialized');
+        } catch (error) {
+            console.warn('Failed to load mock service:', error);
+            this.mockMode = false;
+        }
     }
 
     /**
@@ -373,6 +407,10 @@ class ApiClient {
      * @returns {Promise<*>} Response data
      */
     async executeRequest(endpoint, options = {}) {
+        // Use mock service if in mock mode
+        if (this.mockMode && this.mockService) {
+            return this.executeMockRequest(endpoint, options);
+        }
         const url = `${this.baseUrl}${endpoint}`;
         let lastError;
         
@@ -441,6 +479,36 @@ class ApiClient {
         }
         
         throw lastError;
+    }
+
+    /**
+     * Execute mock request
+     * @param {string} endpoint - API endpoint
+     * @param {Object} options - Request options
+     * @returns {Promise<*>} Mock response data
+     */
+    async executeMockRequest(endpoint, options = {}) {
+        try {
+            console.log(`🎭 Mock API Request: ${options.method || 'GET'} ${endpoint}`, options);
+            
+            // Route to appropriate mock service method
+            if (endpoint.startsWith('/auth/')) {
+                return await this.mockService.mockAuth(endpoint, options.body ? JSON.parse(options.body) : {});
+            } else if (endpoint.startsWith('/studybooks')) {
+                return await this.mockService.mockStudyBooks(endpoint, {
+                    method: options.method,
+                    body: options.body ? JSON.parse(options.body) : null,
+                    limit: new URLSearchParams(endpoint.split('?')[1] || '').get('limit')
+                });
+            } else if (endpoint.startsWith('/typing/')) {
+                return await this.mockService.mockTyping(endpoint, options.body ? JSON.parse(options.body) : {});
+            } else {
+                throw new Error(`Mock endpoint not implemented: ${endpoint}`);
+            }
+        } catch (error) {
+            console.error('Mock API Error:', error);
+            throw error;
+        }
     }
 
     /**

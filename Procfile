@@ -1,0 +1,1 @@
+web: cd rct-backend && java -Dserver.port=$PORT -jar build/libs/rct-backend-0.0.1-SNAPSHOT.jar
