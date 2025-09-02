@@ -1,19 +1,25 @@
-# Single-stage build - simpler and more reliable
+# Alternative: Use Gradle directly instead of wrapper
 FROM eclipse-temurin:17-jdk-alpine
 
 WORKDIR /app
 
-# Install curl and bash for better shell support
-RUN apk add --no-cache curl bash
+# Install curl and Gradle
+RUN apk add --no-cache curl wget unzip
+
+# Install Gradle
+RUN wget https://services.gradle.org/distributions/gradle-8.4-bin.zip \
+    && unzip gradle-8.4-bin.zip \
+    && mv gradle-8.4 /opt/gradle \
+    && rm gradle-8.4-bin.zip
+
+# Add Gradle to PATH
+ENV PATH="/opt/gradle/bin:${PATH}"
 
 # Copy the entire rct-backend directory
 COPY rct-backend/ ./
 
-# Make gradlew executable and verify
-RUN chmod +x gradlew && ls -la gradlew
-
-# Use bash to run gradlew (more reliable than sh)
-RUN bash ./gradlew clean bootJar --no-daemon --stacktrace
+# Build the application using Gradle directly
+RUN gradle clean bootJar --no-daemon --stacktrace
 
 # Expose port
 EXPOSE 8080
@@ -22,7 +28,7 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
   CMD curl -f http://localhost:8080/actuator/health || exit 1
 
-# Run the application with optimized JVM settings
+# Run the application
 ENTRYPOINT ["java", \
     "-Dspring.profiles.active=railway", \
     "-Dserver.port=8080", \
