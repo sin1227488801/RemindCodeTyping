@@ -219,15 +219,17 @@ spring:
       on-profile: railway
   
   datasource:
-    url: ${DATABASE_URL:${SPRING_DATASOURCE_URL}}
-    username: ${DATABASE_USERNAME:${SPRING_DATASOURCE_USERNAME}}
-    password: ${DATABASE_PASSWORD:${SPRING_DATASOURCE_PASSWORD}}
-    driver-class-name: org.postgresql.Driver
+    url: ${DATABASE_URL:jdbc:h2:mem:railwaydb}
+    username: ${PGUSER:sa}
+    password: ${PGPASSWORD:}
+    driver-class-name: ${DATABASE_DRIVER:org.h2.Driver}
   
   jpa:
+    hibernate:
+      ddl-auto: create-drop
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: ${JPA_DIALECT:org.hibernate.dialect.H2Dialect}
     show-sql: false
   
   h2:
@@ -257,11 +259,12 @@ app:
 
 logging:
   level:
-    # Railway logging - production level
-    com.rct: INFO
-    org.springframework: WARN
-    org.hibernate: WARN
-    root: WARN
+    # Railway logging - debug for troubleshooting
+    com.rct: DEBUG
+    org.springframework: INFO
+    org.hibernate: INFO
+    org.springframework.boot: INFO
+    root: INFO
 
 ---
 spring:
