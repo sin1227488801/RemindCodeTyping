@@ -52,10 +52,18 @@ app = FastAPI(
     ]
 )
 
+# origins
+origins = [
+    "https://sin1227488801.github.io",                 # ユーザーページのルート
+    "https://sin1227488801.github.io/RemindCodeTyping" # GitHub Pages URL
+    # 必要に応じて他のオリジンも追加
+]
+
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify exact origins
+    # allow_origins=["*"],  # In production, specify exact origins
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
