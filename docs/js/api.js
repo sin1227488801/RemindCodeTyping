@@ -1063,11 +1063,10 @@ class RctApi {
                 studyBook = studyBooks[0];
             }
 
-            // 問題を作成
-            const question = await this.request('/questions/', {
+            // 問題を作成（study_book_idはクエリパラメータとして送信）
+            const question = await this.request(`/questions/?study_book_id=${studyBook.id}`, {
                 method: 'POST',
                 body: JSON.stringify({
-                    study_book_id: studyBook.id,
                     language: questionData.language,
                     category: questionData.category || 'user-created',
                     difficulty: questionData.difficulty || 'medium',
