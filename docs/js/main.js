@@ -161,14 +161,33 @@ function initializeNotebookPage() {
         clearTimeout(window.notebookPageInitTimeout);
     }
     window.notebookPageInitTimeout = setTimeout(() => {
+        console.log('Checking for NotebookManager...', {
+            NotebookManagerExists: typeof NotebookManager !== 'undefined',
+            rctApiExists: !!window.rctApi
+        });
+        
         if (typeof NotebookManager !== 'undefined' && window.rctApi) {
             console.log('Initializing NotebookManager...');
-            window.notebookManager = new NotebookManager();
+            try {
+                window.notebookManager = new NotebookManager();
+                console.log('NotebookManager initialized successfully');
+            } catch (error) {
+                console.error('Failed to initialize NotebookManager:', error);
+            }
         } else {
-            console.warn('NotebookManager or rctApi not found');
+            console.warn('NotebookManager or rctApi not found, retrying...');
+            // リトライ
+            setTimeout(() => {
+                if (typeof NotebookManager !== 'undefined' && window.rctApi) {
+                    console.log('Retry: Initializing NotebookManager...');
+                    window.notebookManager = new NotebookManager();
+                } else {
+                    console.error('Still not found after retry');
+                }
+            }, 500);
         }
         window.notebookPageInitTimeout = null;
-    }, 100);
+    }, 200);
 }
 
 // 記録ページの初期化

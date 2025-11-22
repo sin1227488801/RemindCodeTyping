@@ -51,7 +51,9 @@ class NotebookManager {
     // 新規登録フォームのセットアップ
     setupRegisterForm() {
         const registerButton = document.getElementById('register-button');
-        registerButton.addEventListener('click', () => this.registerProblem());
+        if (registerButton) {
+            registerButton.addEventListener('click', () => this.registerProblem());
+        }
     }
 
     // 言語リストの読み込み
@@ -62,25 +64,29 @@ class NotebookManager {
 
             // 新規登録フォームの言語リスト
             const datalist = document.getElementById('languages');
-            datalist.innerHTML = '';
-            languages.forEach(lang => {
-                const option = document.createElement('option');
-                option.value = lang;
-                datalist.appendChild(option);
-            });
+            if (datalist) {
+                datalist.innerHTML = '';
+                languages.forEach(lang => {
+                    const option = document.createElement('option');
+                    option.value = lang;
+                    datalist.appendChild(option);
+                });
+            }
 
             // フィルター用の言語リスト
             const filterSelect = document.getElementById('filter-language');
-            filterSelect.innerHTML = '<option value="">すべて</option>';
-            languages.forEach(lang => {
-                const option = document.createElement('option');
-                option.value = lang;
-                option.textContent = lang;
-                filterSelect.appendChild(option);
-            });
+            if (filterSelect) {
+                filterSelect.innerHTML = '<option value="">すべて</option>';
+                languages.forEach(lang => {
+                    const option = document.createElement('option');
+                    option.value = lang;
+                    option.textContent = lang;
+                    filterSelect.appendChild(option);
+                });
 
-            // フィルター変更イベント
-            filterSelect.addEventListener('change', () => this.filterProblems());
+                // フィルター変更イベント
+                filterSelect.addEventListener('change', () => this.filterProblems());
+            }
 
         } catch (error) {
             console.error('Failed to load languages:', error);
@@ -132,6 +138,8 @@ class NotebookManager {
     // 問題一覧の読み込み
     async loadProblems() {
         const listContainer = document.getElementById('problems-list');
+        if (!listContainer) return;
+
         listContainer.innerHTML = '<p class="loading-message">読み込み中...</p>';
 
         try {
@@ -164,6 +172,7 @@ class NotebookManager {
     // 問題一覧の描画
     renderProblems() {
         const listContainer = document.getElementById('problems-list');
+        if (!listContainer) return;
 
         if (this.filteredProblems.length === 0) {
             listContainer.innerHTML = '<p class="empty-message">登録された問題がありません</p>';
@@ -209,14 +218,14 @@ class NotebookManager {
         item.appendChild(header);
         item.appendChild(questionDiv);
 
-        if (problem.explanation) {
+        if (problem.answer || problem.explanation) {
             const explanationLabel = document.createElement('div');
             explanationLabel.className = 'problem-explanation-label';
             explanationLabel.textContent = '解説:';
 
             const explanationDiv = document.createElement('div');
             explanationDiv.className = 'problem-explanation';
-            explanationDiv.textContent = problem.explanation;
+            explanationDiv.textContent = problem.answer || problem.explanation;
 
             item.appendChild(explanationLabel);
             item.appendChild(explanationDiv);
@@ -246,5 +255,5 @@ class NotebookManager {
     }
 }
 
-// ページ読み込み時に初期化（main.jsから呼ばれる場合もあるため、DOMContentLoadedは使わない）
-// main.jsのinitializeNotebookPage()から直接インスタンス化される
+// グローバルスコープに公開
+window.NotebookManager = NotebookManager;
