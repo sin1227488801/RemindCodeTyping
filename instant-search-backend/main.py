@@ -53,34 +53,16 @@ app = FastAPI(
 )
 
 # origins
-#origins = [
-#    "https://sin1227488801.github.io",                 # ユーザーページのルート
+origins = [
+    "https://sin1227488801.github.io",                 # ユーザーページのルート
     # 必要に応じて他のオリジンも追加
-#]
-
-# =========================
-# ★ 自前CORSミドルウェアを追加
-# =========================
-@app.middleware("http")
-async def add_cors_headers(request: Request, call_next):
-    response = await call_next(request)
-
-    # ここで全レスポンスにCORSヘッダを付与
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type, Accept"
-
-    # OPTIONSプリフライトにも対応しておく（保険）
-    if request.method == "OPTIONS":
-        response.status_code = 200
-
-    return response
+]
 
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, specify exact origins
-    # allow_origins=origins,
+    # allow_origins=["*"],  # In production, specify exact origins
+    allow_origins=origins,
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
