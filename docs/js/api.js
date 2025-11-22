@@ -1016,3 +1016,91 @@ class RctApi {
 
 // グローバルRctAPIインスタンス
 window.rctApi = new RctApi();
+ 
+   // ユーザーの問題一覧を取得
+    async getUserQuestions() {
+        try {
+            // ユーザーの学習帳を取得
+            const studyBooks = await this.request('/study-books');
+            
+            if (!studyBooks || studyBooks.length === 0) {
+                console.log('学習帳が見つかりません');
+                return [];
+            }
+
+            // すべての学習帳から問題を取得
+            const allQuestions = [];
+            for (const book of studyBooks) {
+                try {
+                    const questions = await this.request(`/questions/?study_book_id=${book.id}`);
+                    allQuestions.push(...questions);
+                } catch (error) {
+                    console.warn(`学習帳 ${book.id} の問題取得に失敗:`, error);
+                }
+            }
+
+            return allQuestions;
+        } catch (error) {
+            console.error('ユーザー問題の取得に失敗:', error);
+            return [];
+        }
+    }
+
+    // 問題の新規作成
+    async createQuestion(questionData) {
+        try {
+            // ユーザーの学習帳を取得または作成
+            let studyBooks = await this.request('/study-books');
+            
+            let studyBook;
+            if (!studyBooks || studyBooks.length === 0) {
+                // 学習帳がない場合は作成
+                studyBook = await this.request('/study-books/', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        title: 'My Study Book',
+                        description: 'ユーザーが作成した問題集'
+                    })
+                });
+                console.log('新しい学習帳を作成しました:', studyBook);
+            } else {
+                studyBook = studyBooks[0];
+            }
+
+            // 問題を作成
+            const question = await this.request('/questions/', {
+                method: 'POST',
+                body: JSON.stringify({
+                    study_book_id: studyBook.id,
+                    language: questionData.language,
+                    category: questionData.category || 'user-created',
+                    difficulty: questionData.difficulty || 'medium',
+                    question: questionData.question,
+                    answer: questionData.explanation || ''
+                })
+            });
+
+            console.log('問題を作成しました:', question);
+            return question;
+        } catch (error) {
+            console.error('問題の作成に失敗:', error);
+            throw error;
+        }
+    }
+
+    // 問題の削除
+    async deleteQuestion(questionId) {
+        try {
+            await this.request(`/questions/${questionId}`, {
+                method: 'DELETE'
+            });
+            console.log('問題を削除しました:', questionId);
+        } catch (error) {
+            console.error('問題の削除に失敗:', error);
+            throw error;
+        }
+    }
+}
+
+// グローバルインスタンスを作成
+window.rctApi = new RctApi();
