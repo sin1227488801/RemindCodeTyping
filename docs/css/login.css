@@ -1,0 +1,126 @@
+@import url('_common.css');
+
+.login-container {
+    background-color: #fff;
+    padding: var(--padding-main);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: var(--container-width);
+    min-width: var(--container-width);
+    text-align: center;
+    position: relative;
+    margin: 0 auto;
+    flex-shrink: 0;
+}
+
+
+
+.input-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--margin-main);
+}
+
+.input-group label {
+    font-size: var(--font-size-main);
+    color: var(--color-text);
+    width: 30%;
+    padding-top: var(--padding-narrow);
+    line-height: 1.2;
+}
+
+.input-group input[type="text"],
+.input-group input[type="password"] {
+    width: 65%;
+    padding: var(--padding-narrow);
+    font-size: var(--font-size-main);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    transition: border-color 0.3s ease;
+    margin-bottom: 0;
+}
+
+.input-group input:focus {
+    border-color: var(--color-primary);
+    outline: none;
+}
+
+.password-options {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: -10px;
+    margin-bottom: var(--margin-main);
+    font-size: var(--font-size-smaller);
+    color: var(--color-text-light);
+}
+
+.password-options input[type="checkbox"] {
+    margin-right: var(--margin-more-narrow);
+    width: auto;
+    margin-bottom: 0;
+}
+
+.password-options label {
+    margin: 0;
+    width: auto;
+    cursor: pointer;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.button-container .btn-muted {
+    width: 48%;
+}
+
+/* ヘッダーを全画面サイズで固定 */
+.header {
+    height: 60px !important;
+    padding: 10px 15px !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 15px !important;
+    min-width: 460px;
+    overflow: hidden;
+}
+
+.header img {
+    height: 48px !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+}
+
+.header h1 {
+    font-size: 1.5rem !important;
+    margin: 0 !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+    flex-grow: 1 !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ログインページ専用のbodyスタイル - 固定レイアウト維持 */
+body {
+    min-width: 460px !important;
+    overflow-x: auto !important;
+    padding: 0 30px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    height: 100vh !important;
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+/* レスポンシブ対応を無効化 - 固定レイアウト維持 */
+/* 
+400px固定幅を維持し、狭い画面では水平スクロールで対応
+レイアウトの崩れを防止
+*/

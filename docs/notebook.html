@@ -1,0 +1,38 @@
+<head>
+    <link rel="stylesheet" href="css/notebook.css">
+</head>
+
+<body>
+    <div class="label-text-container">
+        <h2>電子学習帳</h2>
+    </div>
+    <div class="main">
+        <h3>新規登録</h3>
+    </div>
+    <div class="main">
+        <div class="box-left">
+            <!-- 入力可能プルダウンメニュー -->
+            <div class="dropdown-container">
+                <label for="language-select">言語:</label>
+                <input list="languages" id="language-select" name="language-select" placeholder="選択または入力">
+                <datalist id="languages">
+                    <!-- 言語オプションは動的に読み込まれます -->
+                </datalist>
+            </div>
+        </div>
+    </div>
+    <div class="main">
+        <div class="box-full">
+            <label>問題</label>
+            <!-- 長文入力 -->
+            <textarea placeholder="ここに問題文を入力してください" rows="6" cols="80"></textarea>
+        </div>
+    </div>
+    <div class="main">
+        <div class="box-full">
+            <label>解説</label>
+            <textarea placeholder="ここに解説を入力してください" rows="4" cols="80"></textarea>
+        </div>
+    </div>
+    <button class="btn">新規登録</button>
+</body>

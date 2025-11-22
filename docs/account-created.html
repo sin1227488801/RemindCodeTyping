@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アカウント作成完了</title>
+    <link rel="icon" href="./images/13_Rのみ.png">
+    <link rel="stylesheet" href="css/account-created.css">
+</head>
+
+<body>
+    <header class="header">
+        <img src="./images/02_ロゴ基本_白抜き.png" alt="Remind Code Typing Logo">
+        <h1>Remind code typing</h1>
+    </header>
+
+    <div class="success-container">
+        <div class="success-icon">
+            <div class="checkmark">✓</div>
+        </div>
+        <h2>アカウントを作成しました</h2>
+        <p id="welcome-message">Remind Code Typingへようこそ！</p>
+
+        <div class="button-container">
+            <button type="button" class="btn" id="login-button">ログイン</button>
+            <button type="button" class="btn-muted" id="back-button">戻る</button>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script>
+        // sessionStorageから登録したアカウント情報を取得
+        function getAccountInfo() {
+            const newUserData = sessionStorage.getItem('newUserData');
+            if (newUserData) {
+                try {
+                    return JSON.parse(newUserData);
+                } catch (e) {
+                    console.error('ユーザーデータの解析エラー:', e);
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        function proceedToLogin() {
+            console.log('proceedToLogin called');
+            const accountInfo = getAccountInfo();
+
+            if (!accountInfo || !accountInfo.loginId) {
+                console.warn('アカウント情報がありません');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 新規登録したユーザー情報でログイン状態を設定
+            const userData = {
+                id: accountInfo.id, // 新規登録時に生成されたUUID
+                name: accountInfo.name || accountInfo.loginId,
+                email: accountInfo.email,
+                loginId: accountInfo.loginId,
+                isLocalOnly: accountInfo.isLocalOnly || false // ローカルユーザーフラグを保持
+            };
+
+            window.rctApi.setUser(userData);
+            console.log('新規登録ユーザーでログイン:', userData);
+            
+            if (accountInfo.isLocalOnly) {
+                console.log('ローカルユーザーとして登録されました（バックエンド連携なし）');
+            } else {
+                console.log('バックエンドユーザーとして登録されました');
+            }
+
+            // sessionStorageをクリア
+            sessionStorage.removeItem('newUserData');
+
+            // メインページに遷移
+            window.location.href = 'main.html';
+        }
+
+        function goBack() {
+            console.log('goBack called');
+            // sessionStorageをクリア
+            sessionStorage.removeItem('newUserData');
+            window.location.href = 'login.html';
+        }
+
+        // ページ読み込み時の初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('account-created.html loaded');
+            
+            const accountInfo = getAccountInfo();
+            console.log('Account info:', accountInfo);
+            
+            if (accountInfo && accountInfo.loginId) {
+                const welcomeMessage = document.getElementById('welcome-message');
+                if (welcomeMessage) {
+                    let message = `${accountInfo.loginId} さん、Remind Code Typingへようこそ！`;
+                    if (accountInfo.isLocalOnly) {
+                        message += '\n（ローカル保存モード）';
+                    }
+                    welcomeMessage.textContent = message;
+                }
+            }
+
+            // ボタンイベントを設定
+            const loginButton = document.getElementById('login-button');
+            const backButton = document.getElementById('back-button');
+
+            if (loginButton) {
+                loginButton.addEventListener('click', proceedToLogin);
+                console.log('ログインボタンのイベントリスナーを設定しました');
+            }
+
+            if (backButton) {
+                backButton.addEventListener('click', goBack);
+                console.log('戻るボタンのイベントリスナーを設定しました');
+            }
+        });
+    </script>
+</body>
+
+</html>

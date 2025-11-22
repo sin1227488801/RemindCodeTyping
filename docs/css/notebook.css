@@ -1,0 +1,79 @@
+@import url('_common.css');
+/* 学習帳ページのスタイル */
+.dropdown-container {
+    margin-bottom: 15px;
+}
+
+.dropdown-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.dropdown-container input,
+.dropdown-container select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+    font-family: monospace;
+}
+
+.box-full {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.box-full label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* レスポンシブデザイン */
+@media screen and (max-width: 768px) {
+    .main {
+        flex-direction: column;
+    }
+    
+    .box-left, .box-right, .box-full {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    
+    .dropdown-container input,
+    .dropdown-container select,
+    textarea {
+        font-size: 16px; /* iOS zoom prevention */
+        padding: 10px;
+    }
+    
+    textarea {
+        min-height: 80px;
+    }
+    
+    .btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .dropdown-container label,
+    .box-full label {
+        font-size: 0.9rem;
+    }
+    
+    textarea {
+        min-height: 60px;
+    }
+}
