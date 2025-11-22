@@ -51,7 +51,18 @@ class MockAuthenticationService(AuthenticationService):
                 if user:
                     return user_id
                 else:
-                    raise UnauthorizedAccessError(user_id, "User", user_id)
+                    # User doesn't exist - create a new user with this ID
+                    # This allows frontend to maintain consistent user IDs
+                    now = datetime.utcnow()
+                    new_user = User(
+                        id=user_id,
+                        name=f"User {user_id}",
+                        email=f"user-{user_id}@example.com",
+                        created_at=now,
+                        updated_at=now
+                    )
+                    created_user = self._run_async(self.user_repository.create(new_user))
+                    return created_user.id
             except ValueError:
                 raise ValidationError("user_id", user_id_header, "Invalid user ID format in X-User-Id header")
         
