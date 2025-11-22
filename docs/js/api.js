@@ -1012,12 +1012,8 @@ class RctApi {
     isLoggedIn() {
         return localStorage.getItem('isAuthenticated') === 'true';
     }
-}
 
-// グローバルRctAPIインスタンス
-window.rctApi = new RctApi();
- 
-   // ユーザーの問題一覧を取得
+    // ユーザーの問題一覧を取得
     async getUserQuestions() {
         try {
             // ユーザーの学習帳を取得
@@ -1102,5 +1098,5 @@ window.rctApi = new RctApi();
     }
 }
 
-// グローバルインスタンスを作成
+// グローバルRctAPIインスタンス
 window.rctApi = new RctApi();
