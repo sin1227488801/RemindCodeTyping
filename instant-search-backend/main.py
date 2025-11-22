@@ -192,21 +192,31 @@ app.include_router(learning_events_router, prefix="/api/v1")
 if settings.enable_compatibility_endpoints:
     app.include_router(studybooks_compat_router, prefix="/api/v1")
     
-    # Add typing compatibility routes
-    from fastapi import APIRouter
     typing_router = APIRouter(prefix="/typing", tags=["typing-compatibility"])
 
     @typing_router.get("/stats")
     async def get_typing_stats_compat(
-        user_id: UUID = Depends(get_current_user_id),
-        typing_log_repo = Depends(get_typing_log_repository)
+        # フロントが送ってくれる想定のヘッダ（なければ None）
+        x_user_id: str | None = Header(default=None, alias="X-User-Id"),
+        typing_log_repo = Depends(get_typing_log_repository),
     ):
-        """Compatibility endpoint for frontend typing stats."""
+        """Compatibility endpoint for frontend typing stats (demo-friendly)."""
+
+        # 1. ヘッダにユーザーIDがあればそれを使う
+        if x_user_id:
+            try:
+                user_id = UUID(x_user_id)
+            except ValueError:
+                # 形式がおかしくても demo ユーザーでフォールバック
+                user_id = UUID("176c6aeb-297e-4033-8c96-abc8cd7c474a")
+        else:
+            # 2. ヘッダがなければ demo ユーザー固定
+            user_id = UUID("176c6aeb-297e-4033-8c96-abc8cd7c474a")
+
         from api.typing_logs import get_typing_stats
         return await get_typing_stats(user_id, typing_log_repo)
 
     app.include_router(typing_router, prefix="/api/v1")
-
 
 @app.on_event("startup")
 async def startup_event():
