@@ -43,8 +43,6 @@ DB：開発＝SQLite → 本番＝Azure Database for PostgreSQL Flexible Server
 
 ホスティング：Azure App Service（Linux, Java 17）
 
-可観測性：Application Insights（任意）
-
 ドキュメント：springdoc-openapi、READMEクイックスタート、Postman（任意）
 
 セキュリティ：まずは簡易JWT／ゲスト対応、後に本番強化（Key Vault、厳格CORS）

@@ -380,17 +380,23 @@ class SQLAlchemyQuestionRepository(QuestionRepository):
     async def delete(self, question_id: UUID, user_id: UUID) -> bool:
         """Delete a question by ID, scoped to user."""
         try:
-            result = self.session.query(QuestionModel).join(
+            # First verify the question exists and user owns it
+            question = self.session.query(QuestionModel).join(
                 StudyBookModel, QuestionModel.study_book_id == StudyBookModel.id
             ).filter(
                 and_(
                     QuestionModel.id == str(question_id),
                     StudyBookModel.user_id == str(user_id)
                 )
-            ).delete(synchronize_session=False)
+            ).first()
             
+            if not question:
+                return False
+            
+            # Delete the question
+            self.session.delete(question)
             self.session.commit()
-            return result > 0
+            return True
             
         except SQLAlchemyError as e:
             self.session.rollback()

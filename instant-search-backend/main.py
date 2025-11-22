@@ -61,11 +61,12 @@ origins = [
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    # allow_origins=["*"],  # In production, specify exact origins
-    allow_origins=origins,
+    allow_origins=["*"],  # In production, specify exact origins
+    # allow_origins=origins,
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # Add middleware (order matters - first added is outermost)
