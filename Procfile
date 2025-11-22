@@ -1,1 +1,0 @@
-web: cd rct-backend && ./gradlew bootRun --args='--server.port=$PORT --spring.profiles.active=heroku'

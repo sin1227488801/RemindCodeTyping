@@ -341,6 +341,12 @@ class TypingPractice {
 
                 // 成功した場合は結果を返す
                 if (problems && Array.isArray(problems)) {
+                    // 問題数が少ない場合はデフォルト問題で補完
+                    if (problems.length < 10 && window.rctApi && typeof window.rctApi.getDefaultProblems === 'function') {
+                        const defaultProblems = window.rctApi.getDefaultProblems(language);
+                        console.log(`問題数が少ないため、デフォルト問題で補完 (${language}): ${problems.length} + ${defaultProblems.length}`);
+                        return [...problems, ...defaultProblems];
+                    }
                     return problems;
                 }
 
@@ -369,25 +375,27 @@ class TypingPractice {
             }
         }
 
-        console.log(`全ての試行が失敗しました (${language})`);
+        console.log(`全ての試行が失敗しました (${language})。デフォルト問題を使用します。`);
+        
+        // バックエンドから取得できない場合はデフォルト問題を使用
+        if (window.rctApi && typeof window.rctApi.getDefaultProblems === 'function') {
+            const defaultProblems = window.rctApi.getDefaultProblems(language);
+            console.log(`デフォルト問題を使用 (${language}):`, defaultProblems.length, '問');
+            return defaultProblems;
+        }
+        
         return [];
     }
 
     async fetchUserProblems(language) {
         try {
-            const userId = sessionStorage.getItem('userId');
-            if (!userId) {
-                console.log('ユーザーIDが見つかりません');
-                return [];
-            }
-
-            console.log(`ユーザー問題を取得中: ${language}, userId: ${userId}`);
-
             // rctApiが読み込まれるまで待機
             if (!window.rctApi) {
                 console.error('rctApiが未定義です');
                 return [];
             }
+
+            console.log(`ユーザー問題を取得中: ${language}`);
 
             const problems = await window.rctApi.getUserProblemsByLanguage(language);
             console.log(`ユーザー問題取得成功 (${language}):`, problems);
@@ -449,7 +457,7 @@ class TypingPractice {
             attemptCount++;
             try {
                 // ヘルスチェック的なAPI呼び出し
-                const response = await fetch('http://localhost:8080/api/studybooks/languages', {
+                const response = await fetch('http://localhost:8000/api/v1/studybooks/languages', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -566,7 +574,10 @@ class TypingPractice {
 
         document.getElementById('current-language').textContent = problem.language;
         document.getElementById('current-problem').textContent = this.currentProblemIndex + 1;
-        document.getElementById('problem-explanation').textContent = problem.explanation;
+        
+        // ヒント表示用のテキストを設定
+        const hintText = this.generateHintText(problem);
+        document.getElementById('problem-explanation').textContent = hintText;
 
         // 目標時間を全問題の合計値で計算して表示
         const totalChars = this.problems.reduce((sum, p) => sum + p.question.length, 0);
@@ -650,7 +661,7 @@ class TypingPractice {
 
             // 特殊文字の視覚化
             if (correctChar === ' ') {
-                displayChar = '<span class="space-char">·</span>';
+                displayChar = '<span class="space-char">&nbsp;</span>';
             } else if (correctChar === '\t') {
                 displayChar = '<span class="tab-char">→</span>';
             } else if (correctChar === '\n') {
@@ -779,12 +790,61 @@ class TypingPractice {
 
     showHint() {
         const explanationDiv = document.getElementById('problem-explanation');
+        const hintButton = document.getElementById('hint-button');
         const isCurrentlyHidden = explanationDiv.style.display === 'none';
-        
+
         explanationDiv.style.display = isCurrentlyHidden ? 'block' : 'none';
         
+        // ボタンテキストを更新
+        if (hintButton) {
+            hintButton.textContent = isCurrentlyHidden ? 'ヒント非表示' : 'ヒント表示';
+        }
+
         // ヒント表示の切り替えではテキストエリアの高さは変更しない
         // 問題文ボックスの高さのみに基づいて調整
+    }
+
+    // ヒント表示用のテキストを生成
+    generateHintText(problem) {
+        // 既存のexplanationまたはanswerフィールドがある場合はそれを使用
+        if (problem.explanation && problem.explanation !== problem.question) {
+            return problem.explanation;
+        }
+        
+        if (problem.answer && problem.answer !== problem.question) {
+            return problem.answer;
+        }
+
+        // デフォルト問題の場合、answerフィールドから適切なヒントを生成
+        const hintText = problem.answer || '';
+        
+        // 追加情報を生成
+        const additionalInfo = [];
+        
+        if (problem.language) {
+            additionalInfo.push(`言語: ${problem.language}`);
+        }
+        
+        if (problem.category) {
+            additionalInfo.push(`カテゴリ: ${problem.category}`);
+        }
+        
+        if (problem.difficulty) {
+            additionalInfo.push(`難易度: ${problem.difficulty}`);
+        }
+
+        // 文字数情報を追加
+        if (problem.question) {
+            additionalInfo.push(`文字数: ${problem.question.length}文字`);
+        }
+
+        // ヒントテキストを構築
+        let result = hintText;
+        if (additionalInfo.length > 0) {
+            result += '\n\n' + additionalInfo.join(' | ');
+        }
+
+        return result || 'ヒント情報がありません';
     }
 
     togglePause() {
@@ -947,20 +1007,29 @@ class TypingPractice {
                 stat.style.padding = '10px 0';
                 stat.style.borderBottom = '1px solid #e9ecef';
             });
+        }
 
-            // 最後の統計項目のボーダーを削除
+        // タイピングログを保存
+        this.saveTypingResult(actualAccuracy, elapsedTime, totalInputChars, totalChars);
+
+        // 最後の統計項目のボーダーを削除（modalContentが存在する場合のみ）
+        if (modalContent) {
+            const stats = modalContent.querySelectorAll('.stat');
             if (stats.length > 0) {
                 stats[stats.length - 1].style.borderBottom = 'none';
             }
-
-            // ランクハイライトのスタイル
-            const rankHighlight = modalContent.querySelector('.rank-highlight');
-            if (rankHighlight) {
-                rankHighlight.style.backgroundColor = '#f8f9fa';
-                rankHighlight.style.fontWeight = 'bold';
-                rankHighlight.style.color = '#28a745';
-            }
         }
+
+        // ランクハイライトのスタイル
+        const rankHighlight = modalContent.querySelector('.rank-highlight');
+        if (rankHighlight) {
+            rankHighlight.style.backgroundColor = '#f8f9fa';
+            rankHighlight.style.fontWeight = 'bold';
+            rankHighlight.style.color = '#28a745';
+        }
+
+        // タイピングログを保存
+        this.saveTypingResult(actualAccuracy, elapsedTime, totalInputChars, totalChars);
     }
 
     calculateRank(accuracy, score) {
@@ -1063,7 +1132,7 @@ class TypingPractice {
 
         // 経過時間を計算（秒単位）
         const elapsedTime = (Date.now() - this.startTime) / 1000;
-        
+
         // 完了した問題の総文字数を計算
         let completedChars = 0;
         for (let i = 0; i < this.correctAnswers && i < this.problems.length; i++) {
@@ -1110,13 +1179,13 @@ class TypingPractice {
                 // 問題文ボックスのみの高さを取得
                 const problemHeight = problemText.scrollHeight;
                 const problemOffsetHeight = problemText.offsetHeight;
-                
+
                 // より確実な高さを取得
                 const actualHeight = Math.max(problemHeight, problemOffsetHeight);
-                
+
                 // 入力エリアの高さを問題文ボックスに合わせる
                 typingInput.style.height = `${actualHeight}px`;
-                
+
                 console.log('入力エリアの高さを調整:', {
                     problemHeight: problemHeight,
                     problemOffsetHeight: problemOffsetHeight,
@@ -1142,7 +1211,143 @@ class TypingPractice {
     }
 
     goBack() {
-        window.location.href = 'main.html';
+        // 統計情報更新フラグを設定
+        sessionStorage.setItem('statsUpdated', 'true');
+        
+        // バックエンドユーザーの場合、統計情報のキャッシュをクリア
+        if (window.rctApi && !window.rctApi.isLocalUser()) {
+            console.log('バックエンドユーザーの統計キャッシュをクリア');
+            // 次回の統計取得時に最新情報を取得するため、少し待機
+            setTimeout(() => {
+                window.location.href = 'main.html';
+            }, 500);
+        } else {
+            window.location.href = 'main.html';
+        }
+    }
+
+    // タイピング結果を保存
+    async saveTypingResult(accuracy, elapsedTimeSeconds, correctChars, totalChars) {
+        try {
+            // 実際の問題数情報を計算
+            const totalProblems = this.problems.length;
+            const correctProblems = this.correctAnswers;
+            
+            console.log('タイピング結果保存開始:', {
+                accuracy: accuracy,
+                elapsedTime: elapsedTimeSeconds,
+                correctChars: correctChars,
+                totalChars: totalChars,
+                totalProblems: totalProblems,
+                correctProblems: correctProblems
+            });
+
+            // WPM計算（Words Per Minute）- 0除算を防ぐ
+            const wpm = elapsedTimeSeconds > 0 ? Math.round((correctChars / 5) / (elapsedTimeSeconds / 60)) : 0;
+
+            // 精度を0-1の範囲に変換（0-100% → 0-1）
+            const accuracyDecimal = Math.max(0, Math.min(1, accuracy / 100));
+
+            // ミリ秒に変換
+            const durationMs = Math.round(elapsedTimeSeconds * 1000);
+
+            // スコア（判定値）を計算
+            const score = this.calculateCurrentJudgmentValue();
+
+            // 使用した言語を取得（複数言語の場合は最初の言語）
+            const language = this.config.languages && this.config.languages.length > 0 
+                ? this.config.languages[0] 
+                : 'Unknown';
+
+            // rctApiのsaveTypingLogを呼び出し
+            if (window.rctApi && typeof window.rctApi.saveTypingLog === 'function') {
+                const result = await window.rctApi.saveTypingLog(
+                    null, // studyBookId（現在は使用しない）
+                    this.startTime, // startedAt
+                    durationMs, // durationMs
+                    totalChars, // totalChars
+                    correctChars, // correctChars
+                    language, // language
+                    score // score
+                );
+
+                console.log('タイピングログ保存結果:', result);
+
+                if (result.savedLocally) {
+                    console.log('ローカルストレージに保存されました');
+                } else {
+                    console.log('バックエンドに保存されました');
+                    
+                    // バックエンドユーザーでも問題数情報をローカルに保存
+                    const localLogs = JSON.parse(localStorage.getItem('typingLogs') || '[]');
+                    localLogs.push({
+                        startedAt: this.startTime,
+                        durationMs: durationMs,
+                        totalChars: totalChars,
+                        correctChars: correctChars,
+                        wpm: wpm,
+                        accuracy: accuracyDecimal,
+                        totalProblems: totalProblems,
+                        correctProblems: correctProblems,
+                        score: score,
+                        language: language,
+                        timestamp: new Date().toISOString(),
+                        backendSaved: true
+                    });
+                    localStorage.setItem('typingLogs', JSON.stringify(localLogs));
+                    console.log('バックエンドユーザーの問題数情報もローカルに保存しました');
+                }
+            } else {
+                console.warn('rctApi.saveTypingLogが利用できません。ローカルに保存します。');
+
+                // フォールバック：直接ローカルストレージに保存
+                const logs = JSON.parse(localStorage.getItem('typingLogs') || '[]');
+                logs.push({
+                    startedAt: this.startTime,
+                    durationMs: durationMs,
+                    totalChars: totalChars,
+                    correctChars: correctChars,
+                    wpm: wpm,
+                    accuracy: accuracyDecimal,
+                    totalProblems: totalProblems,
+                    correctProblems: correctProblems,
+                    score: score,
+                    language: language,
+                    timestamp: new Date().toISOString()
+                });
+                localStorage.setItem('typingLogs', JSON.stringify(logs));
+
+                // 統計情報は自動的にタイピングログから計算される
+            }
+
+        } catch (error) {
+            console.error('タイピング結果保存エラー:', error);
+
+            // エラー時のフォールバック処理
+            const logs = JSON.parse(localStorage.getItem('typingLogs') || '[]');
+            logs.push({
+                startedAt: this.startTime,
+                durationMs: Math.round(elapsedTimeSeconds * 1000),
+                totalChars: totalChars,
+                correctChars: correctChars,
+                wpm: Math.round((correctChars / 5) / (elapsedTimeSeconds / 60)),
+                accuracy: accuracy / 100,
+                totalProblems: totalProblems,
+                correctProblems: correctProblems,
+                score: score,
+                timestamp: new Date().toISOString(),
+                error: true
+            });
+            localStorage.setItem('typingLogs', JSON.stringify(logs));
+
+            // 統計情報は自動的にタイピングログから計算される
+        }
+    }
+
+    // ローカル統計情報を直接更新（廃止：タイピングログから自動計算）
+    updateLocalStatsDirectly(wpm, accuracy) {
+        console.log('updateLocalStatsDirectly は廃止されました。タイピングログから統計を計算します。');
+        // この関数は使用しない（タイピングログから統計を計算するため）
     }
 }
 

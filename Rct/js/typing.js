@@ -299,7 +299,7 @@ class TypingConfig {
     }
 
     setupEventListeners() {
-        const startButton = document.querySelector('.btn');
+        const startButton = document.getElementById('typing-start-button');
         const problemSourceSelect = document.getElementById('problem-source-select');
         const languageSelect = document.getElementById('language-select');
         const problemCountInput = document.getElementById('problem-count-input');
@@ -432,7 +432,7 @@ class TypingConfig {
 
         // 要素への参照を保存（クリーンアップ用）
         this.elements = {
-            startButton: document.querySelector('.btn'),
+            startButton: document.getElementById('typing-start-button'),
             problemSourceSelect,
             languageSelect,
             problemCountInput,

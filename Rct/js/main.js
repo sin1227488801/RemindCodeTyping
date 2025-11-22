@@ -120,13 +120,13 @@ function initializeTypingPage() {
         window.typingPageLanguageTimeout = null;
     }, 300);
 
-    // 特別ランクのモーダル機能を直接実装
+    // 特別ランクのモーダル機能を直接実装（ログアウトボタンを除外）
     if (window.specialRankModalTimeout) {
         clearTimeout(window.specialRankModalTimeout);
     }
     window.specialRankModalTimeout = setTimeout(() => {
         console.log('Setting up special rank modal functionality...');
-        setupSpecialRankModal();
+        setupSpecialRankModalSafely();
         window.specialRankModalTimeout = null;
     }, 200);
 
@@ -135,8 +135,8 @@ function initializeTypingPage() {
         clearTimeout(window.typingPageButtonTimeout);
     }
     window.typingPageButtonTimeout = setTimeout(() => {
-        const startButton = document.querySelector('#content-area .btn');
-        if (startButton && startButton.textContent.includes('Start')) {
+        const startButton = document.getElementById('typing-start-button');
+        if (startButton) {
             // 既存のイベントリスナーを削除してから新しいものを追加
             const newStartButton = startButton.cloneNode(true);
             startButton.parentNode.replaceChild(newStartButton, startButton);
@@ -358,11 +358,28 @@ async function loadUserStats() {
         // タイピングページの統計表示を更新
         const userDataDiv = document.querySelector('.user-data');
         if (userDataDiv) {
-            userDataDiv.innerHTML = `
-                直近${stats.totalAttempts}問正答率 ${stats.averageAccuracy.toFixed(1)}%<br>
-                最高正答率 ${stats.bestAccuracy.toFixed(1)}%
-            `;
-            console.log('User stats updated successfully');
+            const totalProblems = stats.totalProblems || 0;
+            const totalSessions = stats.totalSessions || 0;
+
+            let displayText = '';
+            if (totalProblems > 0) {
+                displayText = `累計${totalProblems}問正答率 ${stats.averageAccuracy.toFixed(1)}%<br>`;
+            } else {
+                displayText = `累計0問正答率 0.0%<br>`;
+            }
+
+            displayText += `直近100問スコア平均 ${stats.recent100ProblemsScore.toFixed(1)}`;
+
+            if (totalSessions > 0) {
+                displayText += `<br><small style="color: #666;">セッション数: ${totalSessions}回</small>`;
+            }
+
+            userDataDiv.innerHTML = displayText;
+            console.log('User stats updated successfully:', {
+                totalProblems,
+                totalSessions,
+                averageAccuracy: stats.averageAccuracy
+            });
         } else {
             console.warn('user-dataエレメントが見つかりません');
         }
@@ -374,8 +391,8 @@ async function loadUserStats() {
         const userDataDiv = document.querySelector('.user-data');
         if (userDataDiv) {
             userDataDiv.innerHTML = `
-                直近0問正答率 0.0%<br>
-                最高正答率 0.0%<br>
+                累計0問正答率 0.0%<br>
+                直近100問スコア平均 0.0<br>
                 <small style="color: red;">統計情報の取得に失敗しました</small>
             `;
         } else {
@@ -667,7 +684,7 @@ function updateProblemDisplay(typed) {
 
         // 特殊文字を視覚化
         if (targetChar === ' ') {
-            displayChar = '<span class="space-indicator">·</span>';
+            displayChar = '<span class="space-indicator">&nbsp;</span>';
         } else if (targetChar === '\t') {
             displayChar = '<span class="tab-indicator">→</span>';
         } else if (targetChar === '\n') {
@@ -688,7 +705,7 @@ function updateProblemDisplay(typed) {
                 let charDescription = '';
 
                 if (typedChar === ' ') {
-                    typedDisplay = '<span class="space-indicator">·</span>';
+                    typedDisplay = '<span class="space-indicator">&nbsp;</span>';
                     charDescription = 'スペース';
                 } else if (typedChar === '\t') {
                     typedDisplay = '<span class="tab-indicator">→</span>';
@@ -899,16 +916,63 @@ async function handleStudyBookRegister() {
 async function loadRecordsData() {
     try {
         const stats = await rctApi.getStats();
+        const languageStats = await rctApi.getLanguageStats();
 
         // 記録ページの統計表示を更新
         const labelTextContainer = document.querySelector('.label-text-container div');
         if (labelTextContainer) {
+            const totalProblems = stats.totalProblems || 0;
+            const totalSessions = stats.totalSessions || 0;
+
             labelTextContainer.innerHTML = `
-                <p>直近${stats.totalAttempts}問正答率 ${stats.averageAccuracy.toFixed(1)}%</p>
-                <p>最高正答率 ${stats.bestAccuracy.toFixed(1)}%</p>
+                <p>累計${totalProblems}問正答率 ${stats.averageAccuracy.toFixed(1)}%</p>
+                <p>直近100問スコア平均 ${stats.recent100ProblemsScore.toFixed(1)}</p>
+                <p><small style="color: #666;">セッション数: ${totalSessions}回</small></p>
             `;
         } else {
             console.warn('label-text-containerエレメントが見つかりません');
+        }
+
+        // 得意言語の表示を更新
+        const favoriteLanguageDiv = document.getElementById('favoriteLanguage');
+        if (favoriteLanguageDiv) {
+            if (languageStats.bestLanguage) {
+                favoriteLanguageDiv.innerHTML = `
+                    言語 ${languageStats.bestLanguage.language}<br>
+                    平均スコア ${languageStats.bestLanguage.averageScore.toFixed(1)}<br>
+                    <small style="color: #666;">(${languageStats.bestLanguage.count}回)</small>
+                `;
+            } else {
+                favoriteLanguageDiv.innerHTML = `
+                    データがありません<br>
+                    <small style="color: #666;">タイピング練習を開始してください</small>
+                `;
+            }
+        }
+
+        // 苦手言語の表示を更新
+        const weaknessLanguageDiv = document.getElementById('weaknessesLanguage');
+        if (weaknessLanguageDiv) {
+            if (languageStats.worstLanguage) {
+                // 得意言語と苦手言語が同じ場合（1つの言語のみの場合）
+                if (languageStats.allLanguages && languageStats.allLanguages.length === 1) {
+                    weaknessLanguageDiv.innerHTML = `
+                        データが不足しています<br>
+                        <small style="color: #666;">複数の言語で練習してください</small>
+                    `;
+                } else {
+                    weaknessLanguageDiv.innerHTML = `
+                        言語 ${languageStats.worstLanguage.language}<br>
+                        平均スコア ${languageStats.worstLanguage.averageScore.toFixed(1)}<br>
+                        <small style="color: #666;">(${languageStats.worstLanguage.count}回)</small>
+                    `;
+                }
+            } else {
+                weaknessLanguageDiv.innerHTML = `
+                    データがありません<br>
+                    <small style="color: #666;">タイピング練習を開始してください</small>
+                `;
+            }
         }
 
     } catch (error) {
@@ -922,13 +986,19 @@ function handleLogout() {
     try {
         if (confirm('ログアウトしますか？')) {
             console.log('ログアウト確認OK');
-            rctApi.logout();
+            // 直接ログアウト処理を実行
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('currentUser');
+            sessionStorage.clear();
+            window.location.href = 'login.html';
         } else {
             console.log('ログアウトキャンセル');
         }
     } catch (error) {
         console.error('ログアウト処理エラー:', error);
         // エラーが発生してもログアウトを実行
+        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('currentUser');
         sessionStorage.clear();
         window.location.href = 'login.html';
     }
@@ -936,32 +1006,30 @@ function handleLogout() {
 
 // ユーザー情報表示の更新
 function updateUserInfo() {
-    const user = rctApi.getUser();
+    const currentUser = localStorage.getItem('currentUser');
     const loginInfoText = document.querySelector('.login-info-text');
 
-    if (loginInfoText && user.loginId) {
-        // 統計情報を取得して表示
-        rctApi.getStats().then(stats => {
-            // ユーザー名が6文字以上の場合は改行
-            const compactText = user.loginId.length >= 6
-                ? `Hi! ${user.loginId}!<br>${stats.totalLoginDays}日 login!`
-                : `Hi! ${user.loginId}! ${stats.totalLoginDays}日 login!`;
+    if (loginInfoText && currentUser) {
+        try {
+            const userData = JSON.parse(currentUser);
+            const userName = userData.name || userData.loginId || 'ユーザー';
+
+            // 簡単な表示（統計情報は後で実装）
+            const compactText = userName.length >= 6
+                ? `Hi! ${userName}!<br>ログイン中`
+                : `Hi! ${userName}! ログイン中`;
 
             loginInfoText.innerHTML = `
-                <span class="login-text-full">Hello ${user.loginId}さん！<br>連続${stats.currentLoginStreak}日 累計${stats.totalLoginDays}日のログインです</span>
+                <span class="login-text-full">Hello ${userName}さん！<br>ログイン中です</span>
                 <span class="login-text-compact">${compactText}</span>
             `;
-        }).catch(() => {
-            // ユーザー名が6文字以上の場合は改行
-            const compactText = user.loginId.length >= 6
-                ? `Hi! ${user.loginId}!<br>${user.isDemo ? 'Demo' : 'Login!'}`
-                : `Hi! ${user.loginId}! ${user.isDemo ? 'Demo' : 'Login!'}`;
-
+        } catch (e) {
+            console.error('Error parsing user data:', e);
             loginInfoText.innerHTML = `
-                <span class="login-text-full">Hello ${user.loginId}さん！<br>${user.isDemo ? 'デモモード' : 'ログイン中'}</span>
-                <span class="login-text-compact">${compactText}</span>
+                <span class="login-text-full">Hello ゲストさん！<br>ログイン中です</span>
+                <span class="login-text-compact">Hi! ゲスト! ログイン中</span>
             `;
-        });
+        }
     }
 }
 
@@ -970,7 +1038,8 @@ window.onload = function () {
     console.log('Main page loaded, initializing...');
 
     // ログインチェック
-    if (!rctApi.isLoggedIn()) {
+    const isAuthenticated = localStorage.getItem('isAuthenticated');
+    if (!isAuthenticated || isAuthenticated !== 'true') {
         console.log('User not logged in, redirecting to login page');
         window.location.href = 'login.html';
         return;
@@ -981,34 +1050,30 @@ window.onload = function () {
     // ユーザー情報表示
     updateUserInfo();
 
-    // ログアウトボタンのイベント設定（ヘッダー内の特定のボタンを選択）
-    const logoutButton = document.querySelector('.login-info .btn');
-    console.log('ログアウトボタン検索結果:', logoutButton);
-    
-    if (logoutButton) {
-        // 既存のイベントリスナーを削除してから追加（重複防止）
-        const newLogoutButton = logoutButton.cloneNode(true);
-        logoutButton.parentNode.replaceChild(newLogoutButton, logoutButton);
-        
-        // クリックイベントを追加
-        newLogoutButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('ログアウトボタンがクリックされました');
-            handleLogout();
-        });
-        
-        console.log('Logout button event listener added');
-    } else {
-        console.warn('ログアウトボタンが見つかりません');
-        
-        // 代替手段：すべてのボタンを検索
-        const allButtons = document.querySelectorAll('button, .btn');
-        console.log('全ボタン数:', allButtons.length);
-        allButtons.forEach((btn, index) => {
-            console.log(`ボタン ${index}:`, btn.textContent, btn.className);
-        });
+    // 統計情報を再読み込み（タイピング練習後の更新を反映）
+    loadUserStats();
+
+    // タイピング練習完了後の統計更新チェック
+    if (sessionStorage.getItem('statsUpdated') === 'true') {
+        console.log('タイピング練習完了後の統計更新を検出しました');
+        sessionStorage.removeItem('statsUpdated');
+        // バックエンド統計の更新を待って確実に更新
+        setTimeout(() => {
+            console.log('統計情報を強制更新中...');
+            loadUserStats();
+        }, 2000);
+
+        // さらに追加で更新
+        setTimeout(() => {
+            console.log('統計情報を再度更新中...');
+            loadUserStats();
+        }, 5000);
     }
+
+    // ログアウトボタンの設定（念のため再設定）
+    setTimeout(() => {
+        setupLogoutButton();
+    }, 500);
 
     // 初期ページ読み込み
     console.log('Loading initial page: typing.html');
@@ -1117,14 +1182,21 @@ function applyResponsiveStyles() {
     }
 }
 // 特別ランクのモーダル機能
-function setupSpecialRankModal() {
-    console.log('Setting up special rank modal functionality...');
+// 安全な特別ランクモーダル設定（ログアウトボタンを除外）
+function setupSpecialRankModalSafely() {
+    console.log('Setting up special rank modal functionality safely...');
 
-    // 特別ランクの要素を取得
+    // 特別ランクの要素を取得（ログアウトボタンを除外）
     const specialRanks = document.querySelectorAll('.rank-shodan-special, .rank-1-special, .rank-2-special');
     console.log('Special rank elements found:', specialRanks.length);
 
     specialRanks.forEach((element, index) => {
+        // ログアウトボタンでないことを確認
+        if (element.id === 'logout-button' || element.textContent.includes('ログアウト')) {
+            console.log('Skipping logout button in special rank setup');
+            return;
+        }
+
         console.log(`Adding click listener to special rank ${index + 1}:`, element);
 
         // 既存のイベントリスナーを削除（重複防止）
@@ -1140,31 +1212,51 @@ function setupSpecialRankModal() {
         });
     });
 
-    // モーダルの閉じるボタンのイベント設定
+    // モーダルの閉じるボタンのイベント設定（重複防止）
     const modal = document.getElementById('special-rank-modal');
-    const closeBtn = modal?.querySelector('.close');
+    const closeBtn = document.getElementById('modal-close-button') || modal?.querySelector('.close');
 
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
+    if (closeBtn && !closeBtn.hasAttribute('data-event-set')) {
+        closeBtn.onclick = function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Modal close button clicked');
             hideSpecialRankModal();
-        });
+        };
+        closeBtn.setAttribute('data-event-set', 'true');
+        console.log('Close button event set');
     }
 
-    // モーダル背景クリックで閉じる
-    if (modal) {
+    // モーダル背景クリックで閉じる（重複防止）
+    if (modal && !modal.hasAttribute('data-bg-event-set')) {
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
+                console.log('Modal background clicked');
                 hideSpecialRankModal();
             }
         });
+        modal.setAttribute('data-bg-event-set', 'true');
+        console.log('Modal background event set');
     }
 
-    // ESCキーでモーダルを閉じる
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            hideSpecialRankModal();
-        }
-    });
+    // ESCキーでモーダルを閉じる（グローバルなので一度だけ設定）
+    if (!window.modalEscapeEventSet) {
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                console.log('Escape key pressed');
+                hideSpecialRankModal();
+            }
+        });
+        window.modalEscapeEventSet = true;
+        console.log('Escape key event set');
+    }
+
+    console.log('Special rank modal setup completed');
+}
+
+// 元の関数も残しておく（互換性のため）
+function setupSpecialRankModal() {
+    setupSpecialRankModalSafely();
 
     console.log('Special rank modal setup completed');
 }
@@ -1207,12 +1299,114 @@ function showSpecialRankModal(rankElement) {
     // モーダルを表示
     modal.style.display = 'flex';
     console.log('Modal displayed successfully');
+
+    // モーダルの閉じるボタンが存在するか確認
+    const closeBtn = document.getElementById('modal-close-button') || modal.querySelector('.close');
+    console.log('Close button found:', closeBtn);
+    console.log('Close button has event:', closeBtn?.hasAttribute('data-event-set'));
 }
 
 function hideSpecialRankModal() {
+    console.log('hideSpecialRankModal called');
     const modal = document.getElementById('special-rank-modal');
     if (modal) {
         modal.style.display = 'none';
-        console.log('Modal hidden');
+        console.log('Modal hidden successfully');
+
+        // モーダル内容をクリア（次回表示時のため）
+        const title = document.getElementById('modal-rank-title');
+        const description = document.getElementById('modal-rank-description');
+        if (title) title.textContent = 'ランク詳細';
+        if (description) description.textContent = '';
+
+        console.log('Modal content cleared');
+    } else {
+        console.warn('Modal not found for hiding');
+    }
+}
+
+// ページ読み込み完了時の初期化
+document.addEventListener('DOMContentLoaded', function () {
+    console.log('Main.js DOMContentLoaded - 初期化開始');
+
+    // 少し遅延してからログアウトボタンを設定（DOM構築完了を待つ）
+    setTimeout(() => {
+        setupLogoutButton();
+    }, 100);
+
+    // デフォルトページを読み込み
+    const activeTab = document.querySelector('.tab.active');
+    if (activeTab) {
+        loadPage('typing.html', { target: activeTab });
+    } else {
+        console.warn('アクティブなタブが見つかりません。デフォルトで読み込みます。');
+        loadPage('typing.html');
+    }
+});
+
+// ログアウトボタンの安全な設定
+function setupLogoutButton() {
+    console.log('setupLogoutButton - 開始');
+
+    // 複数の方法でログアウトボタンを検索
+    let logoutButton = document.getElementById('logout-button');
+
+    if (!logoutButton) {
+        // IDで見つからない場合、クラスとテキストで検索
+        const buttons = document.querySelectorAll('button, .btn');
+        for (let btn of buttons) {
+            if (btn.textContent && btn.textContent.includes('ログアウト')) {
+                logoutButton = btn;
+                console.log('ログアウトボタンをテキストで発見:', btn);
+                break;
+            }
+        }
+    }
+
+    if (!logoutButton) {
+        // ヘッダー内のボタンを検索
+        logoutButton = document.querySelector('.login-info .btn, .header .btn');
+        console.log('ヘッダー内のボタンを検索:', logoutButton);
+    }
+
+    console.log('setupLogoutButton - ログアウトボタン検索結果:', logoutButton);
+
+    if (logoutButton) {
+        // 既存のイベントをクリア
+        logoutButton.onclick = null;
+        logoutButton.removeAttribute('onclick');
+
+        // IDを設定（まだない場合）
+        if (!logoutButton.id) {
+            logoutButton.id = 'logout-button';
+        }
+
+        // 新しいイベントを設定
+        logoutButton.onclick = function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('ログアウトボタンがクリックされました');
+
+            if (confirm('ログアウトしますか？')) {
+                console.log('ログアウト確認OK');
+                localStorage.removeItem('isAuthenticated');
+                localStorage.removeItem('currentUser');
+                sessionStorage.clear();
+                window.location.href = 'login.html';
+            } else {
+                console.log('ログアウトキャンセル');
+            }
+        };
+
+        console.log('ログアウトボタンのイベントリスナーを設定しました');
+    } else {
+        console.warn('ログアウトボタンが見つかりません');
+
+        // デバッグ用：全ボタンを表示
+        const allButtons = document.querySelectorAll('button, .btn');
+        console.log('全ボタン数:', allButtons.length);
+        allButtons.forEach((btn, index) => {
+            console.log(`ボタン ${index}:`, btn.textContent, btn.className, btn.id);
+        });
     }
 }

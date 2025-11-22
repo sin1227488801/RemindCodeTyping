@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ログイン - Remind Code Typing</title>
+    <link rel="icon" href="./images/13_Rのみ.png">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+        }
+
+        .demo-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="./images/02_ロゴ基本_白抜き.png" alt="Remind Code Typing Logo">
+        <h1>Remind Code Typing</h1>
+    </div>
+
+    <div class="login-container">
+        <form id="login-form">
+            <div class="input-group">
+                <label for="loginId">ログインID</label>
+                <input type="text" id="loginId" value="demo" placeholder="IDを入力" required>
+            </div>
+            <div class="input-group">
+                <label for="password">パスワード</label>
+                <input type="password" id="password" value="password" placeholder="パスワードを入力" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">ログイン</button>
+            <button type="button" id="guest-login" class="btn btn-secondary">ゲストプレイ</button>
+        </form>
+
+        <div class="demo-info">
+            <strong>🎭 デモモード</strong><br>
+            ログインID: <code>demo</code><br>
+            パスワード: <code>password</code>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000/api/v1';
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('login-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const loginId = document.getElementById('loginId').value;
+                const password = document.getElementById('password').value;
+                
+                try {
+                    const response = await fetch(`${API_BASE_URL}/users/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            loginId: loginId,
+                            password: password
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        const userData = await response.json();
+                        localStorage.setItem('isAuthenticated', 'true');
+                        localStorage.setItem('currentUser', JSON.stringify({
+                            id: userData.id,
+                            name: userData.name,
+                            email: userData.email,
+                            loginId: loginId
+                        }));
+                        window.location.href = 'main.html';
+                    } else {
+                        const errorData = await response.json();
+                        showError('ログインに失敗しました: ' + (errorData.detail || 'Unknown error'));
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    showError('ログインに失敗しました: ネットワークエラー');
+                }
+            });
+
+            document.getElementById('guest-login').addEventListener('click', async function() {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/users/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            loginId: 'demo',
+                            password: 'password'
+                        })
+                    });
+                    
+                    if (response.ok) {
+                        const userData = await response.json();
+                        localStorage.setItem('isAuthenticated', 'true');
+                        localStorage.setItem('currentUser', JSON.stringify({
+                            id: userData.id,
+                            name: userData.name,
+                            email: userData.email,
+                            loginId: 'guest'
+                        }));
+                        window.location.href = 'main.html';
+                    } else {
+                        showError('ゲストログインに失敗しました');
+                    }
+                } catch (error) {
+                    console.error('Guest login error:', error);
+                    showError('ゲストログインに失敗しました: ネットワークエラー');
+                }
+            });
+        });
+
+        function showError(message) {
+            // Remove existing error messages
+            const existingError = document.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            // Create and show error message
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.style.cssText = `
+                background: rgba(255, 0, 0, 0.1);
+                color: #ff6b6b;
+                padding: 1rem;
+                border-radius: 8px;
+                margin-top: 1rem;
+                text-align: center;
+                border: 1px solid rgba(255, 107, 107, 0.3);
+            `;
+            errorDiv.textContent = message;
+            
+            document.querySelector('.login-container').appendChild(errorDiv);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (errorDiv.parentNode) {
+                    errorDiv.remove();
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

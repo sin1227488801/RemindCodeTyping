@@ -20,94 +20,105 @@
             <div class="checkmark">✓</div>
         </div>
         <h2>アカウントを作成しました</h2>
-        <p>Remind Code Typingへようこそ！</p>
+        <p id="welcome-message">Remind Code Typingへようこそ！</p>
 
         <div class="button-container">
-            <button type="button" class="btn" onclick="proceedToLogin()">ログイン</button>
-            <button type="button" class="btn-muted" onclick="goBack()">戻る</button>
+            <button type="button" class="btn" id="login-button">ログイン</button>
+            <button type="button" class="btn-muted" id="back-button">戻る</button>
         </div>
     </div>
 
     <script src="js/api.js"></script>
     <script>
-        // URLパラメータから登録したアカウント情報を取得
+        // sessionStorageから登録したアカウント情報を取得
         function getAccountInfo() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return {
-                loginId: urlParams.get('loginId'),
-                password: urlParams.get('password')
-            };
+            const newUserData = sessionStorage.getItem('newUserData');
+            if (newUserData) {
+                try {
+                    return JSON.parse(newUserData);
+                } catch (e) {
+                    console.error('ユーザーデータの解析エラー:', e);
+                    return null;
+                }
+            }
+            return null;
         }
 
-        async function proceedToLogin() {
+        function proceedToLogin() {
+            console.log('proceedToLogin called');
             const accountInfo = getAccountInfo();
 
-            if (!accountInfo.loginId || !accountInfo.password) {
-                // アカウント情報がない場合はログイン画面に遷移
+            if (!accountInfo || !accountInfo.loginId) {
+                console.warn('アカウント情報がありません');
                 window.location.href = 'login.html';
                 return;
             }
 
-            try {
-                showLoading('ログイン中...');
-                const response = await rctApi.login(accountInfo.loginId, accountInfo.password);
-                console.log('自動ログイン成功:', response);
-                window.location.href = 'main.html';
-            } catch (error) {
-                console.error('自動ログインエラー:', error);
-                showError('ログインに失敗しました。手動でログインしてください。');
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 2000);
-            } finally {
-                hideLoading();
+            // 新規登録したユーザー情報でログイン状態を設定
+            const userData = {
+                id: accountInfo.id, // 新規登録時に生成されたUUID
+                name: accountInfo.name || accountInfo.loginId,
+                email: accountInfo.email,
+                loginId: accountInfo.loginId,
+                isLocalOnly: accountInfo.isLocalOnly || false // ローカルユーザーフラグを保持
+            };
+
+            window.rctApi.setUser(userData);
+            console.log('新規登録ユーザーでログイン:', userData);
+            
+            if (accountInfo.isLocalOnly) {
+                console.log('ローカルユーザーとして登録されました（バックエンド連携なし）');
+            } else {
+                console.log('バックエンドユーザーとして登録されました');
             }
+
+            // sessionStorageをクリア
+            sessionStorage.removeItem('newUserData');
+
+            // メインページに遷移
+            window.location.href = 'main.html';
         }
 
         function goBack() {
+            console.log('goBack called');
+            // sessionStorageをクリア
+            sessionStorage.removeItem('newUserData');
             window.location.href = 'login.html';
         }
 
-        // UI ヘルパー関数
-        function showLoading(message) {
-            const loadingDiv = document.createElement('div');
-            loadingDiv.className = 'loading-message';
-            loadingDiv.textContent = message;
-            loadingDiv.style.cssText = 'color: var(--color-primary); text-align: center; margin: 10px 0; font-size: var(--font-size-main);';
-
-            const container = document.querySelector('.success-container');
-            container.appendChild(loadingDiv);
-
-            const buttons = document.querySelectorAll('button');
-            buttons.forEach(btn => btn.disabled = true);
-        }
-
-        function hideLoading() {
-            const loadingDiv = document.querySelector('.loading-message');
-            if (loadingDiv) {
-                loadingDiv.remove();
+        // ページ読み込み時の初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('account-created.html loaded');
+            
+            const accountInfo = getAccountInfo();
+            console.log('Account info:', accountInfo);
+            
+            if (accountInfo && accountInfo.loginId) {
+                const welcomeMessage = document.getElementById('welcome-message');
+                if (welcomeMessage) {
+                    let message = `${accountInfo.loginId} さん、Remind Code Typingへようこそ！`;
+                    if (accountInfo.isLocalOnly) {
+                        message += '\n（ローカル保存モード）';
+                    }
+                    welcomeMessage.textContent = message;
+                }
             }
 
-            const buttons = document.querySelectorAll('button');
-            buttons.forEach(btn => btn.disabled = false);
-        }
+            // ボタンイベントを設定
+            const loginButton = document.getElementById('login-button');
+            const backButton = document.getElementById('back-button');
 
-        function showError(message) {
-            const existingError = document.querySelector('.error-message');
-            if (existingError) {
-                existingError.remove();
+            if (loginButton) {
+                loginButton.addEventListener('click', proceedToLogin);
+                console.log('ログインボタンのイベントリスナーを設定しました');
             }
 
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'error-message';
-            errorDiv.textContent = message;
-            errorDiv.style.cssText = 'color: #dc3545; text-align: center; margin: 10px 0; padding: 10px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: var(--border-radius); font-size: var(--font-size-smaller);';
-
-            const container = document.querySelector('.success-container');
-            container.appendChild(errorDiv);
-        }
+            if (backButton) {
+                backButton.addEventListener('click', goBack);
+                console.log('戻るボタンのイベントリスナーを設定しました');
+            }
+        });
     </script>
-
 </body>
 
 </html>

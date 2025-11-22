@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: sqlite:///./data/app.db
+      APP_NAME: instant-search-backend
+      APP_VERSION: 1.0.0
+      DEBUG: "false"
+      LOG_LEVEL: INFO
+      CORS_ORIGINS: "*"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  app-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+    environment:
+      DATABASE_URL: sqlite:///./data/app-dev.db
+      APP_NAME: instant-search-backend-dev
+      APP_VERSION: 1.0.0-dev
+      DEBUG: "true"
+      LOG_LEVEL: DEBUG
+      CORS_ORIGINS: "*"
+    volumes:
+      - .:/app
+      - ./data:/app/data
+      - ./logs:/app/logs
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    restart: unless-stopped
+    profiles:
+      - dev

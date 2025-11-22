@@ -37,7 +37,7 @@
 
 バックエンド：Java 17 / Spring Boot 3（Web, Validation, Data JPA）
 
-DB：開発＝H2 または SQLite → 本番＝Azure Database for PostgreSQL Flexible Server
+DB：開発＝SQLite → 本番＝Azure Database for PostgreSQL Flexible Server
 
 マイグレーション：Flyway（初期化＋シード）
 
