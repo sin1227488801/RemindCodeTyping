@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         try {
             // バックエンドAPIでユーザーを作成
-            const response = await fetch('http://localhost:8000/api/v1/users/signup', {
+            const response = await fetch('https://remindcodetyping.onrender.com/api/v1/users/signup', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

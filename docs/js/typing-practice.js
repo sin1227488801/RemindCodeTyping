@@ -457,7 +457,7 @@ class TypingPractice {
             attemptCount++;
             try {
                 // ヘルスチェック的なAPI呼び出し
-                const response = await fetch('http://localhost:8000/api/v1/studybooks/languages', {
+                const response = await fetch('https://remindcodetyping.onrender.com/api/v1/studybooks/languages', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'

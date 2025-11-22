@@ -10,7 +10,7 @@ function generateUUID() {
 // RCT API接続クラス
 class RctApi {
     constructor() {
-        this.baseUrl = 'http://localhost:8000/api/v1';
+        this.baseUrl = 'https://remindcodetyping.onrender.com/api/v1';
         this.userId = this.getCurrentUserId();
         console.log('RctApi initialized - baseUrl:', this.baseUrl);
         console.log('RctApi initialized - userId:', this.userId);

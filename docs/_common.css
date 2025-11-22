@@ -1,0 +1,201 @@
+:root {
+    /* マージンのサイズ */
+    --margin-main: 13px;
+    --margin-narrow: 7px;
+    --margin-more-narrow: 3px;
+
+    /* パディングのサイズ */
+    --padding-main: 13px;
+    --padding-narrow: 7px;
+    --padding-more-narrow: 3px;
+
+    /* フォントサイズ */
+    --font-size-larger: 12px;
+    --font-size-main: 11px;
+    --font-size-smaller: 10px;
+
+    /* ボーダーの角丸 */
+    --border-radius: 3px;
+
+    /* 配色 */
+    --color-product-main: #7CADED;
+    --color-product-sub: #929292;
+    --color-primary: #007bff;
+    --color-hover: #0056b3;
+    --color-muted-primary: hsl(211, 50%, 56%);
+    --color-muted-hover: hsl(211, 50%, 46%);
+    --color-border: #ccc;
+    --color-bg: #f4f4f4;
+    --color-text: #333;
+    --color-text-light: #888;
+
+    /* コンテナの幅 */
+    --container-width: 268px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.header {
+    position: fixed;
+    display: flex;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--color-muted-primary);
+    color: white;
+    margin: auto;
+    height: 60px !important;
+    padding: 10px 15px !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 15px !important;
+    z-index: 1000;
+    min-width: 320px;
+}
+
+.header h1 {
+    font-size: 1.5rem !important;
+    margin: 0 !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+    flex-grow: 1 !important;
+    font-family: 'Mogra';
+    text-shadow: 0.1rem 0.05rem 0px var(--color-product-sub);
+    line-height: 1.2;
+}
+
+.header img {
+    height: 48px !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+}
+
+.main-content {
+    margin-top: 80px;
+    height: calc(100vh - 60px);
+    /* ヘッダーの高さ分だけ下にずらす */
+    padding: var(--padding-main);
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--color-bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    min-width: 320px;
+    overflow-x: auto;
+}
+
+h2 {
+    margin-bottom: var(--padding-main);
+    color: var(--color-text);
+    font-size: var(--font-size-larger);
+}
+
+.btn,
+.btn-muted {
+    width: 100%;
+    padding: var(--padding-narrow);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-larger);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 10px;
+}
+
+.btn {
+    background-color: var(--color-primary);
+}
+
+.btn:hover {
+    background-color: var(--color-hover);
+}
+
+.btn-muted {
+    background-color: var(--color-muted-primary);
+}
+
+.btn-muted:hover {
+    background-color: var(--color-muted-hover)
+}
+
+.main {
+    display: flex;
+    width: calc(100% - 10px);
+    box-sizing: border-box;
+    gap: var(--margin-main);
+    align-items: flex-start;
+}
+
+.main .box-left,
+.main .box-right {
+    width: 50%;
+    flex-shrink: 0;
+}
+
+.main .box-right {
+    padding-left: var(--padding-narrow);
+}
+
+.main .box-full {
+    width: 100%;
+}
+
+/* レスポンシブ対応を無効化 - 775px以上のデザインで固定 */
+/* @media (max-width: 775px) - 無効化 */
+
+.label-text-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: calc(100% - 50px);
+}
+
+.label-text-container div {
+    margin-right: 1em;
+    text-align: left;
+    font-size: var(--font-size-smaller);
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: var(--margin-more-narrow);
+    font-size: var(--font-size-smaller);
+}
+
+input,
+select,
+textarea {
+    width: 100% ;
+    padding: var(--padding-narrow);
+    font-size: var(--font-size-main);
+    font-family: 'Arial', sans-serif;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    transition: border-color 0.3s ease;
+    margin-right: var(--margin-main);
+    margin-bottom: var(--margin-main);
+}
+
+textarea {
+    min-height: 100px;
+    max-height: 400px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    background-color: white;
+}

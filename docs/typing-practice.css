@@ -1,0 +1,1031 @@
+.typing-practice {
+    padding: 12px;
+    max-width: 648px;
+    margin: 0 auto;
+    width: 90%;
+    transform: scale(0.9);
+    transform-origin: top center;
+}
+
+.problem-info {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    border-left: 3px solid #007bff;
+    font-size: 12px;
+}
+
+/* 表示オプション（login.htmlのデザインを踏襲） */
+.display-options {
+    background-color: #f8f9fa !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 4px !important;
+    padding: 6px 10px !important;
+    margin-bottom: 10px !important;
+    display: flex !important;
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+}
+
+/* 問題文と入力エリアの横並びレイアウト */
+.coding-area {
+    display: flex !important;
+    gap: 18px !important;
+    margin-bottom: 14px !important;
+    align-items: flex-start !important;
+    margin-top: 40px !important;
+    /* ヒント表示時の高さを確保 */
+}
+
+.problem-section {
+    flex: 1 !important;
+    min-width: 0 !important;
+    position: relative !important;
+    /* ヒント表示の絶対配置のため */
+}
+
+.typing-section {
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
+.problem-explanation {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 4px;
+    padding: 7px 11px;
+    margin-bottom: 11px;
+    font-size: 11px;
+    color: #856404;
+    transition: all 0.3s ease;
+    position: absolute;
+    top: -50px;
+    /* coding-areaの上に固定配置、間隔を広げる */
+    left: 0;
+    right: 0;
+    z-index: 10;
+}
+
+/* ヒント表示が非表示の時は完全に隠す */
+.problem-explanation[style*="display: none"] {
+    display: none !important;
+}
+
+/* ヒント表示時でも問題文とテキストエリアの位置を固定 */
+.problem-section {
+    min-height: 50px;
+    /* ヒント表示領域を確保、間隔を広げる */
+}
+
+.coding-area {
+    position: relative;
+}
+
+.problem-text {
+    margin-bottom: 0;
+}
+
+.option-group {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.option-group input[type="checkbox"] {
+    margin: 0 !important;
+    width: auto !important;
+    height: auto !important;
+    cursor: pointer !important;
+}
+
+.option-group label {
+    margin: 0 !important;
+    cursor: pointer !important;
+    font-size: 13px !important;
+    color: #495057 !important;
+    user-select: none !important;
+}
+
+/* 特殊文字凡例のスタイル */
+.problem-display .legend {
+    background-color: #e3f2fd !important;
+    border: 1px solid #bbdefb !important;
+    border-radius: 4px !important;
+    padding: 11px !important;
+    font-size: 11px !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+    height: auto !important;
+    position: relative !important;
+    transition: all 0.3s ease !important;
+    margin-bottom: 14px !important;
+}
+
+/* 凡例が非表示の時 */
+.legend.hidden {
+    display: none !important;
+}
+
+/* 問題文が非表示の時 */
+.problem-text.hidden {
+    display: none !important;
+}
+
+.problem-display .legend .legend-title {
+    font-weight: bold !important;
+    color: #1976d2 !important;
+    margin-bottom: 8px !important;
+    display: block !important;
+    font-size: 13px !important;
+}
+
+.problem-display .legend .legend-items {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 15px !important;
+}
+
+.problem-display .legend .legend-item {
+    display: flex !important;
+    align-items: center !important;
+    color: #424242 !important;
+    font-family: 'Courier New', monospace !important;
+    font-size: 12px !important;
+}
+
+.problem-display .legend .legend-item .space-char,
+.problem-display .legend .legend-item .tab-char,
+.problem-display .legend .legend-item .newline-char {
+    margin-right: 5px !important;
+    font-weight: bold !important;
+}
+
+.typing-area {
+    margin-bottom: 20px;
+}
+
+.problem-text {
+    background-color: #f1f3f4;
+    padding: 11px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    white-space: pre-wrap;
+    margin-bottom: 9px;
+    border: 1px solid #dee2e6;
+    overflow-y: auto;
+    overflow-x: auto;
+    line-height: 1.4;
+    font-size: 10px;
+    letter-spacing: 0.3px;
+    width: 100%;
+    box-sizing: border-box;
+    word-break: break-all;
+    text-align: left;
+}
+
+/* 問題文が非表示の時でも現在位置は表示 */
+.problem-text.text-hidden {
+    background-color: transparent !important;
+    border: 2px dashed #dee2e6 !important;
+    color: transparent !important;
+}
+
+.problem-text.text-hidden .current {
+    background-color: #ffeb3b !important;
+    color: #333 !important;
+    font-weight: bold !important;
+    border-radius: 3px !important;
+    padding: 2px 4px !important;
+    animation: currentBlink 1.2s infinite !important;
+    border: 2px solid #ff9800 !important;
+    box-shadow: 0 0 8px rgba(255, 152, 0, 0.5) !important;
+    position: relative !important;
+    display: inline-block !important;
+}
+
+.problem-text.text-hidden .correct {
+    /* 正解部分は表示を維持 */
+    background-color: #4caf50 !important;
+    color: white !important;
+    border-radius: 3px !important;
+    padding: 2px 4px !important;
+    font-weight: 500 !important;
+    box-shadow: 0 1px 3px rgba(76, 175, 80, 0.3) !important;
+}
+
+.problem-text.text-hidden .incorrect,
+.problem-text.text-hidden .pending {
+    color: transparent !important;
+    background-color: transparent !important;
+}
+
+.problem-display {
+    margin-bottom: 15px;
+}
+
+/* 文字の状態表示 */
+.correct {
+    background-color: #4caf50 !important;
+    color: white !important;
+    border-radius: 3px !important;
+    padding: 2px 4px !important;
+    font-weight: 500 !important;
+    box-shadow: 0 1px 3px rgba(76, 175, 80, 0.3) !important;
+}
+
+.incorrect {
+    background-color: #f44336 !important;
+    color: white !important;
+    border-radius: 3px !important;
+    padding: 2px 4px !important;
+    position: relative !important;
+    font-weight: 500 !important;
+    box-shadow: 0 1px 3px rgba(244, 67, 54, 0.3) !important;
+    animation: incorrectShake 0.5s ease-in-out !important;
+}
+
+.current {
+    background-color: #ffeb3b !important;
+    color: #333 !important;
+    font-weight: bold !important;
+    border-radius: 3px !important;
+    padding: 2px 4px !important;
+    animation: currentBlink 1.2s infinite !important;
+    border: 2px solid #ff9800 !important;
+    box-shadow: 0 0 8px rgba(255, 152, 0, 0.5) !important;
+    position: relative !important;
+    display: inline-block !important;
+}
+
+.pending {
+    color: #9e9e9e;
+    opacity: 0.8;
+    background-color: #f5f5f5;
+    border-radius: 2px;
+    padding: 1px 2px;
+}
+
+/* 特殊文字の視覚化 */
+.space-char {
+    color: #007bff;
+    font-weight: bold;
+    background-color: rgba(0, 123, 255, 0.1);
+    border-radius: 2px;
+    padding: 1px 3px;
+}
+
+.tab-char {
+    color: #28a745;
+    font-weight: bold;
+    background-color: rgba(40, 167, 69, 0.1);
+    border-radius: 2px;
+    padding: 1px 3px;
+}
+
+.newline-char {
+    color: #dc3545;
+    font-weight: bold;
+    background-color: rgba(220, 53, 69, 0.1);
+    border-radius: 2px;
+    padding: 1px 3px;
+}
+
+/* エラーオーバーレイ */
+.error-overlay {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    background-color: #FF4444;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 10;
+    opacity: 0.9;
+}
+
+/* 特殊文字の視覚化 */
+.space-indicator {
+    color: #999;
+    font-weight: bold;
+}
+
+.tab-indicator {
+    color: #666;
+    font-weight: bold;
+}
+
+.newline-indicator {
+    color: #666;
+    font-weight: bold;
+}
+
+/* カーソルの点滅アニメーション */
+@keyframes blink {
+
+    0%,
+    50% {
+        opacity: 1;
+    }
+
+    51%,
+    100% {
+        opacity: 0.3;
+    }
+}
+
+/* 現在の入力位置のより目立つ点滅アニメーション */
+@keyframes currentBlink {
+    0% {
+        background-color: #ffeb3b;
+        transform: scale(1);
+        box-shadow: 0 0 8px rgba(255, 152, 0, 0.5);
+    }
+
+    50% {
+        background-color: #ff9800;
+        transform: scale(1.05);
+        box-shadow: 0 0 12px rgba(255, 152, 0, 0.8);
+    }
+
+    100% {
+        background-color: #ffeb3b;
+        transform: scale(1);
+        box-shadow: 0 0 8px rgba(255, 152, 0, 0.5);
+    }
+}
+
+/* 間違った文字の振動アニメーション */
+@keyframes incorrectShake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-2px);
+    }
+
+    75% {
+        transform: translateX(2px);
+    }
+}
+
+#typing-input {
+    width: 100%;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    padding: 11px;
+    border: 2px solid #007bff;
+    border-radius: 4px;
+    resize: none;
+    line-height: 1.4;
+    letter-spacing: 0.3px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    transition: height 0.2s ease;
+    text-align: left;
+}
+
+.input-help {
+    margin-top: 5px;
+    padding: 5px;
+    background-color: #f8f9fa;
+    border-radius: 3px;
+}
+
+#typing-input:focus {
+    outline: none;
+    border-color: #0056b3;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.typing-controls {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.typing-controls button {
+    margin: 0 9px;
+    padding: 9px 18px;
+    font-size: 13px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.typing-controls button:first-child {
+    background-color: #28a745;
+    color: white;
+}
+
+.typing-controls button:first-child:hover {
+    background-color: #218838;
+}
+
+.typing-controls button:last-child {
+    background-color: #6c757d;
+    color: white;
+}
+
+.typing-controls button:last-child:hover {
+    background-color: #5a6268;
+}
+
+/* タイピング練習画面のボタンスタイル修正 */
+.typing-controls .btn,
+.typing-controls button {
+    width: auto !important;
+    display: inline-block;
+    margin: 0 10px;
+    padding: 10px 20px;
+}
+
+/* タイピング練習画面のレイアウト修正 */
+.typing-practice-container {
+    max-width: none !important;
+    width: 100% !important;
+}
+
+.typing-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.typing-stats {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #007bff;
+    padding: 12px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+/* タイピング練習画面のヘッダー部分を中央寄せ */
+.typing-practice h1 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* 統計情報表示部分を中央寄せ */
+.typing-practice .problem-info {
+    text-align: center;
+}
+
+.loading-message {
+    text-align: center;
+    color: #007bff;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.error-message {
+    text-align: center;
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+/* 評価ランク一覧のスタイル */
+.rank-list {
+    background-color: #f8f9fa;
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--padding-main);
+    margin-top: var(--margin-narrow);
+}
+
+.rank-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.rank-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.rank-list li:last-child {
+    border-bottom: none;
+}
+
+.rank-list .rank {
+    font-weight: bold;
+    color: var(--color-primary);
+    min-width: 60px;
+}
+
+.rank-list .points {
+    color: var(--color-text-light);
+    font-size: var(--font-size-smaller);
+}
+
+/* レスポンシブ対応 - セレクタとフォーム要素のみ */
+@media (max-width: 768px) {
+    .dropdown-container {
+        margin-bottom: 15px !important;
+    }
+
+    .dropdown-container select,
+    .dropdown-container input {
+        font-size: var(--font-size-main) !important;
+        padding: 8px !important;
+        margin-bottom: 15px !important;
+    }
+
+    .dropdown-container label {
+        font-size: var(--font-size-main) !important;
+        margin-bottom: 5px !important;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .dropdown-container select,
+    .dropdown-container input {
+        font-size: var(--font-size-smaller) !important;
+        padding: 8px !important;
+    }
+
+    .dropdown-container label {
+        font-size: var(--font-size-smaller) !important;
+    }
+
+    .dropdown-container p {
+        font-size: 12px !important;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .dropdown-container select,
+    .dropdown-container input {
+        font-size: 12px !important;
+        padding: 6px !important;
+    }
+
+    .dropdown-container label {
+        font-size: 12px !important;
+    }
+
+    .dropdown-container p {
+        font-size: 11px !important;
+    }
+
+    .btn {
+        font-size: var(--font-size-smaller) !important;
+        padding: 8px !important;
+    }
+}
+
+/* ドロップダウンコンテナのスタイル */
+.dropdown-container {
+    margin-bottom: var(--margin-main);
+}
+
+.dropdown-container p {
+    font-size: var(--font-size-smaller);
+    color: var(--color-text-light);
+    margin: var(--margin-more-narrow) 0;
+}
+
+/* ユーザーデータ表示の調整 */
+.user-data {
+    font-size: var(--font-size-smaller);
+    color: var(--color-text-light);
+    text-align: right;
+    line-height: 1.4;
+}
+
+/* タイピング訓練画面専用の統計表示調整 */
+body .label-text-container div {
+    margin-right: 0.5em !important;
+    font-size: var(--font-size-smaller) !important;
+    font-family: 'Arial', sans-serif !important;
+    color: var(--color-text-light) !important;
+    text-align: right !important;
+    line-height: 1.4 !important;
+}
+
+/* content-area内のmainクラス - 常に横並びを維持 */
+#content-area div.main {
+    flex-direction: row !important;
+    gap: var(--margin-main) !important;
+    flex-wrap: nowrap !important;
+}
+
+#content-area div.main div.box-left,
+#content-area div.main div.box-right {
+    width: 50% !important;
+    flex-shrink: 0 !important;
+    flex-basis: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+}
+
+#content-area div.main div.box-right {
+    padding-left: var(--padding-narrow) !important;
+    margin-top: 0 !important;
+}
+
+#content-area .rank-list {
+    margin-top: var(--margin-narrow) !important;
+}
+
+/*
+ 凡例の強制表示（他のスタイルに干渉されないように） */
+div.legend {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+    clip: auto !important;
+    background-color: #e3f2fd !important;
+    border: 2px solid #1976d2 !important;
+    padding: 15px !important;
+    margin: 10px 0 !important;
+    font-size: 14px !important;
+    line-height: 1.4 !important;
+}
+
+/* 凡例内の要素も強制表示 */
+div.legend * {
+    display: inherit !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* ワープロ検定
+評価の特別スタイル */
+.wp-evaluation {
+    background-color: #fff3e0 !important;
+    border: 2px solid #ff9800 !important;
+    border-radius: 5px !important;
+    padding: 8px !important;
+}
+
+.wp-evaluation .stat-label {
+    color: #e65100 !important;
+    font-weight: bold !important;
+}
+
+.wp-evaluation .stat-value {
+    color: #ff6f00 !important;
+    font-weight: bold !important;
+    font-size: 1.1em !important;
+}
+
+/* レス
+ポンシブデザイン - タブレット以下で縦並び */
+@media (max-width: 768px) {
+    .coding-area {
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+
+    .problem-section,
+    .typing-section {
+        flex: none !important;
+        width: 100% !important;
+    }
+
+    .display-options {
+        padding: 8px 12px !important;
+    }
+
+    .option-group {
+        gap: 6px !important;
+    }
+}
+
+/* 完了メッセージのスタイル */
+.completion-message {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin-top: 8px;
+    font-size: 0.9rem;
+    text-align: center;
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* スマートフォン向け調整 */
+@media (max-width: 480px) {
+    .coding-area {
+        gap: 10px !important;
+    }
+
+    .problem-text,
+    #typing-input {
+        font-size: 12px !important;
+        padding: 10px !important;
+    }
+
+    .legend-items {
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+}
+
+/* ===== 結果表示モーダル（既存デザイン踏襲） ===== */
+.result-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    width: 90%;
+    max-width: 450px;
+    max-height: 85vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    text-align: left;
+    position: relative;
+    box-sizing: border-box;
+    margin: 20px;
+}
+
+.modal-content h2 {
+    margin-bottom: 15px;
+    color: #333;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.result-stats {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 5px;
+}
+
+.stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid #e9ecef;
+    background-color: #fafafa;
+    border-radius: 4px;
+    margin: 3px 0;
+    min-height: 24px;
+}
+
+.stat:last-child {
+    border-bottom: none;
+}
+
+.stat-label {
+    font-size: 1rem;
+    color: #333;
+    font-weight: 500;
+    text-align: left;
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #007bff;
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* 評価ランクのハイライト */
+.rank-highlight {
+    background-color: #e3f2fd;
+    border-left: 4px solid #007bff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 2px 0;
+}
+
+.rank-highlight .stat-value {
+    font-size: 1.3rem;
+    color: #0056b3;
+}
+
+/* ワープロ検定評価の特別スタイル */
+.wp-evaluation {
+    background-color: #fff3e0;
+    border-left: 4px solid #ff9800;
+    padding: 12px 15px;
+    border-radius: var(--border-radius);
+    margin: 5px 0;
+}
+
+.wp-evaluation .stat-label {
+    color: #e65100;
+    font-weight: bold;
+}
+
+.wp-evaluation .stat-value {
+    color: #ff6f00;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* 評価ランクのツールチップ機能を無効化（typing-practice.htmlでは不要） */
+.rank-tooltip-trigger {
+    position: static !important;
+    cursor: default !important;
+    border-bottom: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    transition: none !important;
+}
+
+.rank-tooltip-trigger:hover {
+    background-color: transparent !important;
+}
+
+/* ツールチップを完全に無効化 */
+.rank-tooltip-trigger::before,
+.rank-tooltip-trigger::after {
+    display: none !important;
+    content: none !important;
+}
+
+.modal-actions {
+    margin-top: 20px;
+    padding: 0 5px;
+}
+
+.modal-actions .button-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-actions .button-container .btn,
+.modal-actions .button-container .btn-muted {
+    width: 48%;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        max-width: 500px;
+        padding: 18px;
+        max-height: 90vh;
+    }
+
+    .modal-actions .button-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .modal-actions .button-container .btn,
+    .modal-actions .button-container .btn-muted {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        width: 95%;
+        padding: 15px;
+        max-height: 95vh;
+        max-width: 380px;
+    }
+
+    .modal-content h2 {
+        font-size: 1.2rem;
+        margin-bottom: 12px;
+    }
+
+    .stat {
+        padding: 6px 10px;
+    }
+
+    .stat-label,
+    .stat-value {
+        font-size: 0.9rem;
+    }
+
+    .rank-highlight .stat-value {
+        font-size: 1.1rem;
+    }
+
+    .result-stats {
+        margin-bottom: 15px;
+        gap: 2px;
+    }
+
+    .modal-actions {
+        margin-top: 12px;
+    }
+}
+
+/* data-tooltip属性を使ったツールチップスタイル */
+.rank-tooltip-trigger {
+    position: relative !important;
+    cursor: help !important;
+    border-bottom: 2px dotted #007bff !important;
+    padding: 2px 4px !important;
+    border-radius: 2px !important;
+    transition: background-color 0.2s ease !important;
+}
+
+.rank-tooltip-trigger:hover {
+    background-color: rgba(0, 123, 255, 0.1) !important;
+}
+
+/* data-tooltip属性からツールチップを生成 */
+.rank-tooltip-trigger::before {
+    content: attr(data-tooltip) !important;
+    position: absolute !important;
+    bottom: 100% !important;
+    left: 50% !important;
+    transform: translateX(-50%) translateY(-5px) !important;
+    background-color: rgba(0, 0, 0, 0.95) !important;
+    color: white !important;
+    padding: 10px 15px !important;
+    border-radius: 6px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    white-space: nowrap !important;
+    z-index: 99999 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: all 0.3s ease !important;
+    pointer-events: none !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+    margin-bottom: 8px !important;
+}
+
+/* 矢印 */
+.rank-tooltip-trigger::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: 100% !important;
+    left: 50% !important;
+    transform: translateX(-50%) translateY(2px) !important;
+    border: 6px solid transparent !important;
+    border-top-color: rgba(0, 0, 0, 0.95) !important;
+    z-index: 99999 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: all 0.3s ease !important;
+    pointer-events: none !important;
+}
+
+/* ホバー時の表示 */
+.rank-tooltip-trigger:hover::before,
+.rank-tooltip-trigger:hover::after {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateX(-50%) translateY(0) !important;
+}
+
+/* 評価ランクのハイライト */
+.rank-highlight {
+    position: relative !important;
+}
