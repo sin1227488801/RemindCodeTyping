@@ -246,11 +246,5 @@ class NotebookManager {
     }
 }
 
-// ページ読み込み時に初期化
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.rctApi) {
-        window.notebookManager = new NotebookManager();
-    } else {
-        console.error('RctApi not found');
-    }
-});
+// ページ読み込み時に初期化（main.jsから呼ばれる場合もあるため、DOMContentLoadedは使わない）
+// main.jsのinitializeNotebookPage()から直接インスタンス化される

@@ -156,32 +156,18 @@ function initializeNotebookPage() {
     // 既存のタイマーをクリーンアップ
     cleanupTimers();
 
-    // 言語選択リストを動的に更新（1回だけ実行）
-    if (window.notebookPageLanguageTimeout) {
-        clearTimeout(window.notebookPageLanguageTimeout);
+    // NotebookManagerを初期化（notebook.jsが読み込まれている場合）
+    if (window.notebookPageInitTimeout) {
+        clearTimeout(window.notebookPageInitTimeout);
     }
-    window.notebookPageLanguageTimeout = setTimeout(() => {
-        console.log('Loading available languages for notebook page...');
-        loadAvailableLanguages();
-        window.notebookPageLanguageTimeout = null;
-    }, 300);
-
-    // 新規登録ボタンのイベント設定（少し遅延させて確実にボタンが存在するようにする）
-    if (window.notebookPageButtonTimeout) {
-        clearTimeout(window.notebookPageButtonTimeout);
-    }
-    window.notebookPageButtonTimeout = setTimeout(() => {
-        const registerButton = document.querySelector('#content-area .btn');
-        if (registerButton && registerButton.textContent.includes('新規登録')) {
-            // 既存のイベントリスナーを削除してから新しいものを追加
-            const newRegisterButton = registerButton.cloneNode(true);
-            registerButton.parentNode.replaceChild(newRegisterButton, registerButton);
-            newRegisterButton.addEventListener('click', handleStudyBookRegister);
-            console.log('Register button event listener added');
+    window.notebookPageInitTimeout = setTimeout(() => {
+        if (typeof NotebookManager !== 'undefined' && window.rctApi) {
+            console.log('Initializing NotebookManager...');
+            window.notebookManager = new NotebookManager();
         } else {
-            console.error('新規登録ボタンが見つかりません');
+            console.warn('NotebookManager or rctApi not found');
         }
-        window.notebookPageButtonTimeout = null;
+        window.notebookPageInitTimeout = null;
     }, 100);
 }
 
