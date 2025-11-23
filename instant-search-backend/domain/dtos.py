@@ -64,7 +64,7 @@ class QuestionCreateRequest(BaseModel):
     category: str = Field(..., min_length=1, max_length=100)
     difficulty: str = Field(..., pattern=r'^(easy|medium|hard)$')
     question: str = Field(..., min_length=1, max_length=2000)
-    answer: str = Field(..., min_length=1, max_length=2000)
+    answer: str = Field(default="", max_length=2000)  # Allow empty answer/explanation
 
 
 class QuestionUpdateRequest(BaseModel):
