@@ -400,7 +400,8 @@ class SQLAlchemyQuestionRepository(QuestionRepository):
             
         except SQLAlchemyError as e:
             self.session.rollback()
-            raise ValidationError(f"Failed to delete question: {str(e)}")
+            # Use a generic exception instead of ValidationError
+            raise Exception(f"Failed to delete question: {str(e)}")
     
     async def count_by_study_book_id(self, study_book_id: UUID, user_id: UUID) -> int:
         """Count questions in a study book, scoped to user."""
