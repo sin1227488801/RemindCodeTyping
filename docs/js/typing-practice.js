@@ -623,15 +623,6 @@ class TypingPractice {
         const input = document.getElementById('typing-input').value;
         const problem = this.problems[this.currentProblemIndex];
 
-        // キーボード入力の効果音を再生
-        console.log('onTypingInput called - attempting to play tap sound');
-        if (window.SoundEffects) {
-            console.log('SoundEffects available, calling playTap');
-            window.SoundEffects.playTap();
-        } else {
-            console.warn('SoundEffects not available in onTypingInput');
-        }
-
         // リアルタイムで入力位置と正答率を更新
         this.updateTypingDisplay(input, problem.question);
 
@@ -702,6 +693,19 @@ class TypingPractice {
 
     onKeyDown(e) {
         if (!this.isActive) return;
+
+        // 通常の文字入力時に効果音を再生（特殊キーを除外）
+        const specialKeys = ['Enter', 'Shift', 'Control', 'Alt', 'Meta', 'Tab', 'Escape', 'CapsLock', 
+                            'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End', 
+                            'PageUp', 'PageDown', 'Insert', 'Delete', 'F1', 'F2', 'F3', 'F4', 
+                            'F5', 'F6', 'F7', 'F8', 'F9', 'F10', 'F11', 'F12'];
+        
+        if (!specialKeys.includes(e.key) && e.key.length === 1) {
+            console.log('Key pressed:', e.key, '- playing tap sound');
+            if (window.SoundEffects) {
+                window.SoundEffects.playTap();
+            }
+        }
 
         // 入力完了後のEnterキーで次の問題へ
         if (e.key === 'Enter') {

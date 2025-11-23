@@ -31,6 +31,12 @@
     <script src="js/api.js"></script>
     <script src="js/sound-effects.js"></script>
     <script>
+        // 画面遷移直後に効果音を即座に再生
+        console.log('アカウント作成完了画面に遷移 - 効果音を即座に再生');
+        if (window.SoundEffects) {
+            window.SoundEffects.playRegistered();
+        }
+
         // sessionStorageから登録したアカウント情報を取得
         function getAccountInfo() {
             const newUserData = sessionStorage.getItem('newUserData');
@@ -119,12 +125,6 @@
             if (backButton) {
                 backButton.addEventListener('click', goBack);
                 console.log('戻るボタンのイベントリスナーを設定しました');
-            }
-
-            // 全ての初期化処理が完了した直後にアカウント作成完了の効果音を再生
-            if (window.SoundEffects) {
-                console.log('アカウント作成完了の効果音を再生します');
-                window.SoundEffects.playRegistered();
             }
         });
     </script>

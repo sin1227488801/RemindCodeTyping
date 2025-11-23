@@ -140,7 +140,18 @@ function initializeTypingPage() {
             // 既存のイベントリスナーを削除してから新しいものを追加
             const newStartButton = startButton.cloneNode(true);
             startButton.parentNode.replaceChild(newStartButton, startButton);
-            newStartButton.addEventListener('click', startTypingSession);
+            
+            // ボタンクリック時に効果音を即座に再生してからstartTypingSessionを実行
+            newStartButton.addEventListener('click', function() {
+                console.log('Start button clicked - playing sound immediately');
+                // 効果音を即座に再生
+                if (window.SoundEffects) {
+                    window.SoundEffects.playConfirm();
+                }
+                // startTypingSessionを実行
+                startTypingSession();
+            });
+            
             console.log('Start button event listener added');
         } else {
             console.error('Start!ボタンが見つかりません');
@@ -524,14 +535,9 @@ async function startTypingSession() {
             // 設定保存完了
             console.log('設定保存完了');
 
-            // 画面遷移の効果音を再生
-            if (window.SoundEffects) {
-                window.SoundEffects.playConfirm();
-            }
-
             console.log('Config saved, redirecting to typing-practice.html');
             
-            // 効果音再生後に2秒待機してから遷移
+            // 効果音再生後に2秒待機してから遷移（効果音はボタンクリック時に既に再生済み）
             setTimeout(() => {
                 window.location.href = 'typing-practice.html';
             }, 2000);
