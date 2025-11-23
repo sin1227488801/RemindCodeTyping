@@ -230,6 +230,13 @@ class NotebookManager {
 
         // 解説がある場合のみ表示（空文字列でない場合）
         const answerText = problem.answer || problem.explanation || '';
+        console.log('Creating problem item:', {
+            id: problem.id,
+            question: problem.question,
+            answerText: answerText,
+            willShowAnswer: !!answerText.trim()
+        });
+        
         if (answerText.trim()) {
             const explanationLabel = document.createElement('div');
             explanationLabel.className = 'problem-explanation-label';
@@ -241,6 +248,10 @@ class NotebookManager {
 
             item.appendChild(explanationLabel);
             item.appendChild(explanationDiv);
+            
+            console.log('Answer element added to DOM');
+        } else {
+            console.log('Answer is empty, not showing');
         }
 
         return item;
