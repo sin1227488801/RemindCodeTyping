@@ -47,11 +47,6 @@
 
         function proceedToLogin() {
             console.log('proceedToLogin called');
-            
-            // 画面遷移の効果音を再生
-            if (window.SoundEffects) {
-                window.SoundEffects.playConfirm();
-            }
 
             const accountInfo = getAccountInfo();
 
@@ -88,11 +83,6 @@
 
         function goBack() {
             console.log('goBack called');
-            
-            // 画面遷移の効果音を再生
-            if (window.SoundEffects) {
-                window.SoundEffects.playConfirm();
-            }
 
             // sessionStorageをクリア
             sessionStorage.removeItem('newUserData');

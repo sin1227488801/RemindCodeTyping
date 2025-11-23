@@ -119,11 +119,6 @@ class NotebookManager {
             });
 
             console.log('Problem registered:', result);
-            
-            // 登録完了の効果音を再生
-            if (window.SoundEffects) {
-                window.SoundEffects.playRegistered();
-            }
 
             alert('問題を登録しました！');
 

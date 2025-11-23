@@ -4,7 +4,8 @@ const SoundEffects = {
     sounds: {
         confirm: 'sound/confirm-effect.mp3',
         registered: 'sound/registered-sound-effect.mp3',
-        tap: 'sound/tap-effect.mp3'
+        tap: 'sound/tap-effect.mp3',
+        submission: 'sound/submission-effect.mp3'
     },
 
     // タップ音のデバウンス用
@@ -46,6 +47,11 @@ const SoundEffects = {
             this.play('tap');
             this.lastTapTime = now;
         }
+    },
+
+    // 問題送信時の効果音
+    playSubmission: function() {
+        this.play('submission');
     }
 };
 

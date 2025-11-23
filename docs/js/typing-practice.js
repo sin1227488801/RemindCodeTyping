@@ -758,6 +758,11 @@ class TypingPractice {
     }
 
     nextProblem() {
+        // 問題送信の効果音を再生
+        if (window.SoundEffects) {
+            window.SoundEffects.playSubmission();
+        }
+
         this.currentProblemIndex++;
 
         // 完了状態をリセット
@@ -1212,20 +1217,10 @@ class TypingPractice {
     }
 
     retry() {
-        // 画面遷移の効果音を再生
-        if (window.SoundEffects) {
-            window.SoundEffects.playConfirm();
-        }
-
         window.location.reload();
     }
 
     goBack() {
-        // 画面遷移の効果音を再生
-        if (window.SoundEffects) {
-            window.SoundEffects.playConfirm();
-        }
-
         // 統計情報更新フラグを設定
         sessionStorage.setItem('statsUpdated', 'true');
         

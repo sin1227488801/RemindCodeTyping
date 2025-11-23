@@ -1,11 +1,6 @@
 function loadPage(page, event) {
     console.log('Loading page:', page, 'Event:', event);
 
-    // タブ切り替えの効果音を再生
-    if (window.SoundEffects) {
-        window.SoundEffects.playConfirm();
-    }
-
     // 既存のページをクリーンアップ
     cleanupCurrentPage();
 
@@ -1001,11 +996,6 @@ function handleLogout() {
     try {
         if (confirm('ログアウトしますか？')) {
             console.log('ログアウト確認OK');
-            
-            // 画面遷移の効果音を再生
-            if (window.SoundEffects) {
-                window.SoundEffects.playConfirm();
-            }
 
             // 直接ログアウト処理を実行
             localStorage.removeItem('isAuthenticated');
