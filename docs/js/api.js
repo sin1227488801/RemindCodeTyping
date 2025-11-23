@@ -63,6 +63,11 @@ class RctApi {
                 throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
             }
 
+            // 204 No Content の場合は空のレスポンスを返す
+            if (response.status === 204) {
+                return null;
+            }
+
             const contentType = response.headers.get('content-type');
             if (contentType && contentType.includes('application/json')) {
                 const data = await response.json();
