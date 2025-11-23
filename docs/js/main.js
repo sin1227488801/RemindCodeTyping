@@ -1,6 +1,11 @@
 function loadPage(page, event) {
     console.log('Loading page:', page, 'Event:', event);
 
+    // タブ切り替えの効果音を再生
+    if (window.SoundEffects) {
+        window.SoundEffects.playConfirm();
+    }
+
     // 既存のページをクリーンアップ
     cleanupCurrentPage();
 
@@ -524,6 +529,11 @@ async function startTypingSession() {
             // 設定保存完了
             console.log('設定保存完了');
 
+            // 画面遷移の効果音を再生
+            if (window.SoundEffects) {
+                window.SoundEffects.playConfirm();
+            }
+
             console.log('Config saved, redirecting to typing-practice.html');
             // タイピング練習画面に遷移
             window.location.href = 'typing-practice.html';
@@ -991,6 +1001,12 @@ function handleLogout() {
     try {
         if (confirm('ログアウトしますか？')) {
             console.log('ログアウト確認OK');
+            
+            // 画面遷移の効果音を再生
+            if (window.SoundEffects) {
+                window.SoundEffects.playConfirm();
+            }
+
             // 直接ログアウト処理を実行
             localStorage.removeItem('isAuthenticated');
             localStorage.removeItem('currentUser');

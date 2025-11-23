@@ -623,6 +623,11 @@ class TypingPractice {
         const input = document.getElementById('typing-input').value;
         const problem = this.problems[this.currentProblemIndex];
 
+        // キーボード入力の効果音を再生
+        if (window.SoundEffects) {
+            window.SoundEffects.playTap();
+        }
+
         // リアルタイムで入力位置と正答率を更新
         this.updateTypingDisplay(input, problem.question);
 
@@ -1207,10 +1212,20 @@ class TypingPractice {
     }
 
     retry() {
+        // 画面遷移の効果音を再生
+        if (window.SoundEffects) {
+            window.SoundEffects.playConfirm();
+        }
+
         window.location.reload();
     }
 
     goBack() {
+        // 画面遷移の効果音を再生
+        if (window.SoundEffects) {
+            window.SoundEffects.playConfirm();
+        }
+
         // 統計情報更新フラグを設定
         sessionStorage.setItem('statsUpdated', 'true');
         

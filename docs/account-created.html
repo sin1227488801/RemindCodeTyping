@@ -29,6 +29,7 @@
     </div>
 
     <script src="js/api.js"></script>
+    <script src="js/sound-effects.js"></script>
     <script>
         // sessionStorageから登録したアカウント情報を取得
         function getAccountInfo() {
@@ -46,6 +47,12 @@
 
         function proceedToLogin() {
             console.log('proceedToLogin called');
+            
+            // 画面遷移の効果音を再生
+            if (window.SoundEffects) {
+                window.SoundEffects.playConfirm();
+            }
+
             const accountInfo = getAccountInfo();
 
             if (!accountInfo || !accountInfo.loginId) {
@@ -81,6 +88,12 @@
 
         function goBack() {
             console.log('goBack called');
+            
+            // 画面遷移の効果音を再生
+            if (window.SoundEffects) {
+                window.SoundEffects.playConfirm();
+            }
+
             // sessionStorageをクリア
             sessionStorage.removeItem('newUserData');
             window.location.href = 'login.html';
