@@ -60,86 +60,99 @@
 .problems-list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: var(--margin-more-narrow);
 }
 
 .problem-item {
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: #fff;
+    background-color: var(--color-border);
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px var(--color-product-sub);
+    padding: 5px;
+    margin: var(--margin-more-narrow) 0;
+    box-sizing: border-box;
     overflow: hidden;
 }
 
-.problem-header {
+.label-button-container {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 12px 15px;
-    background: #f8f9fa;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.problem-header:hover {
-    background: #e9ecef;
+    align-items: flex-start;
+    width: 100%;
+    min-height: 40px;
 }
 
 .problem-header-left {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     flex: 1;
-}
-
-.toggleButton {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 0.8rem;
-    color: #666;
-    padding: 0;
-    width: 20px;
-    text-align: center;
-    transition: transform 0.2s;
-}
-
-.toggleButton.active {
-    transform: rotate(90deg);
 }
 
 .problem-language {
     display: inline-block;
-    padding: 3px 10px;
-    background: #007bff;
+    padding: 2px 8px;
+    background: var(--color-primary);
     color: white;
-    border-radius: 12px;
-    font-size: 0.75rem;
+    border-radius: 4px;
+    font-size: 12px;
     font-weight: 500;
-    flex-shrink: 0;
 }
 
 .problem-question-preview {
-    color: #333;
-    font-size: 0.9rem;
+    color: var(--color-text);
+    font-size: 12px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
+/* トグルボタンのスタイル（records.cssと同じ） */
+.toggleButton {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 30px;
+    background-color: var(--color-text-light);
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.4s;
+}
+
+.toggleButton:before {
+    content: '';
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background-color: white;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.4s;
+}
+
+.toggleButton.active {
+    background-color: var(--color-primary);
+}
+
+.toggleButton.active:before {
+    transform: translateX(20px);
+}
+
 .problem-actions {
     display: flex;
-    gap: 10px;
-    flex-shrink: 0;
+    gap: 8px;
+    align-items: center;
 }
 
 .btn-delete {
-    padding: 5px 12px;
+    padding: 4px 10px;
     background: #dc3545;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 11px;
     transition: background 0.2s;
 }
 
@@ -147,44 +160,41 @@
     background: #c82333;
 }
 
-/* トグルコンテンツ */
+/* トグルコンテンツ（records.cssと同じ） */
 .toggleContent {
-    padding: 15px;
-    border-top: 1px solid #e9ecef;
-    background: #fff;
+    text-align: left;
+    margin-top: 6px;
+    padding: 4px 8px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    line-height: 1.2;
+    font-size: 12px;
 }
 
 .problem-question {
-    background: #f8f9fa;
-    padding: 12px;
-    border-radius: 4px;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     font-family: 'Courier New', Courier, monospace;
     white-space: pre-wrap;
     word-break: break-word;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    border-left: 3px solid #007bff;
+    font-size: 12px;
+    line-height: 1.4;
 }
 
 .problem-explanation-label {
     font-weight: bold;
-    margin-bottom: 8px;
-    color: #495057;
-    font-size: 0.9rem;
+    margin-top: 8px;
+    margin-bottom: 4px;
+    color: var(--color-text);
+    font-size: 12px;
 }
 
 .problem-explanation {
-    color: #666;
-    font-size: 0.9rem;
-    padding: 12px;
-    background: #fff9e6;
-    border-radius: 4px;
+    color: var(--color-text);
+    font-size: 12px;
     white-space: pre-wrap;
     word-break: break-word;
-    line-height: 1.5;
-    border-left: 3px solid #ffc107;
-    position: static !important;  /* Override typing-practice.css */
+    line-height: 1.4;
+    position: static !important;
     top: auto !important;
     left: auto !important;
     right: auto !important;

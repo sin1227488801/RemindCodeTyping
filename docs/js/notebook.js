@@ -202,18 +202,12 @@ class NotebookManager {
         const item = document.createElement('div');
         item.className = 'problem-item';
 
-        // ヘッダー（クリックで展開/折りたたみ）
+        // ヘッダー（records.htmlと同じスタイル）
         const header = document.createElement('div');
-        header.className = 'problem-header';
+        header.className = 'label-button-container';
 
         const headerLeft = document.createElement('div');
         headerLeft.className = 'problem-header-left';
-
-        // トグルボタン
-        const toggleBtn = document.createElement('button');
-        toggleBtn.className = 'toggleButton';
-        toggleBtn.textContent = '▶';
-        toggleBtn.setAttribute('data-target', `problem-${problem.id}`);
 
         const language = document.createElement('span');
         language.className = 'problem-language';
@@ -221,9 +215,8 @@ class NotebookManager {
 
         const questionPreview = document.createElement('span');
         questionPreview.className = 'problem-question-preview';
-        questionPreview.textContent = problem.question.substring(0, 50) + (problem.question.length > 50 ? '...' : '');
+        questionPreview.textContent = problem.question.substring(0, 40) + (problem.question.length > 40 ? '...' : '');
 
-        headerLeft.appendChild(toggleBtn);
         headerLeft.appendChild(language);
         headerLeft.appendChild(questionPreview);
 
@@ -234,11 +227,18 @@ class NotebookManager {
         deleteBtn.className = 'btn-delete';
         deleteBtn.textContent = '削除';
         deleteBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // ヘッダークリックイベントを防ぐ
+            e.stopPropagation();
             this.deleteProblem(problem.id);
         });
 
+        // トグルボタン（records.htmlと同じスタイル）
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'toggleButton';
+        toggleBtn.setAttribute('data-target', `problem-${problem.id}`);
+
         actions.appendChild(deleteBtn);
+        actions.appendChild(toggleBtn);
+        
         header.appendChild(headerLeft);
         header.appendChild(actions);
 
@@ -272,13 +272,11 @@ class NotebookManager {
         item.appendChild(header);
         item.appendChild(content);
 
-        // トグル機能
-        header.addEventListener('click', (e) => {
-            if (e.target === deleteBtn) return; // 削除ボタンは除外
-            
+        // トグル機能（records.htmlと同じ動作）
+        toggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
             const isOpen = content.style.display === 'block';
             content.style.display = isOpen ? 'none' : 'block';
-            toggleBtn.textContent = isOpen ? '▶' : '▼';
             toggleBtn.classList.toggle('active', !isOpen);
         });
 
