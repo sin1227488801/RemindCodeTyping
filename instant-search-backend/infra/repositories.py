@@ -10,7 +10,7 @@ from datetime import datetime
 from typing import List, Optional
 from uuid import UUID
 
-from sqlalchemy import func, and_, desc
+from sqlalchemy import func, and_, desc, text
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -392,6 +392,16 @@ class SQLAlchemyQuestionRepository(QuestionRepository):
             
             if not question:
                 return False
+            
+            # Manually delete from FTS table first to avoid trigger issues
+            try:
+                self.session.execute(
+                    text("DELETE FROM questions_fts WHERE question_id = :qid"),
+                    {"qid": str(question_id)}
+                )
+            except Exception:
+                # FTS table might not exist or already deleted, ignore
+                pass
             
             # Delete the question
             self.session.delete(question)
