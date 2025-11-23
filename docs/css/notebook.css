@@ -60,50 +60,57 @@
 .problems-list {
     display: flex;
     flex-direction: column;
-    gap: var(--margin-more-narrow);
+    gap: var(--margin-narrow);
+    width: 100%;
+    max-width: 100%;
 }
 
 .problem-item {
     background-color: var(--color-border);
     border-radius: 8px;
     box-shadow: 0px 0px 5px var(--color-product-sub);
-    padding: 5px;
-    margin: var(--margin-more-narrow) 0;
+    padding: 10px;
+    margin: var(--margin-narrow) 0;
     box-sizing: border-box;
     overflow: hidden;
+    width: 100%;
 }
 
 .label-button-container {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     width: 100%;
-    min-height: 40px;
+    min-height: 50px;
+    padding: 5px 10px;
 }
 
 .problem-header-left {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 15px;
     flex: 1;
+    min-width: 0;
 }
 
 .problem-language {
     display: inline-block;
-    padding: 2px 8px;
+    padding: 4px 12px;
     background: var(--color-primary);
     color: white;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 500;
+    flex-shrink: 0;
 }
 
 .problem-question-preview {
     color: var(--color-text);
-    font-size: 12px;
+    font-size: 14px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    flex: 1;
 }
 
 /* トグルボタンのスタイル（records.cssと同じ） */
@@ -141,18 +148,19 @@
 
 .problem-actions {
     display: flex;
-    gap: 8px;
+    gap: 12px;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .btn-delete {
-    padding: 4px 10px;
+    padding: 6px 14px;
     background: #dc3545;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 11px;
+    font-size: 13px;
     transition: background 0.2s;
 }
 
@@ -160,40 +168,40 @@
     background: #c82333;
 }
 
-/* トグルコンテンツ（records.cssと同じ） */
+/* トグルコンテンツ */
 .toggleContent {
     text-align: left;
-    margin-top: 6px;
-    padding: 4px 8px;
+    margin-top: 10px;
+    padding: 15px;
     background-color: rgba(255, 255, 255, 0.3);
     border-radius: 4px;
-    line-height: 1.2;
-    font-size: 12px;
+    line-height: 1.5;
+    font-size: 14px;
 }
 
 .problem-question {
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     font-family: 'Courier New', Courier, monospace;
     white-space: pre-wrap;
     word-break: break-word;
-    font-size: 12px;
-    line-height: 1.4;
+    font-size: 14px;
+    line-height: 1.6;
 }
 
 .problem-explanation-label {
     font-weight: bold;
-    margin-top: 8px;
-    margin-bottom: 4px;
+    margin-top: 12px;
+    margin-bottom: 6px;
     color: var(--color-text);
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .problem-explanation {
     color: var(--color-text);
-    font-size: 12px;
+    font-size: 14px;
     white-space: pre-wrap;
     word-break: break-word;
-    line-height: 1.4;
+    line-height: 1.6;
     position: static !important;
     top: auto !important;
     left: auto !important;
