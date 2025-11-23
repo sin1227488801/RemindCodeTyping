@@ -8,10 +8,6 @@ const SoundEffects = {
         submission: 'sound/submission-effect.mp3'
     },
 
-    // タップ音のデバウンス用
-    lastTapTime: 0,
-    tapDebounceMs: 50, // 50ms以内の連続タップは無視
-
     // 効果音を再生する関数
     play: function(soundName) {
         console.log(`Attempting to play sound: ${soundName}`);
@@ -44,19 +40,9 @@ const SoundEffects = {
         this.play('registered');
     },
 
-    // キーボード入力時の効果音（デバウンス付き）
+    // キーボード入力時の効果音
     playTap: function() {
-        const now = Date.now();
-        const timeSinceLastTap = now - this.lastTapTime;
-        console.log(`playTap called - time since last tap: ${timeSinceLastTap}ms, debounce: ${this.tapDebounceMs}ms`);
-        
-        if (now - this.lastTapTime >= this.tapDebounceMs) {
-            console.log('Playing tap sound (debounce passed)');
-            this.play('tap');
-            this.lastTapTime = now;
-        } else {
-            console.log('Tap sound skipped (debounce not passed)');
-        }
+        this.play('tap');
     },
 
     // 問題送信時の効果音

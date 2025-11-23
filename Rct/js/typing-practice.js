@@ -753,6 +753,12 @@ class TypingPractice {
 
         // 完了状態をマーク
         this.currentProblemCompleted = true;
+
+        // 問題完了の効果音を再生
+        console.log('Playing submission sound on completion');
+        if (window.SoundEffects) {
+            window.SoundEffects.playSubmission();
+        }
     }
 
     skipProblem() {
@@ -762,15 +768,6 @@ class TypingPractice {
     }
 
     nextProblem() {
-        // 問題送信の効果音を再生
-        console.log('nextProblem called - playing submission sound');
-        if (window.SoundEffects) {
-            console.log('SoundEffects available, calling playSubmission');
-            window.SoundEffects.playSubmission();
-        } else {
-            console.warn('SoundEffects not available');
-        }
-
         this.currentProblemIndex++;
 
         // 完了状態をリセット

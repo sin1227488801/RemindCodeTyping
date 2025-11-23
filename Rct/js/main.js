@@ -531,10 +531,10 @@ async function startTypingSession() {
 
             console.log('Config saved, redirecting to typing-practice.html');
             
-            // 効果音再生後に少し待機してから遷移
+            // 効果音再生後に2秒待機してから遷移
             setTimeout(() => {
                 window.location.href = 'typing-practice.html';
-            }, 200);
+            }, 2000);
 
         } catch (error) {
             console.error('設定取得エラー:', error);
