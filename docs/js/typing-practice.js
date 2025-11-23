@@ -624,8 +624,12 @@ class TypingPractice {
         const problem = this.problems[this.currentProblemIndex];
 
         // キーボード入力の効果音を再生
+        console.log('onTypingInput called - attempting to play tap sound');
         if (window.SoundEffects) {
+            console.log('SoundEffects available, calling playTap');
             window.SoundEffects.playTap();
+        } else {
+            console.warn('SoundEffects not available in onTypingInput');
         }
 
         // リアルタイムで入力位置と正答率を更新
@@ -759,8 +763,12 @@ class TypingPractice {
 
     nextProblem() {
         // 問題送信の効果音を再生
+        console.log('nextProblem called - playing submission sound');
         if (window.SoundEffects) {
+            console.log('SoundEffects available, calling playSubmission');
             window.SoundEffects.playSubmission();
+        } else {
+            console.warn('SoundEffects not available');
         }
 
         this.currentProblemIndex++;

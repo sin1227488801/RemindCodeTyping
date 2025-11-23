@@ -530,8 +530,11 @@ async function startTypingSession() {
             }
 
             console.log('Config saved, redirecting to typing-practice.html');
-            // タイピング練習画面に遷移
-            window.location.href = 'typing-practice.html';
+            
+            // 効果音再生後に少し待機してから遷移
+            setTimeout(() => {
+                window.location.href = 'typing-practice.html';
+            }, 200);
 
         } catch (error) {
             console.error('設定取得エラー:', error);
