@@ -325,11 +325,25 @@ async def delete_question(
     Raises:
         HTTPException: 404 if not found
     """
-    # Delete question (scoped to user through study book ownership)
-    deleted = await question_repo.delete(question_id, user_id)
-    
-    if not deleted:
+    try:
+        # Delete question (scoped to user through study book ownership)
+        deleted = await question_repo.delete(question_id, user_id)
+        
+        if not deleted:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Question with ID {question_id} not found"
+            )
+    except ValidationError as e:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Question with ID {question_id} not found"
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+    except Exception as e:
+        # Log the error for debugging
+        import logging
+        logging.error(f"Error deleting question {question_id}: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to delete question: {str(e)}"
         )
