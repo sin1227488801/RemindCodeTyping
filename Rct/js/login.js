@@ -104,6 +104,11 @@ document.addEventListener('DOMContentLoaded', function () {
             window.rctApi.setUser(authenticatedUser);
             showMessage('ログイン成功！', 'success');
 
+            // 画面遷移の効果音を再生
+            if (window.SoundEffects) {
+                window.SoundEffects.playConfirm();
+            }
+
             setTimeout(() => {
                 window.location.href = 'main.html';
             }, 1000);
@@ -123,6 +128,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         window.rctApi.setUser(userData);
         showMessage('ゲストとしてログインします...', 'success');
+
+        // 画面遷移の効果音を再生
+        if (window.SoundEffects) {
+            window.SoundEffects.playConfirm();
+        }
 
         setTimeout(() => {
             window.location.href = 'main.html';

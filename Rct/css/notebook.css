@@ -1,5 +1,234 @@
-@import url('_common.css');
+@import url('common.css');
 /* 学習帳ページのスタイル */
+
+/* コンテンツエリアを広く */
+#content-area .main {
+    max-width: 95% !important;
+    width: 95% !important;
+    margin: 0 auto !important;
+}
+
+#list-tab .main {
+    max-width: 95% !important;
+    width: 95% !important;
+    padding: 20px !important;
+}
+
+/* タブスタイル */
+.notebook-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+}
+
+.notebook-tab {
+    padding: 10px 20px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #666;
+    transition: all 0.3s;
+}
+
+.notebook-tab:hover {
+    color: #333;
+    background: #f5f5f5;
+}
+
+.notebook-tab.active {
+    color: #007bff;
+    border-bottom-color: #007bff;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* フィルターコンテナ */
+.filter-container {
+    margin: 15px 0;
+}
+
+.filter-container label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.filter-container select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    min-width: 200px;
+}
+
+/* 問題一覧 */
+.problems-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--margin-narrow);
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto;
+}
+
+.problem-item {
+    background-color: var(--color-border);
+    border-radius: 8px;
+    box-shadow: 0px 0px 5px var(--color-product-sub);
+    padding: 10px;
+    margin: var(--margin-narrow) 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    width: 100%;
+}
+
+.label-button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    min-height: 50px;
+    padding: 5px 10px;
+}
+
+.problem-header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+    min-width: 0;
+}
+
+.problem-language {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--color-primary);
+    color: white;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    flex-shrink: 0;
+}
+
+.problem-question-preview {
+    color: var(--color-text);
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+}
+
+/* トグルボタンのスタイル（records.cssと同じ） */
+.toggleButton {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 30px;
+    background-color: var(--color-text-light);
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.4s;
+}
+
+.toggleButton:before {
+    content: '';
+    position: absolute;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background-color: white;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.4s;
+}
+
+.toggleButton.active {
+    background-color: var(--color-primary);
+}
+
+.toggleButton.active:before {
+    transform: translateX(20px);
+}
+
+.problem-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.btn-delete {
+    padding: 6px 14px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s;
+}
+
+.btn-delete:hover {
+    background: #c82333;
+}
+
+/* トグルコンテンツ */
+.toggleContent {
+    text-align: left;
+    margin-top: 10px;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+.problem-question {
+    margin-bottom: 12px;
+    font-family: 'Courier New', Courier, monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.problem-explanation-label {
+    font-weight: bold;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    color: var(--color-text);
+    font-size: 14px;
+}
+
+.problem-explanation {
+    color: var(--color-text);
+    font-size: 14px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.6;
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+}
+
+.loading-message, .empty-message {
+    text-align: center;
+    color: #666;
+    padding: 40px;
+    font-size: 1.1rem;
+}
+
 .dropdown-container {
     margin-bottom: 15px;
 }

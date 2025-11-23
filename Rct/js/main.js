@@ -1,6 +1,11 @@
 function loadPage(page, event) {
     console.log('Loading page:', page, 'Event:', event);
 
+    // タブ切り替えの効果音を再生
+    if (window.SoundEffects) {
+        window.SoundEffects.playConfirm();
+    }
+
     // 既存のページをクリーンアップ
     cleanupCurrentPage();
 
@@ -156,33 +161,38 @@ function initializeNotebookPage() {
     // 既存のタイマーをクリーンアップ
     cleanupTimers();
 
-    // 言語選択リストを動的に更新（1回だけ実行）
-    if (window.notebookPageLanguageTimeout) {
-        clearTimeout(window.notebookPageLanguageTimeout);
+    // NotebookManagerを初期化（notebook.jsが読み込まれている場合）
+    if (window.notebookPageInitTimeout) {
+        clearTimeout(window.notebookPageInitTimeout);
     }
-    window.notebookPageLanguageTimeout = setTimeout(() => {
-        console.log('Loading available languages for notebook page...');
-        loadAvailableLanguages();
-        window.notebookPageLanguageTimeout = null;
-    }, 300);
-
-    // 新規登録ボタンのイベント設定（少し遅延させて確実にボタンが存在するようにする）
-    if (window.notebookPageButtonTimeout) {
-        clearTimeout(window.notebookPageButtonTimeout);
-    }
-    window.notebookPageButtonTimeout = setTimeout(() => {
-        const registerButton = document.querySelector('#content-area .btn');
-        if (registerButton && registerButton.textContent.includes('新規登録')) {
-            // 既存のイベントリスナーを削除してから新しいものを追加
-            const newRegisterButton = registerButton.cloneNode(true);
-            registerButton.parentNode.replaceChild(newRegisterButton, registerButton);
-            newRegisterButton.addEventListener('click', handleStudyBookRegister);
-            console.log('Register button event listener added');
+    window.notebookPageInitTimeout = setTimeout(() => {
+        console.log('Checking for NotebookManager...', {
+            NotebookManagerExists: typeof NotebookManager !== 'undefined',
+            rctApiExists: !!window.rctApi
+        });
+        
+        if (typeof NotebookManager !== 'undefined' && window.rctApi) {
+            console.log('Initializing NotebookManager...');
+            try {
+                window.notebookManager = new NotebookManager();
+                console.log('NotebookManager initialized successfully');
+            } catch (error) {
+                console.error('Failed to initialize NotebookManager:', error);
+            }
         } else {
-            console.error('新規登録ボタンが見つかりません');
+            console.warn('NotebookManager or rctApi not found, retrying...');
+            // リトライ
+            setTimeout(() => {
+                if (typeof NotebookManager !== 'undefined' && window.rctApi) {
+                    console.log('Retry: Initializing NotebookManager...');
+                    window.notebookManager = new NotebookManager();
+                } else {
+                    console.error('Still not found after retry');
+                }
+            }, 500);
         }
-        window.notebookPageButtonTimeout = null;
-    }, 100);
+        window.notebookPageInitTimeout = null;
+    }, 200);
 }
 
 // 記録ページの初期化
@@ -518,6 +528,11 @@ async function startTypingSession() {
 
             // 設定保存完了
             console.log('設定保存完了');
+
+            // 画面遷移の効果音を再生
+            if (window.SoundEffects) {
+                window.SoundEffects.playConfirm();
+            }
 
             console.log('Config saved, redirecting to typing-practice.html');
             // タイピング練習画面に遷移
@@ -986,6 +1001,12 @@ function handleLogout() {
     try {
         if (confirm('ログアウトしますか？')) {
             console.log('ログアウト確認OK');
+            
+            // 画面遷移の効果音を再生
+            if (window.SoundEffects) {
+                window.SoundEffects.playConfirm();
+            }
+
             // 直接ログアウト処理を実行
             localStorage.removeItem('isAuthenticated');
             localStorage.removeItem('currentUser');
