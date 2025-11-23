@@ -219,11 +219,6 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('新規ユーザーを登録しました:', newUser);
             showMessage('アカウント作成が完了しました！', 'success');
 
-            // アカウント作成完了の効果音を再生
-            if (window.SoundEffects) {
-                window.SoundEffects.playRegistered();
-            }
-
             // アカウント作成完了画面に遷移
             setTimeout(() => {
                 window.location.href = 'account-created.html';
@@ -263,11 +258,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             console.log('ローカルユーザーを登録しました:', newUser);
             showMessage('アカウント作成が完了しました（ローカル保存）！', 'success');
-
-            // アカウント作成完了の効果音を再生
-            if (window.SoundEffects) {
-                window.SoundEffects.playRegistered();
-            }
 
             // アカウント作成完了画面に遷移
             setTimeout(() => {

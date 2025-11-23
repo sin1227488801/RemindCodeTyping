@@ -130,6 +130,14 @@
                 backButton.addEventListener('click', goBack);
                 console.log('戻るボタンのイベントリスナーを設定しました');
             }
+
+            // 全ての初期化処理が完了してから1秒後にアカウント作成完了の効果音を再生
+            setTimeout(function() {
+                if (window.SoundEffects) {
+                    console.log('アカウント作成完了の効果音を再生します');
+                    window.SoundEffects.playRegistered();
+                }
+            }, 1000);
         });
     </script>
 </body>
