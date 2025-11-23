@@ -1,6 +1,19 @@
 @import url('common.css');
 /* 学習帳ページのスタイル */
 
+/* コンテンツエリアを広く */
+#content-area {
+    max-width: 95% !important;
+    width: 95% !important;
+    margin: 0 auto !important;
+    padding: 20px !important;
+}
+
+.main {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
 /* タブスタイル */
 .notebook-tabs {
     display: flex;
