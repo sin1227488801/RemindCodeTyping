@@ -393,18 +393,38 @@ class SQLAlchemyQuestionRepository(QuestionRepository):
             if not question:
                 return False
             
-            # Manually delete from FTS table first to avoid trigger issues
+            # Drop the problematic trigger temporarily
+            try:
+                self.session.execute(text("DROP TRIGGER IF EXISTS questions_fts_delete"))
+            except Exception:
+                pass
+            
+            # Manually delete from FTS table
             try:
                 self.session.execute(
                     text("DELETE FROM questions_fts WHERE question_id = :qid"),
                     {"qid": str(question_id)}
                 )
             except Exception:
-                # FTS table might not exist or already deleted, ignore
+                # FTS table might not exist, ignore
                 pass
             
-            # Delete the question
-            self.session.delete(question)
+            # Delete the question using raw SQL to avoid ORM trigger issues
+            self.session.execute(
+                text("DELETE FROM questions WHERE id = :qid"),
+                {"qid": str(question_id)}
+            )
+            
+            # Recreate the trigger
+            try:
+                self.session.execute(text("""
+                    CREATE TRIGGER questions_fts_delete AFTER DELETE ON questions BEGIN
+                        DELETE FROM questions_fts WHERE question_id = old.id;
+                    END
+                """))
+            except Exception:
+                pass
+            
             self.session.commit()
             return True
             
