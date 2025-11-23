@@ -32,7 +32,20 @@ const SoundEffects = {
 
     // 画面遷移を伴うボタンクリック時の効果音
     playConfirm: function() {
-        this.play('confirm');
+        console.log('playConfirm called');
+        try {
+            const audio = new Audio(this.sounds.confirm);
+            audio.volume = 0.7; // confirm効果音は音量を70%に設定
+            console.log(`Playing confirm sound: ${this.sounds.confirm}, volume: ${audio.volume}`);
+            audio.play().then(() => {
+                console.log('Confirm sound played successfully');
+            }).catch(error => {
+                console.error('Confirm sound playback failed:', error);
+                console.error('Error details:', error.name, error.message);
+            });
+        } catch (error) {
+            console.error('Confirm sound error:', error);
+        }
     },
 
     // アカウント作成完了時の効果音
@@ -42,7 +55,15 @@ const SoundEffects = {
 
     // キーボード入力時の効果音
     playTap: function() {
-        this.play('tap');
+        try {
+            const audio = new Audio(this.sounds.tap);
+            audio.volume = 1.0; // tap効果音は音量を100%に設定（最大）
+            audio.play().catch(error => {
+                console.warn('Tap sound playback failed:', error);
+            });
+        } catch (error) {
+            console.warn('Tap sound error:', error);
+        }
     },
 
     // 問題送信時の効果音
