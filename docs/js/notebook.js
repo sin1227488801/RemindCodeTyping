@@ -146,6 +146,16 @@ class NotebookManager {
             // ユーザーの問題を取得
             this.problems = await this.api.getUserQuestions();
             console.log('Problems loaded:', this.problems);
+            
+            // デバッグ: 各問題のanswerフィールドを確認
+            this.problems.forEach((p, i) => {
+                console.log(`Problem ${i}:`, {
+                    id: p.id,
+                    question: p.question,
+                    answer: p.answer,
+                    explanation: p.explanation
+                });
+            });
 
             this.filteredProblems = [...this.problems];
             this.renderProblems();
