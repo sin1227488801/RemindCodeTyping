@@ -228,14 +228,16 @@ class NotebookManager {
         item.appendChild(header);
         item.appendChild(questionDiv);
 
-        if (problem.answer || problem.explanation) {
+        // 解説がある場合のみ表示（空文字列でない場合）
+        const answerText = problem.answer || problem.explanation || '';
+        if (answerText.trim()) {
             const explanationLabel = document.createElement('div');
             explanationLabel.className = 'problem-explanation-label';
             explanationLabel.textContent = '解説:';
 
             const explanationDiv = document.createElement('div');
             explanationDiv.className = 'problem-explanation';
-            explanationDiv.textContent = problem.answer || problem.explanation;
+            explanationDiv.textContent = answerText;
 
             item.appendChild(explanationLabel);
             item.appendChild(explanationDiv);
