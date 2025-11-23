@@ -202,12 +202,30 @@ class NotebookManager {
         const item = document.createElement('div');
         item.className = 'problem-item';
 
+        // ヘッダー（クリックで展開/折りたたみ）
         const header = document.createElement('div');
         header.className = 'problem-header';
+
+        const headerLeft = document.createElement('div');
+        headerLeft.className = 'problem-header-left';
+
+        // トグルボタン
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'toggleButton';
+        toggleBtn.textContent = '▶';
+        toggleBtn.setAttribute('data-target', `problem-${problem.id}`);
 
         const language = document.createElement('span');
         language.className = 'problem-language';
         language.textContent = problem.language;
+
+        const questionPreview = document.createElement('span');
+        questionPreview.className = 'problem-question-preview';
+        questionPreview.textContent = problem.question.substring(0, 50) + (problem.question.length > 50 ? '...' : '');
+
+        headerLeft.appendChild(toggleBtn);
+        headerLeft.appendChild(language);
+        headerLeft.appendChild(questionPreview);
 
         const actions = document.createElement('div');
         actions.className = 'problem-actions';
@@ -215,28 +233,29 @@ class NotebookManager {
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'btn-delete';
         deleteBtn.textContent = '削除';
-        deleteBtn.addEventListener('click', () => this.deleteProblem(problem.id));
+        deleteBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // ヘッダークリックイベントを防ぐ
+            this.deleteProblem(problem.id);
+        });
 
         actions.appendChild(deleteBtn);
-        header.appendChild(language);
+        header.appendChild(headerLeft);
         header.appendChild(actions);
+
+        // コンテンツ（折りたたみ可能）
+        const content = document.createElement('div');
+        content.className = 'toggleContent';
+        content.id = `problem-${problem.id}`;
+        content.style.display = 'none';
 
         const questionDiv = document.createElement('div');
         questionDiv.className = 'problem-question';
         questionDiv.textContent = problem.question;
 
-        item.appendChild(header);
-        item.appendChild(questionDiv);
+        content.appendChild(questionDiv);
 
-        // 解説がある場合のみ表示（空文字列でない場合）
+        // 解説がある場合のみ表示
         const answerText = problem.answer || problem.explanation || '';
-        console.log('Creating problem item:', {
-            id: problem.id,
-            question: problem.question,
-            answerText: answerText,
-            willShowAnswer: !!answerText.trim()
-        });
-        
         if (answerText.trim()) {
             const explanationLabel = document.createElement('div');
             explanationLabel.className = 'problem-explanation-label';
@@ -246,13 +265,22 @@ class NotebookManager {
             explanationDiv.className = 'problem-explanation';
             explanationDiv.textContent = answerText;
 
-            item.appendChild(explanationLabel);
-            item.appendChild(explanationDiv);
-            
-            console.log('Answer element added to DOM');
-        } else {
-            console.log('Answer is empty, not showing');
+            content.appendChild(explanationLabel);
+            content.appendChild(explanationDiv);
         }
+
+        item.appendChild(header);
+        item.appendChild(content);
+
+        // トグル機能
+        header.addEventListener('click', (e) => {
+            if (e.target === deleteBtn) return; // 削除ボタンは除外
+            
+            const isOpen = content.style.display === 'block';
+            content.style.display = isOpen ? 'none' : 'block';
+            toggleBtn.textContent = isOpen ? '▶' : '▼';
+            toggleBtn.classList.toggle('active', !isOpen);
+        });
 
         return item;
     }

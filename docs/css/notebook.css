@@ -60,85 +60,134 @@
 .problems-list {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
 }
 
 .problem-item {
     border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
+    border-radius: 4px;
     background: #fff;
-    transition: box-shadow 0.3s;
-}
-
-.problem-item:hover {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
 }
 
 .problem-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    padding: 12px 15px;
+    background: #f8f9fa;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.problem-header:hover {
+    background: #e9ecef;
+}
+
+.problem-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.toggleButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: #666;
+    padding: 0;
+    width: 20px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.toggleButton.active {
+    transform: rotate(90deg);
 }
 
 .problem-language {
     display: inline-block;
-    padding: 4px 12px;
+    padding: 3px 10px;
     background: #007bff;
     color: white;
     border-radius: 12px;
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: 500;
+    flex-shrink: 0;
+}
+
+.problem-question-preview {
+    color: #333;
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .problem-actions {
     display: flex;
     gap: 10px;
+    flex-shrink: 0;
 }
 
 .btn-delete {
-    padding: 6px 12px;
+    padding: 5px 12px;
     background: #dc3545;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: background 0.3s;
+    font-size: 0.85rem;
+    transition: background 0.2s;
 }
 
 .btn-delete:hover {
     background: #c82333;
 }
 
+/* トグルコンテンツ */
+.toggleContent {
+    padding: 15px;
+    border-top: 1px solid #e9ecef;
+    background: #fff;
+}
+
 .problem-question {
     background: #f8f9fa;
-    padding: 10px;
+    padding: 12px;
     border-radius: 4px;
-    margin-bottom: 10px;
-    font-family: monospace;
+    margin-bottom: 12px;
+    font-family: 'Courier New', Courier, monospace;
     white-space: pre-wrap;
-    word-break: break-all;
+    word-break: break-word;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    border-left: 3px solid #007bff;
+}
+
+.problem-explanation-label {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #495057;
+    font-size: 0.9rem;
 }
 
 .problem-explanation {
     color: #666;
     font-size: 0.9rem;
-    padding: 10px;
+    padding: 12px;
     background: #fff9e6;
     border-radius: 4px;
     white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.5;
+    border-left: 3px solid #ffc107;
     position: static !important;  /* Override typing-practice.css */
     top: auto !important;
     left: auto !important;
     right: auto !important;
-}
-
-.problem-explanation-label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #333;
 }
 
 .loading-message, .empty-message {
