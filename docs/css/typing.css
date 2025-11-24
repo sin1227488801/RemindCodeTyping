@@ -491,3 +491,79 @@
 .rank-2-special:active {
     transform: translateY(0);
 }
+
+/* 音声設定 */
+.sound-settings {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin: 20px 0;
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+}
+
+.sound-setting-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sound-setting-item label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text);
+    min-width: 40px;
+}
+
+.sound-toggle-btn {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 24px;
+    background-color: #ccc;
+    border-radius: 24px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.sound-toggle-btn .toggle-slider {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: white;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.sound-toggle-btn.active {
+    background-color: var(--color-primary);
+}
+
+.sound-toggle-btn.active .toggle-slider {
+    transform: translateX(16px);
+}
+
+@media screen and (max-width: 768px) {
+    .sound-settings {
+        gap: 20px;
+    }
+    
+    .sound-toggle-btn {
+        width: 36px;
+        height: 22px;
+    }
+    
+    .sound-toggle-btn .toggle-slider {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .sound-toggle-btn.active .toggle-slider {
+        transform: translateX(14px);
+    }
+}

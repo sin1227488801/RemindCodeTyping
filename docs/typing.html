@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="css/typing.css">
     <script src="js/api.js"></script>
     <script src="js/sound-effects.js"></script>
+    <script src="js/sound-controls.js"></script>
     <script src="js/typing.js"></script>
 </head>
 
@@ -20,6 +21,22 @@
                 <span id="recent-accuracy">直近の正答率 ---%</span><br>
                 <span id="highest-rank">最高ランク ---</span>
             </div>
+        </div>
+    </div>
+    
+    <!-- 音声設定 -->
+    <div class="sound-settings">
+        <div class="sound-setting-item">
+            <label>BGM</label>
+            <button class="sound-toggle-btn active" id="bgm-toggle-btn" data-type="bgm">
+                <span class="toggle-slider"></span>
+            </button>
+        </div>
+        <div class="sound-setting-item">
+            <label>SE</label>
+            <button class="sound-toggle-btn active" id="se-toggle-btn" data-type="se">
+                <span class="toggle-slider"></span>
+            </button>
         </div>
     </div>
     <div class="main">
