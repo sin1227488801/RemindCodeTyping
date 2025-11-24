@@ -315,13 +315,14 @@ class TypingConfig {
             const newStartButton = startButton.cloneNode(true);
             startButton.parentNode.replaceChild(newStartButton, startButton);
 
-            this.startButtonHandler = (e) => {
-                e.preventDefault(); // フォーム送信を防ぐ
-                console.log('Start!ボタンがクリックされました');
-                this.startTyping();
-            };
-            newStartButton.addEventListener('click', this.startButtonHandler);
-            console.log('Start!ボタンのイベントリスナーを設定しました');
+            // Start!ボタンのイベントハンドラーはmain.jsで管理されるため、ここでは設定しない
+            // this.startButtonHandler = (e) => {
+            //     e.preventDefault(); // フォーム送信を防ぐ
+            //     console.log('Start!ボタンがクリックされました');
+            //     this.startTyping();
+            // };
+            // newStartButton.addEventListener('click', this.startButtonHandler);
+            console.log('Start!ボタンはmain.jsで管理されます');
         } else {
             console.error('Start!ボタンが見つかりません');
         }

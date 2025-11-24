@@ -38,8 +38,13 @@ function loadPage(page, event) {
                 contentArea.innerHTML = data;
                 console.log('Content area updated');
 
-                // ページ固有の初期化処理
-                initializePage(page);
+                // DOMが完全にレンダリングされるまで待機してから初期化
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        console.log('Initializing page after DOM render:', page);
+                        initializePage(page);
+                    });
+                });
             } else {
                 console.error('Content area not found!');
             }
