@@ -159,8 +159,12 @@ function initializeTypingPage() {
                     console.error('Error creating audio in click handler:', error);
                 }
                 
-                // startTypingSessionを実行
-                startTypingSession();
+                // 効果音再生後に2秒待機してからstartTypingSessionを実行
+                console.log('Waiting 2 seconds before starting typing session...');
+                setTimeout(() => {
+                    console.log('Starting typing session after sound delay');
+                    startTypingSession();
+                }, 2000);
             });
             
             console.log('Start button event listener added');
@@ -548,10 +552,8 @@ async function startTypingSession() {
 
             console.log('Config saved, redirecting to typing-practice.html');
             
-            // 効果音再生後に2秒待機してから遷移（効果音はボタンクリック時に既に再生済み）
-            setTimeout(() => {
-                window.location.href = 'typing-practice.html';
-            }, 2000);
+            // 即座に画面遷移（効果音の待機はボタンクリック時に既に実行済み）
+            window.location.href = 'typing-practice.html';
 
         } catch (error) {
             console.error('設定取得エラー:', error);
