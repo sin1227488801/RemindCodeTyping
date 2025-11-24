@@ -142,12 +142,23 @@ function initializeTypingPage() {
             startButton.parentNode.replaceChild(newStartButton, startButton);
             
             // ボタンクリック時に効果音を即座に再生してからstartTypingSessionを実行
-            newStartButton.addEventListener('click', function() {
+            newStartButton.addEventListener('click', function(e) {
                 console.log('Start button clicked - playing sound immediately');
-                // 効果音を即座に再生
-                if (window.SoundEffects) {
-                    window.SoundEffects.playConfirm();
+                
+                // 効果音を即座に再生（クリックイベント内で直接Audioオブジェクトを作成）
+                try {
+                    const audio = new Audio('sound/confirm-effect.mp3');
+                    audio.volume = 0.7;
+                    console.log('Creating and playing audio directly in click handler');
+                    audio.play().then(() => {
+                        console.log('Confirm sound played successfully from click handler');
+                    }).catch(error => {
+                        console.error('Failed to play confirm sound from click handler:', error);
+                    });
+                } catch (error) {
+                    console.error('Error creating audio in click handler:', error);
                 }
+                
                 // startTypingSessionを実行
                 startTypingSession();
             });
