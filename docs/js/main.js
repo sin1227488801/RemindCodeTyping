@@ -171,13 +171,9 @@ function initializeTypingPage() {
                 console.error('Error creating audio in click handler:', error);
             }
             
-            // 効果音再生後に1秒待機してからstartTypingSessionを実行
-            console.log('Setting timeout for 1 second...');
-            const timeoutId = setTimeout(() => {
-                console.log('=== Timeout executed - Starting typing session ===');
-                startTypingSession();
-            }, 1000);
-            console.log('Timeout ID:', timeoutId);
+            // ウェイトなしで即座にstartTypingSessionを実行
+            console.log('Starting typing session immediately...');
+            startTypingSession();
         });
         
         console.log('Start button event listener added successfully');
