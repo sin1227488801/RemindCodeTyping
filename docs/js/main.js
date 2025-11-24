@@ -149,7 +149,7 @@ function initializeTypingPage() {
         startButton.parentNode.replaceChild(newStartButton, startButton);
         
         // ボタンクリック時に効果音を即座に再生してからstartTypingSessionを実行
-        newStartButton.addEventListener('click', function(e) {
+        newStartButton.addEventListener('click', async function(e) {
             console.log('=== Start button clicked ===');
             
             // ボタンを無効化（二重クリック防止）
@@ -173,7 +173,19 @@ function initializeTypingPage() {
             
             // ウェイトなしで即座にstartTypingSessionを実行
             console.log('Starting typing session immediately...');
-            startTypingSession();
+            
+            // エラー時にボタンを再有効化するため、グローバルに参照を保存
+            window.currentStartButton = newStartButton;
+            
+            try {
+                await startTypingSession();
+            } catch (error) {
+                console.error('Error in startTypingSession:', error);
+                // エラー時はボタンを再有効化
+                newStartButton.disabled = false;
+                newStartButton.style.opacity = '1';
+                console.log('Button re-enabled due to error');
+            }
         });
         
         console.log('Start button event listener added successfully');
@@ -479,6 +491,12 @@ async function startTypingSession() {
         if (!languageSelect) {
             console.error('language-selectエレメントが見つかりません');
             alert('言語選択要素が見つかりません。');
+            // ボタンを再有効化
+            if (window.currentStartButton) {
+                window.currentStartButton.disabled = false;
+                window.currentStartButton.style.opacity = '1';
+                console.log('Button re-enabled after element not found error');
+            }
             return;
         }
 
@@ -487,6 +505,12 @@ async function startTypingSession() {
 
         if (selectedLanguages.length === 0) {
             alert('言語を選択してください。');
+            // ボタンを再有効化
+            if (window.currentStartButton) {
+                window.currentStartButton.disabled = false;
+                window.currentStartButton.style.opacity = '1';
+                console.log('Button re-enabled after validation error');
+            }
             return;
         }
 
