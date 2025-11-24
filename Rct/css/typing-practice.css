@@ -1029,3 +1029,29 @@ div.legend * {
 .rank-highlight {
     position: relative !important;
 }
+/
+* 音声設定トグル（コンパクト版） */
+.sound-controls-compact {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.sound-toggle-compact {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    user-select: none;
+}
+
+.sound-toggle-compact input[type="checkbox"] {
+    cursor: pointer;
+    width: 14px;
+    height: 14px;
+}
+
+.sound-toggle-compact span {
+    font-weight: 500;
+}

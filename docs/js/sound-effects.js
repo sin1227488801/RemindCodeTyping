@@ -8,8 +8,33 @@ const SoundEffects = {
         submission: 'sound/submission-effect.mp3'
     },
 
+    // 設定を取得
+    getSettings: function() {
+        const bgmEnabled = localStorage.getItem('bgmEnabled');
+        const seEnabled = localStorage.getItem('seEnabled');
+        return {
+            bgm: bgmEnabled === null ? true : bgmEnabled === 'true',
+            se: seEnabled === null ? true : seEnabled === 'true'
+        };
+    },
+
+    // 設定を保存
+    setSetting: function(type, enabled) {
+        if (type === 'bgm') {
+            localStorage.setItem('bgmEnabled', enabled);
+        } else if (type === 'se') {
+            localStorage.setItem('seEnabled', enabled);
+        }
+    },
+
     // 効果音を再生する関数
     play: function(soundName) {
+        // SE設定を確認
+        const settings = this.getSettings();
+        if (!settings.se) {
+            console.log(`SE is disabled, skipping sound: ${soundName}`);
+            return;
+        }
         console.log(`Attempting to play sound: ${soundName}`);
         if (!this.sounds[soundName]) {
             console.warn(`効果音が見つかりません: ${soundName}`);

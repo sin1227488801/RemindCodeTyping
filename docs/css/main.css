@@ -415,3 +415,31 @@ div.box-right .rank-list li.rank-2-special:hover::after {
 .rank-2-special::after {
     display: none !important;
 }
+/* 音
+声設定トグル */
+.sound-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.sound-toggle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    color: white;
+    user-select: none;
+}
+
+.sound-toggle input[type="checkbox"] {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+}
+
+.sound-toggle span {
+    font-weight: 500;
+}

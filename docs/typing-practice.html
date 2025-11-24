@@ -68,6 +68,17 @@
                 <div class="target-time">目標時間: <span id="target-time">--:--</span></div>
                 <div class="score">スコア: <span id="score">0</span></div>
                 <div class="accuracy">正答率: <span id="accuracy">100%</span></div>
+                <!-- 音声設定トグル -->
+                <div class="sound-controls-compact">
+                    <label class="sound-toggle-compact">
+                        <input type="checkbox" id="bgm-toggle" checked>
+                        <span>BGM</span>
+                    </label>
+                    <label class="sound-toggle-compact">
+                        <input type="checkbox" id="se-toggle" checked>
+                        <span>SE</span>
+                    </label>
+                </div>
             </div>
         </header>
 
@@ -173,6 +184,7 @@
 
     <script src="js/api.js"></script>
     <script src="js/sound-effects.js"></script>
+    <script src="js/sound-controls.js"></script>
     <script src="js/typing-practice.js"></script>
 </body>
 
