@@ -2,7 +2,7 @@
 (function() {
     console.log('sound-controls.js loaded');
 
-    function initSoundControls() {
+    window.initSoundControls = function() {
         console.log('Initializing sound controls...');
         
         // チェックボックス型トグル（main.html用）
@@ -176,9 +176,9 @@
     // DOMContentLoadedで初期化（少し遅延させて他のスクリプトの後に実行）
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(initSoundControls, 500);
+            setTimeout(window.initSoundControls, 500);
         });
     } else {
-        setTimeout(initSoundControls, 500);
+        setTimeout(window.initSoundControls, 500);
     }
 })();

@@ -135,6 +135,18 @@ function initializeTypingPage() {
         window.specialRankModalTimeout = null;
     }, 200);
 
+    // 音声コントロールを初期化
+    if (window.soundControlsTimeout) {
+        clearTimeout(window.soundControlsTimeout);
+    }
+    window.soundControlsTimeout = setTimeout(() => {
+        console.log('Initializing sound controls for typing page...');
+        if (window.initSoundControls) {
+            window.initSoundControls();
+        }
+        window.soundControlsTimeout = null;
+    }, 600);
+
     // Startボタンのイベント設定
     if (window.typingPageButtonTimeout) {
         clearTimeout(window.typingPageButtonTimeout);
