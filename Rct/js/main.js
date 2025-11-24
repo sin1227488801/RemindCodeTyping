@@ -38,8 +38,13 @@ function loadPage(page, event) {
                 contentArea.innerHTML = data;
                 console.log('Content area updated');
 
-                // ページ固有の初期化処理
-                initializePage(page);
+                // DOMが完全にレンダリングされるまで待機してから初期化
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        console.log('Initializing page after DOM render:', page);
+                        initializePage(page);
+                    });
+                });
             } else {
                 console.error('Content area not found!');
             }
@@ -130,73 +135,85 @@ function initializeTypingPage() {
         window.specialRankModalTimeout = null;
     }, 200);
 
-    // Startボタンのイベント設定（少し遅延させて確実にボタンが存在するようにする）
+    // Startボタンのイベント設定
     if (window.typingPageButtonTimeout) {
         clearTimeout(window.typingPageButtonTimeout);
     }
     
-    // ボタンが見つかるまでリトライする関数
-    function setupStartButton(retryCount = 0) {
-        const maxRetries = 10;
-        const startButton = document.getElementById('typing-start-button');
+    // ボタンにイベントリスナーを設定する関数
+    function attachStartButtonListener(startButton) {
+        console.log('Attaching event listener to Start button');
         
-        console.log(`setupStartButton attempt ${retryCount + 1}/${maxRetries}, button found:`, !!startButton);
+        // 既存のイベントリスナーを削除してから新しいものを追加
+        const newStartButton = startButton.cloneNode(true);
+        startButton.parentNode.replaceChild(newStartButton, startButton);
         
-        if (startButton) {
-            // 既存のイベントリスナーを削除してから新しいものを追加
-            const newStartButton = startButton.cloneNode(true);
-            startButton.parentNode.replaceChild(newStartButton, startButton);
+        // ボタンクリック時に効果音を即座に再生してからstartTypingSessionを実行
+        newStartButton.addEventListener('click', function(e) {
+            console.log('=== Start button clicked ===');
             
-            // ボタンクリック時に効果音を即座に再生してからstartTypingSessionを実行
-            newStartButton.addEventListener('click', function(e) {
-                console.log('=== Start button clicked ===');
-                
-                // ボタンを無効化（二重クリック防止）
-                newStartButton.disabled = true;
-                newStartButton.style.opacity = '0.5';
-                console.log('Button disabled to prevent double-click');
-                
-                // 効果音を即座に再生（クリックイベント内で直接Audioオブジェクトを作成）
-                try {
-                    const audio = new Audio('sound/confirm-effect.mp3');
-                    audio.volume = 0.7;
-                    console.log('Creating and playing audio directly in click handler');
-                    audio.play().then(() => {
-                        console.log('Confirm sound played successfully from click handler');
-                    }).catch(error => {
-                        console.error('Failed to play confirm sound from click handler:', error);
-                    });
-                } catch (error) {
-                    console.error('Error creating audio in click handler:', error);
-                }
-                
-                // 効果音再生後に1秒待機してからstartTypingSessionを実行
-                console.log('Setting timeout for 1 second...');
-                const timeoutId = setTimeout(() => {
-                    console.log('=== Timeout executed - Starting typing session ===');
-                    startTypingSession();
-                }, 1000);
-                console.log('Timeout ID:', timeoutId);
-            });
+            // ボタンを無効化（二重クリック防止）
+            newStartButton.disabled = true;
+            newStartButton.style.opacity = '0.5';
+            console.log('Button disabled to prevent double-click');
             
-            console.log('Start button event listener added successfully');
-        } else {
-            // ボタンが見つからない場合
-            if (retryCount < maxRetries) {
-                console.warn(`Start!ボタンが見つかりません。リトライします... (${retryCount + 1}/${maxRetries})`);
-                window.typingPageButtonTimeout = setTimeout(() => {
-                    setupStartButton(retryCount + 1);
-                }, 200); // 200ms後にリトライ
-            } else {
-                console.error('Start!ボタンが見つかりませんでした（最大リトライ回数に到達）');
+            // 効果音を即座に再生（クリックイベント内で直接Audioオブジェクトを作成）
+            try {
+                const audio = new Audio('sound/confirm-effect.mp3');
+                audio.volume = 0.7;
+                console.log('Creating and playing audio directly in click handler');
+                audio.play().then(() => {
+                    console.log('Confirm sound played successfully from click handler');
+                }).catch(error => {
+                    console.error('Failed to play confirm sound from click handler:', error);
+                });
+            } catch (error) {
+                console.error('Error creating audio in click handler:', error);
             }
-        }
+            
+            // 効果音再生後に1秒待機してからstartTypingSessionを実行
+            console.log('Setting timeout for 1 second...');
+            const timeoutId = setTimeout(() => {
+                console.log('=== Timeout executed - Starting typing session ===');
+                startTypingSession();
+            }, 1000);
+            console.log('Timeout ID:', timeoutId);
+        });
+        
+        console.log('Start button event listener added successfully');
     }
     
-    // 初回実行（500ms遅延）
-    window.typingPageButtonTimeout = setTimeout(() => {
-        setupStartButton(0);
-    }, 500);
+    // MutationObserverを使用してボタンがDOMに追加されたら即座にイベントリスナーを設定
+    const contentArea = document.getElementById('content-area');
+    if (contentArea) {
+        const observer = new MutationObserver((mutations) => {
+            const startButton = document.getElementById('typing-start-button');
+            if (startButton && !startButton.hasAttribute('data-listener-attached')) {
+                console.log('Start button detected by MutationObserver');
+                startButton.setAttribute('data-listener-attached', 'true');
+                attachStartButtonListener(startButton);
+                observer.disconnect(); // ボタンが見つかったら監視を停止
+            }
+        });
+        
+        observer.observe(contentArea, {
+            childList: true,
+            subtree: true
+        });
+        
+        console.log('MutationObserver set up for Start button');
+        
+        // 既にボタンが存在する場合は即座に設定
+        window.typingPageButtonTimeout = setTimeout(() => {
+            const startButton = document.getElementById('typing-start-button');
+            if (startButton && !startButton.hasAttribute('data-listener-attached')) {
+                console.log('Start button found immediately');
+                startButton.setAttribute('data-listener-attached', 'true');
+                attachStartButtonListener(startButton);
+                observer.disconnect();
+            }
+        }, 100);
+    }
 }
 
 // 学習帳ページの初期化
