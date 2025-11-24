@@ -495,10 +495,10 @@
 /* 音声設定 */
 .sound-settings {
     display: flex;
-    gap: 30px;
-    justify-content: center;
-    margin: 20px 0;
-    padding: 15px;
+    gap: 20px;
+    justify-content: flex-start;
+    margin: 10px 0 20px 0;
+    padding: 10px 15px;
     background-color: rgba(255, 255, 255, 0.05);
     border-radius: 8px;
 }
@@ -506,33 +506,34 @@
 .sound-setting-item {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .sound-setting-item label {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     color: #333;
-    min-width: 40px;
+    min-width: 30px;
 }
 
 .sound-toggle-btn {
     position: relative;
     display: inline-block;
-    width: 40px;
-    height: 24px;
+    width: 32px;
+    height: 18px;
     background-color: #ccc;
-    border-radius: 24px;
+    border-radius: 18px;
     border: none;
     cursor: pointer;
     transition: background-color 0.3s;
     outline: none;
+    padding: 0;
 }
 
 .sound-toggle-btn .toggle-slider {
     position: absolute;
-    width: 20px;
-    height: 20px;
+    width: 14px;
+    height: 14px;
     border-radius: 50%;
     background-color: white;
     top: 2px;
@@ -540,6 +541,7 @@
     transition: transform 0.3s;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     display: block;
+    pointer-events: none;
 }
 
 .sound-toggle-btn.active {
@@ -547,25 +549,25 @@
 }
 
 .sound-toggle-btn.active .toggle-slider {
-    transform: translateX(16px);
+    transform: translateX(14px);
 }
 
 @media screen and (max-width: 768px) {
     .sound-settings {
-        gap: 20px;
+        gap: 15px;
     }
     
     .sound-toggle-btn {
-        width: 36px;
-        height: 22px;
+        width: 28px;
+        height: 16px;
     }
     
     .sound-toggle-btn .toggle-slider {
-        width: 18px;
-        height: 18px;
+        width: 12px;
+        height: 12px;
     }
     
     .sound-toggle-btn.active .toggle-slider {
-        transform: translateX(14px);
+        transform: translateX(12px);
     }
 }

@@ -123,10 +123,12 @@
         console.log('Sound controls initialized successfully');
     }
 
-    // DOMContentLoadedで初期化
+    // DOMContentLoadedで初期化（少し遅延させて他のスクリプトの後に実行）
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initSoundControls);
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(initSoundControls, 500);
+        });
     } else {
-        initSoundControls();
+        setTimeout(initSoundControls, 500);
     }
 })();
