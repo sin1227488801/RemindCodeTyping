@@ -494,7 +494,8 @@
 
 /* 音声設定 */
 .sound-settings {
-    display: flex;
+    display: flex !important;
+    flex-direction: row !important;
     gap: 20px;
     justify-content: flex-start !important;
     align-items: center;
@@ -502,8 +503,11 @@
     padding: 10px 15px;
     background-color: rgba(255, 255, 255, 0.05);
     border-radius: 8px;
-    width: auto;
+    width: fit-content !important;
+    max-width: 100%;
     text-align: left !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
 }
 
 .sound-setting-item {

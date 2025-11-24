@@ -70,8 +70,9 @@
             console.log('Setting up button toggles');
             
             const currentSettings = window.SoundEffects ? window.SoundEffects.getSettings() : { bgm: true, se: true };
+            console.log('Current settings:', currentSettings);
             
-            // 初期状態を設定
+            // 初期状態を設定（localStorageの値を反映）
             if (currentSettings.bgm) {
                 bgmBtn.classList.add('active');
             } else {
@@ -83,6 +84,8 @@
             } else {
                 seBtn.classList.remove('active');
             }
+            
+            console.log('Button states set - BGM:', currentSettings.bgm, 'SE:', currentSettings.se);
 
             // BGMトグルボタンのイベントリスナー
             bgmBtn.addEventListener('click', function(e) {
