@@ -1354,13 +1354,24 @@ document.addEventListener('DOMContentLoaded', function () {
         setupLogoutButton();
     }, 100);
 
-    // デフォルトページを読み込み
-    const activeTab = document.querySelector('.tab.active');
-    if (activeTab) {
+    // typing-practice.htmlから戻ってきたかチェック
+    const returnToTyping = sessionStorage.getItem('returnToTyping');
+    if (returnToTyping === 'true') {
+        console.log('typing-practice.htmlから戻ってきました。タイピングページを再読み込みします。');
+        sessionStorage.removeItem('returnToTyping');
+        
+        // タイピングページを再読み込み
+        const activeTab = document.querySelector('.tab.active') || document.querySelector('.tab');
         loadPage('typing.html', { target: activeTab });
     } else {
-        console.warn('アクティブなタブが見つかりません。デフォルトで読み込みます。');
-        loadPage('typing.html');
+        // デフォルトページを読み込み
+        const activeTab = document.querySelector('.tab.active');
+        if (activeTab) {
+            loadPage('typing.html', { target: activeTab });
+        } else {
+            console.warn('アクティブなタブが見つかりません。デフォルトで読み込みます。');
+            loadPage('typing.html');
+        }
     }
 });
 

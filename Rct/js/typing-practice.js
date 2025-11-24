@@ -1232,6 +1232,7 @@ class TypingPractice {
     goBack() {
         // 統計情報更新フラグを設定
         sessionStorage.setItem('statsUpdated', 'true');
+        sessionStorage.setItem('returnToTyping', 'true'); // タイピングページに戻ることを記録
         
         // バックエンドユーザーの場合、統計情報のキャッシュをクリア
         if (window.rctApi && !window.rctApi.isLocalUser()) {
