@@ -134,8 +134,14 @@ function initializeTypingPage() {
     if (window.typingPageButtonTimeout) {
         clearTimeout(window.typingPageButtonTimeout);
     }
-    window.typingPageButtonTimeout = setTimeout(() => {
+    
+    // ボタンが見つかるまでリトライする関数
+    function setupStartButton(retryCount = 0) {
+        const maxRetries = 10;
         const startButton = document.getElementById('typing-start-button');
+        
+        console.log(`setupStartButton attempt ${retryCount + 1}/${maxRetries}, button found:`, !!startButton);
+        
         if (startButton) {
             // 既存のイベントリスナーを削除してから新しいものを追加
             const newStartButton = startButton.cloneNode(true);
@@ -143,7 +149,12 @@ function initializeTypingPage() {
             
             // ボタンクリック時に効果音を即座に再生してからstartTypingSessionを実行
             newStartButton.addEventListener('click', function(e) {
-                console.log('Start button clicked - playing sound immediately');
+                console.log('=== Start button clicked ===');
+                
+                // ボタンを無効化（二重クリック防止）
+                newStartButton.disabled = true;
+                newStartButton.style.opacity = '0.5';
+                console.log('Button disabled to prevent double-click');
                 
                 // 効果音を即座に再生（クリックイベント内で直接Audioオブジェクトを作成）
                 try {
@@ -160,19 +171,32 @@ function initializeTypingPage() {
                 }
                 
                 // 効果音再生後に2秒待機してからstartTypingSessionを実行
-                console.log('Waiting 2 seconds before starting typing session...');
-                setTimeout(() => {
-                    console.log('Starting typing session after sound delay');
+                console.log('Setting timeout for 2 seconds...');
+                const timeoutId = setTimeout(() => {
+                    console.log('=== Timeout executed - Starting typing session ===');
                     startTypingSession();
                 }, 2000);
+                console.log('Timeout ID:', timeoutId);
             });
             
-            console.log('Start button event listener added');
+            console.log('Start button event listener added successfully');
         } else {
-            console.error('Start!ボタンが見つかりません');
+            // ボタンが見つからない場合
+            if (retryCount < maxRetries) {
+                console.warn(`Start!ボタンが見つかりません。リトライします... (${retryCount + 1}/${maxRetries})`);
+                window.typingPageButtonTimeout = setTimeout(() => {
+                    setupStartButton(retryCount + 1);
+                }, 200); // 200ms後にリトライ
+            } else {
+                console.error('Start!ボタンが見つかりませんでした（最大リトライ回数に到達）');
+            }
         }
-        window.typingPageButtonTimeout = null;
-    }, 100);
+    }
+    
+    // 初回実行（500ms遅延）
+    window.typingPageButtonTimeout = setTimeout(() => {
+        setupStartButton(0);
+    }, 500);
 }
 
 // 学習帳ページの初期化
