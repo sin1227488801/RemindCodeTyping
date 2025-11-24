@@ -51,23 +51,44 @@
             });
         }
 
-        // ボタン型トグルの初期化
-        if (bgmToggleBtn && seToggleBtn) {
-            // 初期状態を設定
-            if (settings.bgm) {
-                bgmToggleBtn.classList.add('active');
-            } else {
-                bgmToggleBtn.classList.remove('active');
+        // ボタン型トグルの初期化関数
+        function setupButtonToggles() {
+            const bgmBtn = document.getElementById('bgm-toggle-btn');
+            const seBtn = document.getElementById('se-toggle-btn');
+            
+            if (!bgmBtn || !seBtn) {
+                console.log('Toggle buttons not found');
+                return;
             }
             
-            if (settings.se) {
-                seToggleBtn.classList.add('active');
+            // 既にイベントリスナーが設定されているかチェック
+            if (bgmBtn.hasAttribute('data-listener-attached')) {
+                console.log('Listeners already attached');
+                return;
+            }
+            
+            console.log('Setting up button toggles');
+            
+            const currentSettings = window.SoundEffects ? window.SoundEffects.getSettings() : { bgm: true, se: true };
+            
+            // 初期状態を設定
+            if (currentSettings.bgm) {
+                bgmBtn.classList.add('active');
             } else {
-                seToggleBtn.classList.remove('active');
+                bgmBtn.classList.remove('active');
+            }
+            
+            if (currentSettings.se) {
+                seBtn.classList.add('active');
+            } else {
+                seBtn.classList.remove('active');
             }
 
             // BGMトグルボタンのイベントリスナー
-            bgmToggleBtn.addEventListener('click', function() {
+            bgmBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
                 const isActive = this.classList.contains('active');
                 const newState = !isActive;
                 
@@ -93,7 +114,10 @@
             });
 
             // SEトグルボタンのイベントリスナー
-            seToggleBtn.addEventListener('click', function() {
+            seBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
                 const isActive = this.classList.contains('active');
                 const newState = !isActive;
                 
@@ -109,6 +133,32 @@
                     window.SoundEffects.setSetting('se', newState);
                 }
             });
+            
+            // リスナーが設定されたことをマーク
+            bgmBtn.setAttribute('data-listener-attached', 'true');
+            seBtn.setAttribute('data-listener-attached', 'true');
+            
+            console.log('Button toggles setup complete');
+        }
+        
+        // ボタン型トグルの初期化
+        if (bgmToggleBtn && seToggleBtn) {
+            setupButtonToggles();
+            
+            // MutationObserverでDOMの変更を監視
+            const observer = new MutationObserver(function(mutations) {
+                console.log('DOM mutation detected, re-checking toggles');
+                setupButtonToggles();
+            });
+            
+            // sound-settings要素を監視
+            const soundSettings = document.querySelector('.sound-settings');
+            if (soundSettings) {
+                observer.observe(soundSettings, {
+                    childList: true,
+                    subtree: true
+                });
+            }
         }
 
         // BGMの初期状態を設定
