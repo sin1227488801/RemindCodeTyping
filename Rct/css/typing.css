@@ -512,7 +512,7 @@
 .sound-setting-item label {
     font-size: 14px;
     font-weight: 500;
-    color: var(--color-text);
+    color: #333;
     min-width: 40px;
 }
 
@@ -526,6 +526,7 @@
     border: none;
     cursor: pointer;
     transition: background-color 0.3s;
+    outline: none;
 }
 
 .sound-toggle-btn .toggle-slider {
@@ -538,10 +539,11 @@
     left: 2px;
     transition: transform 0.3s;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: block;
 }
 
 .sound-toggle-btn.active {
-    background-color: var(--color-primary);
+    background-color: #4CAF50;
 }
 
 .sound-toggle-btn.active .toggle-slider {
