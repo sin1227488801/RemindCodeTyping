@@ -310,19 +310,10 @@ class TypingConfig {
         // 既存のイベントリスナーをクリア
         this.removeEventListeners();
 
+        // Start!ボタンのイベントハンドラーはmain.jsで管理されるため、
+        // ここではcloneNodeやイベントリスナーの設定を行わない
         if (startButton) {
-            // イベントリスナーの重複を防ぐため、既存のものを削除してから追加
-            const newStartButton = startButton.cloneNode(true);
-            startButton.parentNode.replaceChild(newStartButton, startButton);
-
-            // Start!ボタンのイベントハンドラーはmain.jsで管理されるため、ここでは設定しない
-            // this.startButtonHandler = (e) => {
-            //     e.preventDefault(); // フォーム送信を防ぐ
-            //     console.log('Start!ボタンがクリックされました');
-            //     this.startTyping();
-            // };
-            // newStartButton.addEventListener('click', this.startButtonHandler);
-            console.log('Start!ボタンはmain.jsで管理されます');
+            console.log('Start!ボタンが見つかりました。main.jsで管理されます。');
         } else {
             console.error('Start!ボタンが見つかりません');
         }
